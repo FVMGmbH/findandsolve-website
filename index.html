@@ -1,0 +1,4760 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<!--
+   ______                            __
+  / ____/___  ____ ___  ____  __  __/ /____  _____
+ / /   / __ \/ __ `__ \/ __ \/ / / / __/ _ \/ ___/
+/ /___/ /_/ / / / / / / /_/ / /_/ / /_/  __/ /
+\____/\____/_/ /_/ /_/ .___/\__,_/\__/\___/_/
+                    /_/
+        Created with Perplexity Computer
+        https://www.perplexity.ai/computer
+-->
+
+<!-- Perplexity Computer Attribution — SEO Meta Tags -->
+<meta name="generator" content="Perplexity Computer">
+<meta name="author" content="Perplexity Computer">
+<meta property="og:see_also" content="https://www.perplexity.ai/computer">
+<link rel="author" href="https://www.perplexity.ai/computer">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FindandSolve — Das erste vollautomatisierte Versicherungsmaklerbüro Deutschlands</title>
+<meta name="description" content="FindandSolve: 16 Features, 9 APIs, 4 Devices. Vom Makler, für den Makler. Gebaut in Rockenhausen, Powered by AI.">
+<meta property="og:title" content="FindandSolve — Maklerbüro 3.0">
+<meta property="og:description" content="Das erste vollautomatisierte Versicherungsmaklerbüro Deutschlands.">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================
+   CSS CUSTOM PROPERTIES
+   ============================================ */
+:root {
+  --bg: #08080f;
+  --surface: #111119;
+  --surface-2: #1a1a25;
+  --border: #222233;
+  --border-alpha: rgba(34, 34, 51, 0.6);
+  --text-primary: #e8e8f0;
+  --text-muted: #8888aa;
+  --text-faint: #555570;
+  --accent: #00d4ff;
+  --accent-glow: rgba(0, 212, 255, 0.15);
+  --accent-green: #22c55e;
+  --accent-amber: #f59e0b;
+  --accent-red: #ef4444;
+
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+
+  --text-xs: clamp(0.6875rem, 0.65rem + 0.15vw, 0.8125rem);
+  --text-sm: clamp(0.8125rem, 0.78rem + 0.15vw, 0.875rem);
+  --text-base: clamp(0.875rem, 0.83rem + 0.2vw, 1rem);
+  --text-lg: clamp(1.125rem, 1rem + 0.5vw, 1.375rem);
+  --text-xl: clamp(1.375rem, 1.15rem + 0.9vw, 1.875rem);
+  --text-2xl: clamp(1.75rem, 1.4rem + 1.5vw, 2.5rem);
+  --text-3xl: clamp(2.25rem, 1.6rem + 2.5vw, 3.5rem);
+  --text-hero: clamp(2.75rem, 2rem + 3.5vw, 5rem);
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+  --space-32: 128px;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+
+  --easing: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration: 180ms;
+
+  --max-w: 1200px;
+  --max-w-narrow: 800px;
+}
+
+/* ============================================
+   RESET & BASE
+   ============================================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Modern scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.18);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.32);
+}
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.18) transparent;
+}
+
+body {
+  font-family: var(--font);
+  font-size: var(--text-base);
+  line-height: 1.6;
+  color: var(--text-primary);
+  background: var(--bg);
+  overflow-x: hidden;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: inherit;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* ============================================
+   GRAIN OVERLAY
+   ============================================ */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+
+/* ============================================
+   SKIP LINK
+   ============================================ */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: var(--space-4);
+  padding: var(--space-2) var(--space-4);
+  background: var(--accent);
+  color: var(--bg);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  z-index: 1000;
+  transition: top var(--duration) var(--easing);
+}
+.skip-link:focus {
+  top: var(--space-4);
+}
+
+/* ============================================
+   NAV
+   ============================================ */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: var(--space-4) var(--space-6);
+  background: rgba(8, 8, 15, 0.8);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.3s var(--easing), box-shadow 0.3s var(--easing);
+}
+.nav.scrolled {
+  border-bottom-color: var(--border-alpha);
+  box-shadow: 0 1px 12px rgba(0, 0, 0, 0.3);
+}
+.nav-inner {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-8);
+}
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-weight: 700;
+  font-size: var(--text-base);
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+.nav-logo svg {
+  flex-shrink: 0;
+}
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  list-style: none;
+}
+.nav-links a {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  transition: color var(--duration) var(--easing);
+  white-space: nowrap;
+}
+.nav-links a:hover,
+.nav-links a:focus-visible {
+  color: var(--text-primary);
+}
+.nav-cta {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  padding: var(--space-2) var(--space-5);
+  background: var(--accent);
+  color: var(--bg);
+  border-radius: var(--radius-sm);
+  transition: opacity var(--duration) var(--easing), transform var(--duration) var(--easing);
+  white-space: nowrap;
+}
+.nav-cta:hover {
+  opacity: 0.9;
+  transform: scale(1.02);
+}
+.nav-cta:active {
+  transform: scale(0.98);
+}
+
+/* Mobile nav toggle */
+.nav-toggle {
+  display: none;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+}
+.nav-toggle i {
+  width: 20px;
+  height: 20px;
+}
+
+@media (max-width: 768px) {
+  .nav-toggle { display: flex; }
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    background: rgba(8, 8, 15, 0.97);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border-alpha);
+    padding: var(--space-6);
+    gap: var(--space-5);
+  }
+  .nav-links.open { display: flex; }
+  .nav-links a { font-size: var(--text-base); }
+  .nav-cta { width: 100%; text-align: center; display: block; }
+}
+
+/* ============================================
+   SECTIONS SHARED
+   ============================================ */
+.section {
+  padding: clamp(var(--space-16), 8vw, var(--space-32)) var(--space-6);
+  max-width: var(--max-w);
+  margin: 0 auto;
+}
+.section-label {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+  margin-bottom: var(--space-4);
+}
+.section-title {
+  font-size: var(--text-2xl);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  color: var(--text-primary);
+  margin-bottom: var(--space-3);
+}
+.section-subtitle {
+  font-size: var(--text-base);
+  color: var(--text-muted);
+  max-width: 65ch;
+  line-height: 1.6;
+}
+
+/* Scroll reveal */
+.reveal {
+  opacity: 0;
+  transition: opacity 0.7s var(--easing);
+}
+.reveal.visible {
+  opacity: 1;
+}
+
+/* ============================================
+   HERO
+   ============================================ */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: var(--space-32) var(--space-6) var(--space-20);
+}
+.hero-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('./assets/hero-bg.png');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.15;
+  pointer-events: none;
+}
+.hero-gradient {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(ellipse 80% 70% at 50% 30%, rgba(0, 212, 255, 0.06) 0%, transparent 70%),
+              linear-gradient(to bottom, transparent 60%, var(--bg) 100%);
+  pointer-events: none;
+}
+.hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  max-width: 800px;
+}
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  color: var(--text-muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: var(--space-2) var(--space-4);
+  border-radius: 100px;
+  margin-bottom: var(--space-8);
+}
+.hero-badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.hero h1 {
+  font-size: var(--text-hero);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+  color: var(--text-primary);
+  margin-bottom: var(--space-6);
+}
+.brand-gradient {
+  background: linear-gradient(135deg, #00d4ff 0%, #38bdf8 40%, #a78bfa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero-tagline {
+  font-size: var(--text-lg);
+  color: var(--text-muted);
+  margin-bottom: var(--space-3);
+  line-height: 1.5;
+}
+.hero-desc {
+  font-size: var(--text-base);
+  color: var(--text-faint);
+  margin-bottom: var(--space-10);
+}
+.hero-stats {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-8);
+  margin-bottom: var(--space-8);
+  flex-wrap: wrap;
+}
+.hero-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+}
+.hero-stat-number {
+  font-size: var(--text-xl);
+  font-weight: 800;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+.hero-stat-label {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.hero-stat-divider {
+  width: 1px;
+  height: 32px;
+  background: var(--border);
+}
+.hero-price {
+  font-size: var(--text-sm);
+  color: var(--text-faint);
+  padding: var(--space-2) var(--space-5);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  display: inline-block;
+}
+
+/* ============================================
+   PHILOSOPHIE
+   ============================================ */
+.philosophy-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-5);
+  margin-top: var(--space-10);
+}
+@media (max-width: 640px) {
+  .philosophy-grid { grid-template-columns: 1fr; }
+}
+.philosophy-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-8);
+  transition: border-color var(--duration) var(--easing), background var(--duration) var(--easing);
+}
+.philosophy-card:hover {
+  border-color: rgba(0, 212, 255, 0.2);
+  background: var(--surface-2);
+}
+.philosophy-card-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  background: rgba(0, 212, 255, 0.08);
+  color: var(--accent);
+  margin-bottom: var(--space-5);
+}
+.philosophy-card-icon i {
+  width: 20px;
+  height: 20px;
+}
+.philosophy-card h3 {
+  font-size: var(--text-base);
+  font-weight: 700;
+  margin-bottom: var(--space-2);
+  letter-spacing: -0.01em;
+}
+.philosophy-card p {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* ============================================
+   FS-BUDDY
+   ============================================ */
+.buddy-section {
+  position: relative;
+  overflow: hidden;
+}
+.buddy-section .section-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('./assets/feature-glow.png');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.08;
+  pointer-events: none;
+}
+.buddy-comparison {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-5);
+  margin-top: var(--space-10);
+  margin-bottom: var(--space-10);
+}
+@media (max-width: 640px) {
+  .buddy-comparison { grid-template-columns: 1fr; }
+}
+.buddy-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-8);
+}
+.buddy-card.highlighted {
+  border-color: rgba(0, 212, 255, 0.3);
+  background: rgba(0, 212, 255, 0.04);
+}
+.buddy-card-label {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: var(--space-3);
+}
+.buddy-card:not(.highlighted) .buddy-card-label {
+  color: var(--text-faint);
+}
+.buddy-card.highlighted .buddy-card-label {
+  color: var(--accent);
+}
+.buddy-card h3 {
+  font-size: var(--text-lg);
+  font-weight: 700;
+  margin-bottom: var(--space-3);
+  letter-spacing: -0.01em;
+}
+.buddy-card p {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* Terminal box */
+.terminal {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  margin-bottom: var(--space-8);
+}
+.terminal-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-5);
+  background: rgba(255,255,255,0.02);
+  border-bottom: 1px solid var(--border);
+}
+.terminal-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--text-faint);
+}
+.terminal-dot:nth-child(1) { background: #ef4444; opacity: 0.7; }
+.terminal-dot:nth-child(2) { background: #f59e0b; opacity: 0.7; }
+.terminal-dot:nth-child(3) { background: #22c55e; opacity: 0.7; }
+.terminal-title {
+  font-size: var(--text-xs);
+  color: var(--text-faint);
+  margin-left: var(--space-3);
+  font-weight: 500;
+}
+.terminal-body {
+  padding: var(--space-6);
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: var(--text-sm);
+  line-height: 2;
+}
+.terminal-line {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+.terminal-step {
+  color: var(--accent);
+  font-weight: 600;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+.terminal-text {
+  color: var(--text-muted);
+}
+.terminal-highlight {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+.terminal-input {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-5);
+  padding-bottom: var(--space-5);
+  border-bottom: 1px solid var(--border);
+}
+.terminal-prompt {
+  color: var(--accent);
+  font-weight: 700;
+}
+.terminal-msg {
+  color: var(--text-primary);
+}
+
+.buddy-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  padding: var(--space-3) var(--space-6);
+  background: var(--accent);
+  color: var(--bg);
+  border-radius: var(--radius-sm);
+  transition: opacity var(--duration) var(--easing), transform var(--duration) var(--easing);
+}
+.buddy-cta:hover {
+  opacity: 0.9;
+  transform: scale(1.02);
+}
+.buddy-cta:active {
+  transform: scale(0.98);
+}
+.buddy-cta i {
+  width: 16px;
+  height: 16px;
+}
+
+/* ============================================
+   TIMELINE — "Ein Tag mit FindandSolve"
+   ============================================ */
+.timeline-section {
+  padding: clamp(var(--space-16), 8vw, var(--space-32)) var(--space-6);
+  max-width: var(--max-w);
+  margin: 0 auto;
+}
+
+.timeline-container {
+  position: relative;
+  margin-top: var(--space-12);
+  padding-left: 100px;
+}
+
+/* The vertical timeline line */
+.timeline-container::before {
+  content: '';
+  position: absolute;
+  left: 68px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--border) 0%, var(--accent) 20%, var(--accent) 80%, var(--border) 100%);
+  opacity: 0.4;
+}
+
+/* Timeline entry */
+.timeline-entry {
+  position: relative;
+  padding-bottom: var(--space-12);
+}
+.timeline-entry:last-child {
+  padding-bottom: 0;
+}
+
+/* Time badge */
+.timeline-time {
+  position: absolute;
+  left: -100px;
+  top: 2px;
+  width: 80px;
+  text-align: center;
+  font-size: var(--text-sm);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: var(--space-1) var(--space-3);
+  transition: border-color 0.4s var(--easing), color 0.4s var(--easing), box-shadow 0.4s var(--easing);
+  z-index: 2;
+}
+.timeline-entry.visible .timeline-time {
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: 0 0 16px rgba(0, 212, 255, 0.15);
+}
+
+/* Dot on the line */
+.timeline-dot {
+  position: absolute;
+  left: -8px;
+  top: 10px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 2px solid var(--border);
+  z-index: 2;
+  transition: border-color 0.4s var(--easing), background 0.4s var(--easing), box-shadow 0.4s var(--easing);
+}
+.timeline-entry.visible .timeline-dot {
+  border-color: var(--accent);
+  background: var(--accent);
+  box-shadow: 0 0 12px rgba(0, 212, 255, 0.3);
+}
+
+/* Content area */
+.timeline-content {
+  padding-left: var(--space-8);
+}
+.timeline-tag {
+  display: inline-block;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-faint);
+  margin-bottom: var(--space-2);
+}
+.timeline-headline {
+  font-size: var(--text-lg);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+  margin-bottom: var(--space-2);
+}
+.timeline-body {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: 1.7;
+  max-width: 58ch;
+}
+
+/* Media area (16:9 placeholder) */
+.timeline-media {
+  margin-top: var(--space-5);
+  aspect-ratio: 16 / 9;
+  max-width: 520px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  transition: border-color var(--duration) var(--easing);
+}
+.timeline-media:hover {
+  border-color: rgba(0, 212, 255, 0.2);
+}
+.timeline-media-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(0, 212, 255, 0.08);
+  color: var(--accent);
+}
+.timeline-media-icon i {
+  width: 22px;
+  height: 22px;
+}
+.timeline-media-text {
+  font-size: var(--text-xs);
+  color: var(--text-faint);
+}
+
+/* Break entries (Mittagspause, Feierabend) */
+.timeline-entry.is-break .timeline-dot {
+  border-color: var(--accent-amber);
+  background: transparent;
+}
+.timeline-entry.is-break.visible .timeline-dot {
+  border-color: var(--accent-amber);
+  background: var(--accent-amber);
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.25);
+}
+.timeline-entry.is-break .timeline-time {
+  color: var(--accent-amber);
+  border-color: rgba(245, 158, 11, 0.3);
+}
+.timeline-entry.is-break.visible .timeline-time {
+  color: var(--accent-amber);
+  border-color: var(--accent-amber);
+  box-shadow: 0 0 16px rgba(245, 158, 11, 0.12);
+}
+.timeline-break-content {
+  padding-left: var(--space-8);
+  border-left: 2px solid rgba(245, 158, 11, 0.3);
+  margin-left: -2px;
+  padding-top: var(--space-2);
+  padding-bottom: var(--space-2);
+}
+.timeline-break-content .timeline-headline {
+  font-style: italic;
+  color: var(--text-muted);
+  font-size: var(--text-base);
+  font-weight: 600;
+}
+.timeline-break-content .timeline-body {
+  font-style: italic;
+  color: var(--text-faint);
+}
+
+/* ============================================
+   TIMELINE CTA
+   ============================================ */
+.timeline-cta {
+  text-align: center;
+  margin-top: var(--space-16);
+  padding-top: var(--space-12);
+  border-top: 1px solid var(--border);
+}
+.timeline-cta h3 {
+  font-size: var(--text-xl);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: var(--space-6);
+}
+.timeline-cta-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  padding: var(--space-3) var(--space-6);
+  background: var(--accent);
+  color: var(--bg);
+  border-radius: var(--radius-sm);
+  transition: opacity var(--duration) var(--easing), transform var(--duration) var(--easing);
+}
+.btn-primary:hover {
+  opacity: 0.9;
+  transform: scale(1.02);
+}
+.btn-primary:active {
+  transform: scale(0.98);
+}
+.btn-primary i {
+  width: 16px;
+  height: 16px;
+}
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  padding: var(--space-3) var(--space-6);
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  transition: color var(--duration) var(--easing), border-color var(--duration) var(--easing), transform var(--duration) var(--easing);
+}
+.btn-secondary:hover {
+  color: var(--text-primary);
+  border-color: var(--text-faint);
+}
+.btn-secondary:active {
+  transform: scale(0.98);
+}
+.btn-secondary i {
+  width: 16px;
+  height: 16px;
+}
+
+/* ============================================
+   KI COMPARISON
+   ============================================ */
+.ki-compare {
+  padding: clamp(var(--space-16), 8vw, var(--space-32)) var(--space-6);
+  max-width: var(--max-w);
+  margin: 0 auto;
+}
+.ki-question {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-8);
+  margin-bottom: var(--space-12);
+  text-align: center;
+  position: relative;
+}
+.ki-question-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(0, 212, 255, 0.08);
+  color: var(--accent);
+  margin: 0 auto var(--space-5);
+}
+.ki-question-icon i {
+  width: 24px;
+  height: 24px;
+}
+.ki-question-text {
+  font-size: var(--text-lg);
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.5;
+  max-width: 600px;
+  margin: 0 auto var(--space-4);
+}
+.ki-question-context {
+  font-size: var(--text-sm);
+  color: var(--text-faint);
+  line-height: 1.6;
+}
+
+/* KI Cards Grid */
+.ki-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-6);
+}
+@media (max-width: 900px) {
+  .ki-grid { grid-template-columns: 1fr; }
+}
+
+.ki-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  transition: border-color var(--duration) var(--easing);
+}
+.ki-card:hover {
+  border-color: rgba(0, 212, 255, 0.15);
+}
+.ki-card.ki-best {
+  border-color: rgba(0, 212, 255, 0.3);
+  background: rgba(0, 212, 255, 0.03);
+  grid-column: 1 / -1;
+}
+@media (min-width: 901px) {
+  .ki-card.ki-best {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-8);
+  }
+}
+
+/* Card Header */
+.ki-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-4);
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.ki-card-name {
+  font-size: var(--text-base);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.ki-card-price {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 100px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.ki-card-price.free {
+  background: rgba(34, 197, 94, 0.1);
+  color: #22c55e;
+}
+.ki-card-price.paid {
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+}
+
+/* Stars */
+.ki-stars {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+.ki-stars-icons {
+  display: flex;
+  gap: 2px;
+}
+.ki-star {
+  width: 16px;
+  height: 16px;
+  color: var(--text-faint);
+}
+.ki-star.filled {
+  color: #f59e0b;
+}
+.ki-star.half {
+  color: #f59e0b;
+  opacity: 0.5;
+}
+.ki-stars-label {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* Card Body */
+.ki-card-body {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: 1.7;
+  flex: 1;
+}
+.ki-card-body strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+.ki-card-body .ki-verdict {
+  margin-top: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border);
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: var(--text-sm);
+}
+
+/* Best card special styles */
+.ki-best .ki-card-header { margin-bottom: var(--space-3); }
+.ki-best-left { }
+.ki-best-right {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+.ki-best-right strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+.ki-best-highlight {
+  background: var(--surface-2);
+  border-radius: var(--radius-sm);
+  padding: var(--space-4);
+  margin-top: var(--space-4);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+.ki-best-highlight strong {
+  color: var(--accent);
+}
+
+/* Takeaway banner */
+.ki-takeaway {
+  margin-top: var(--space-8);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-6);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+}
+.ki-takeaway-icon {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  background: rgba(0, 212, 255, 0.08);
+  color: var(--accent);
+}
+.ki-takeaway-icon i {
+  width: 18px;
+  height: 18px;
+}
+.ki-takeaway-text {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+.ki-takeaway-text strong {
+  color: var(--text-primary);
+}
+
+/* ============================================
+   MVP ADAPTER — ANBINDUNG
+   ============================================ */
+.mvp-section {
+  padding: clamp(var(--space-16), 8vw, var(--space-32)) var(--space-6);
+  max-width: var(--max-w);
+  margin: 0 auto;
+}
+
+/* Scenario Cards */
+.mvp-scenarios {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-6);
+  margin-bottom: var(--space-10);
+}
+@media (max-width: 1024px) {
+  .mvp-scenarios { grid-template-columns: 1fr; }
+}
+
+.mvp-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-8);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  transition: border-color var(--duration) var(--easing);
+}
+.mvp-card:hover {
+  border-color: rgba(0, 212, 255, 0.2);
+}
+.mvp-card.mvp-featured {
+  border-color: rgba(0, 212, 255, 0.3);
+  background: rgba(0, 212, 255, 0.03);
+}
+
+/* Card Top — Badge + Time */
+.mvp-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-5);
+}
+.mvp-badge {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 100px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.mvp-badge.instant {
+  background: rgba(34, 197, 94, 0.1);
+  color: #22c55e;
+}
+.mvp-badge.medium {
+  background: rgba(0, 212, 255, 0.1);
+  color: var(--accent);
+}
+.mvp-badge.custom {
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+}
+.mvp-time {
+  font-size: var(--text-xs);
+  color: var(--text-faint);
+  font-weight: 500;
+}
+
+/* Card Icon */
+.mvp-card-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  background: rgba(0, 212, 255, 0.08);
+  color: var(--accent);
+  margin-bottom: var(--space-5);
+}
+.mvp-card-icon i {
+  width: 24px;
+  height: 24px;
+}
+
+.mvp-card h3 {
+  font-size: var(--text-lg);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: var(--space-2);
+}
+.mvp-card-subtitle {
+  font-size: var(--text-sm);
+  color: var(--text-faint);
+  margin-bottom: var(--space-6);
+}
+
+/* Steps */
+.mvp-steps {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  flex: 1;
+}
+.mvp-step {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+}
+.mvp-step-num {
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(0, 212, 255, 0.1);
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 700;
+  margin-top: 1px;
+}
+.mvp-step-text {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+.mvp-step-text strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* Result line at bottom */
+.mvp-result {
+  margin-top: var(--space-6);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--border);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.mvp-result i {
+  width: 16px;
+  height: 16px;
+}
+
+/* Note under card */
+.mvp-card-note {
+  font-size: var(--text-xs);
+  color: var(--text-faint);
+  margin-top: var(--space-4);
+  line-height: 1.5;
+  font-style: italic;
+}
+
+/* Privacy Banner */
+.mvp-privacy {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-8);
+  display: flex;
+  gap: var(--space-6);
+  align-items: flex-start;
+}
+@media (max-width: 640px) {
+  .mvp-privacy {
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+}
+.mvp-privacy-icon {
+  width: 56px;
+  height: 56px;
+  min-width: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  background: rgba(34, 197, 94, 0.08);
+  color: #22c55e;
+}
+.mvp-privacy-icon i {
+  width: 28px;
+  height: 28px;
+}
+.mvp-privacy-content h3 {
+  font-size: var(--text-lg);
+  font-weight: 700;
+  margin-bottom: var(--space-3);
+}
+.mvp-privacy-content p {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+.mvp-privacy-content p strong {
+  color: var(--text-primary);
+}
+.mvp-privacy-visual {
+  margin-top: var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+.mvp-encrypt-box {
+  font-family: 'Courier New', monospace;
+  font-size: var(--text-xs);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+.mvp-encrypt-box.plain {
+  background: rgba(34, 197, 94, 0.06);
+  color: #22c55e;
+}
+.mvp-encrypt-box.encrypted {
+  background: rgba(0, 212, 255, 0.06);
+  color: var(--accent);
+}
+.mvp-encrypt-arrow {
+  color: var(--text-faint);
+  font-size: var(--text-sm);
+}
+
+/* ============================================
+   WECHSEL — EMPFEHLUNG
+   ============================================ */
+.wechsel-section {
+  padding: clamp(var(--space-16), 8vw, var(--space-32)) var(--space-6);
+  max-width: var(--max-w);
+  margin: 0 auto;
+}
+.wechsel-hero {
+  text-align: center;
+  margin-bottom: var(--space-12);
+}
+.wechsel-hero .wechsel-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 16px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #22c55e;
+  background: rgba(34, 197, 94, 0.08);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  border-radius: 100px;
+  margin-bottom: var(--space-5);
+}
+.wechsel-hero .wechsel-badge i { width: 14px; height: 14px; }
+
+.wechsel-flow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-5);
+  margin-bottom: var(--space-12);
+  flex-wrap: wrap;
+}
+.wechsel-flow-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-6) var(--space-8);
+  text-align: center;
+  min-width: 180px;
+  transition: border-color var(--duration) var(--easing);
+}
+.wechsel-flow-card:hover {
+  border-color: rgba(0, 212, 255, 0.2);
+}
+.wechsel-flow-card.highlight {
+  border-color: rgba(0, 212, 255, 0.3);
+  background: rgba(0, 212, 255, 0.03);
+}
+.wechsel-flow-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto var(--space-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  background: rgba(0, 212, 255, 0.08);
+  color: var(--accent);
+}
+.wechsel-flow-icon i { width: 24px; height: 24px; }
+.wechsel-flow-card .wf-label {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+.wechsel-flow-card .wf-value {
+  font-size: var(--text-lg);
+  font-weight: 800;
+  color: var(--text-primary);
+}
+.wechsel-flow-card .wf-sub {
+  font-size: 11px;
+  color: var(--text-faint);
+  margin-top: 4px;
+}
+.wechsel-flow-arrow {
+  color: var(--accent);
+  opacity: 0.4;
+}
+.wechsel-flow-arrow i { width: 24px; height: 24px; }
+@media (max-width: 768px) {
+  .wechsel-flow { flex-direction: column; }
+  .wechsel-flow-arrow { transform: rotate(90deg); }
+}
+
+.wechsel-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-5);
+  margin-bottom: var(--space-10);
+}
+@media (max-width: 768px) {
+  .wechsel-grid { grid-template-columns: 1fr; }
+}
+
+.wechsel-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-6);
+  transition: border-color var(--duration) var(--easing);
+}
+.wechsel-card:hover {
+  border-color: rgba(0, 212, 255, 0.15);
+}
+.wechsel-card-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+.wechsel-card-icon {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  color: var(--accent);
+}
+.wechsel-card-icon i { width: 20px; height: 20px; }
+.wechsel-card-icon.green { color: #22c55e; }
+.wechsel-card-icon.amber { color: #f59e0b; }
+.wechsel-card-icon.purple { color: #a78bfa; }
+.wechsel-card-title {
+  font-size: var(--text-base);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.wechsel-card p {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: 1.65;
+}
+.wechsel-card ul {
+  list-style: none;
+  padding: 0;
+  margin-top: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.wechsel-card ul li {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: 1.55;
+  padding-left: 24px;
+  position: relative;
+}
+.wechsel-card ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 5px;
+  width: 16px;
+  height: 16px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2322c55e' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E") no-repeat center;
+}
+
+.wechsel-price-banner {
+  background: var(--surface);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-radius: var(--radius-md);
+  padding: var(--space-6) var(--space-8);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-6);
+  margin-bottom: var(--space-4);
+}
+.wechsel-price-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.wechsel-price-left .wpl-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+.wechsel-price-left .wpl-price {
+  font-size: var(--text-2xl);
+  font-weight: 800;
+  color: var(--accent);
+  letter-spacing: -0.02em;
+}
+.wechsel-price-left .wpl-price span {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--text-muted);
+}
+.wechsel-price-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+.wechsel-price-right .wpr-item {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.wechsel-price-right .wpr-item i { width: 14px; height: 14px; color: #22c55e; }
+.wechsel-footnote {
+  font-size: 11px;
+  color: var(--text-faint);
+  line-height: 1.6;
+  max-width: 700px;
+}
+
+/* ============================================
+   INSEL — PRICING COMPARISON
+   ============================================ */
+.insel-section {
+  padding: clamp(var(--space-16), 8vw, var(--space-32)) var(--space-6);
+  max-width: var(--max-w);
+  margin: 0 auto;
+}
+
+.insel-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-5);
+  margin-bottom: var(--space-10);
+}
+@media (max-width: 768px) {
+  .insel-grid { grid-template-columns: 1fr; }
+}
+
+/* Each comparison card */
+.insel-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  transition: border-color var(--duration) var(--easing);
+}
+.insel-card:hover {
+  border-color: rgba(0, 212, 255, 0.15);
+}
+
+.insel-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+.insel-card-icon {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  background: rgba(0, 212, 255, 0.08);
+  color: var(--accent);
+}
+.insel-card-icon i {
+  width: 20px;
+  height: 20px;
+}
+.insel-card-title {
+  font-size: var(--text-base);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+.insel-card-desc {
+  font-size: var(--text-xs);
+  color: var(--text-faint);
+  line-height: 1.5;
+}
+
+/* Price comparison row */
+.insel-prices {
+  display: flex;
+  gap: var(--space-4);
+  flex: 1;
+  align-items: flex-end;
+}
+.insel-price-col {
+  flex: 1;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-sm);
+  text-align: center;
+}
+.insel-price-col.market {
+  background: rgba(239, 68, 68, 0.05);
+  border: 1px solid rgba(239, 68, 68, 0.1);
+}
+.insel-price-col.ours {
+  background: rgba(0, 212, 255, 0.05);
+  border: 1px solid rgba(0, 212, 255, 0.15);
+}
+.insel-price-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-bottom: var(--space-1);
+}
+.insel-price-value {
+  font-size: var(--text-base);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+.insel-price-col.market .insel-price-value {
+  color: #ef4444;
+}
+.insel-price-col.ours .insel-price-value {
+  color: var(--accent);
+}
+.insel-price-note {
+  font-size: 9px;
+  color: var(--text-faint);
+  margin-top: 2px;
+  line-height: 1.3;
+}
+
+/* Totals banner */
+.insel-total {
+  background: var(--surface);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-radius: var(--radius-lg);
+  padding: var(--space-8);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.insel-total::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), #38bdf8, #a78bfa);
+}
+.insel-total-label {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  margin-bottom: var(--space-4);
+}
+.insel-total-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-8);
+  flex-wrap: wrap;
+}
+.insel-total-item {
+  text-align: center;
+}
+.insel-total-price {
+  font-size: var(--text-2xl);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+.insel-total-price.old {
+  color: #ef4444;
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
+}
+.insel-total-price.new {
+  color: var(--accent);
+}
+.insel-total-sub {
+  font-size: var(--text-xs);
+  color: var(--text-faint);
+  margin-top: var(--space-1);
+}
+.insel-total-vs {
+  font-size: var(--text-xl);
+  color: var(--text-faint);
+  font-weight: 300;
+}
+.insel-total-msg {
+  margin-top: var(--space-6);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: 1.7;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.insel-total-msg strong {
+  color: var(--text-primary);
+}
+
+/* ============================================
+   DATA AGGREGATION OVERLAY (Timeline Interactive)
+   ============================================ */
+.da-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+.da-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+.da-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(8, 8, 15, 0.92);
+  backdrop-filter: blur(12px);
+}
+.da-close {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: border-color 0.2s, color 0.2s;
+}
+.da-close:hover {
+  border-color: var(--accent);
+  color: var(--text-primary);
+}
+.da-close i { width: 18px; height: 18px; }
+.da-container {
+  position: relative;
+  width: 750px;
+  max-width: calc(100vw - 48px);
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+  scrollbar-width: none;
+  text-align: center;
+  padding: 24px 0;
+}
+.da-container::-webkit-scrollbar { display: none; }
+
+/* Time display */
+.da-time {
+  font-size: 36px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #00d4ff 0%, #38bdf8 40%, #a78bfa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: daSlideUp 0.5s ease;
+}
+.da-subtitle {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+  animation: daSlideUp 0.5s ease 0.1s both;
+}
+@keyframes daSlideUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Statement screen */
+.da-statement {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.da-statement.active { opacity: 1; }
+.da-statement-text {
+  font-size: clamp(28px, 5vw, 48px);
+  font-weight: 800;
+  color: var(--text-primary);
+  text-align: center;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+}
+.da-statement-text span {
+  background: linear-gradient(135deg, #00d4ff, #38bdf8, #a78bfa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Flow diagram */
+.da-flow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  margin-bottom: 28px;
+}
+.da-sources {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.da-source {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  opacity: 0;
+  transform: translateX(-20px);
+  transition: all 0.4s ease;
+}
+.da-source.active {
+  opacity: 1;
+  transform: translateX(0);
+  border-color: rgba(0, 212, 255, 0.4);
+}
+.da-source.done {
+  border-color: rgba(0, 212, 255, 0.25);
+  background: rgba(0, 212, 255, 0.04);
+}
+.da-source-icon {
+  width: 36px;
+  height: 24px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 800;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 0.03em;
+  flex-shrink: 0;
+}
+.da-source-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+/* Arrows */
+.da-arrows {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+.da-arrow {
+  width: 48px;
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  position: relative;
+  overflow: hidden;
+}
+.da-arrow.active::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  animation: daArrowFlow 0.8s ease forwards;
+}
+@keyframes daArrowFlow {
+  from { left: -100%; }
+  to { left: 100%; }
+}
+.da-arrow.done {
+  background: var(--accent);
+  box-shadow: 0 0 8px rgba(0, 212, 255, 0.3);
+}
+
+/* Hub */
+.da-hub {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+}
+.da-hub-ring {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background: radial-gradient(circle, rgba(0, 212, 255, 0.08), transparent);
+  transition: all 0.5s ease;
+}
+.da-hub-ring.active {
+  border-color: var(--accent);
+  box-shadow: 0 0 24px rgba(0, 212, 255, 0.25);
+  animation: daHubPulse 1.5s ease-in-out infinite;
+}
+@keyframes daHubPulse {
+  0%, 100% { box-shadow: 0 0 24px rgba(0, 212, 255, 0.25); }
+  50% { box-shadow: 0 0 40px rgba(0, 212, 255, 0.45); }
+}
+.da-hub-ring.done {
+  border-color: #10b981;
+  box-shadow: 0 0 24px rgba(16, 185, 129, 0.35);
+  animation: none;
+}
+.da-hub-logo {
+  font-size: 13px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #00d4ff, #38bdf8, #a78bfa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.02em;
+}
+.da-hub-sub {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* KI Processing */
+.da-ki {
+  margin-top: 20px;
+  padding: 24px;
+  background: rgba(0, 212, 255, 0.03);
+  border: 1px solid rgba(0, 212, 255, 0.12);
+  border-radius: var(--radius-lg);
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+  overflow: hidden;
+}
+.da-ki::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(0, 212, 255, 0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+.da-ki.hidden { display: none; }
+.da-ki-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  position: relative;
+}
+.da-ki-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(0, 212, 255, 0.25);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: daSpin 0.8s linear infinite;
+}
+.da-ki-spinner.done {
+  border-color: #10b981;
+  animation: none;
+}
+@keyframes daSpin {
+  to { transform: rotate(360deg); }
+}
+.da-ki-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent);
+}
+.da-ki-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+}
+.da-ki-step {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  color: var(--text-muted);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: all 0.4s ease;
+}
+.da-ki-step.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.da-ki-step.done {
+  border-color: rgba(16, 185, 129, 0.3);
+  background: rgba(16, 185, 129, 0.04);
+}
+.da-ki-step-check {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  flex-shrink: 0;
+  background: rgba(255,255,255,0.05);
+  color: var(--text-faint);
+  transition: all 0.3s ease;
+}
+.da-ki-step.done .da-ki-step-check {
+  background: #10b981;
+  color: white;
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
+}
+.da-ki-success {
+  margin-top: 16px;
+  padding: 14px 20px;
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #10b981;
+  animation: daSlideUp 0.5s ease;
+}
+.da-ki-success.hidden { display: none; }
+.da-ki-success-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #10b981;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 700;
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.35);
+}
+
+/* Results */
+.da-results.hidden { display: none; }
+.da-results-time {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 16px;
+  animation: daSlideUp 0.4s ease;
+}
+.da-results-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: left;
+  max-width: 600px;
+  margin: 0 auto;
+}
+.da-result-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  animation: daSlideUp 0.4s ease;
+}
+.da-result-prio {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  padding: 3px 8px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  min-width: 60px;
+  text-align: center;
+  white-space: nowrap;
+}
+.da-result-item.dringend .da-result-prio { background: rgba(239,68,68,0.12); color: #f87171; }
+.da-result-item.mittel .da-result-prio { background: rgba(245,158,11,0.12); color: #fbbf24; }
+.da-result-item.niedrig .da-result-prio { background: rgba(59,130,246,0.12); color: #60a5fa; }
+.da-result-info { flex: 1; min-width: 0; }
+.da-result-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.da-result-source {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+.da-result-ki {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent);
+  background: rgba(0, 212, 255, 0.06);
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.da-results-actions {
+  margin-top: 20px;
+}
+.da-confirm-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 28px;
+  background: linear-gradient(135deg, #00d4ff, #38bdf8);
+  border: none;
+  border-radius: var(--radius-md);
+  color: #08080f;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.da-confirm-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(0, 212, 255, 0.25);
+}
+.da-confirm-btn.confirmed {
+  background: linear-gradient(135deg, #059669, #10b981);
+  color: white;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .da-flow { flex-direction: column; gap: 16px; }
+  .da-arrows { flex-direction: row; }
+  .da-arrow { width: 3px; height: 24px; }
+  .da-arrow.active::after {
+    top: -100%; left: 0; width: 100%; height: 100%;
+    animation: daArrowFlowV 0.8s ease forwards;
+  }
+  @keyframes daArrowFlowV {
+    from { top: -100%; }
+    to { top: 100%; }
+  }
+  .da-result-ki { display: none; }
+  .da-result-title { white-space: normal; }
+  .da-time { font-size: 28px; }
+  .da-ki { padding: 16px; }
+}
+
+/* Kundenportal Iframe Overlay */
+.kp-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+.kp-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+.kp-overlay-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(8, 8, 15, 0.6);
+  backdrop-filter: blur(6px);
+}
+.kp-overlay-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 48px;
+  background: #0c1019;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  z-index: 10;
+}
+.kp-overlay-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.kp-overlay-title i { width: 16px; height: 16px; color: var(--accent); }
+.kp-overlay-close {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+.kp-overlay-close:hover {
+  border-color: var(--accent);
+  color: var(--text-primary);
+}
+.kp-overlay-close i { width: 16px; height: 16px; }
+.kp-iframe-wrap {
+  position: absolute;
+  top: 48px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+.kp-iframe-wrap iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: #0a0f1a;
+}
+
+/* Timeline media clickable state */
+.timeline-media.clickable {
+  cursor: pointer;
+  border-color: rgba(0, 212, 255, 0.15);
+}
+.timeline-media.clickable:hover {
+  border-color: rgba(0, 212, 255, 0.35);
+}
+.timeline-media.clickable:hover img {
+  opacity: 0.9 !important;
+}
+.timeline-media.clickable:hover .da-preview-overlay {
+  background: rgba(8, 8, 15, 0.2) !important;
+}
+.timeline-media.clickable .timeline-media-icon {
+  background: rgba(0, 212, 255, 0.15);
+  backdrop-filter: blur(4px);
+}
+.timeline-media.clickable:hover .timeline-media-icon {
+  background: rgba(0, 212, 255, 0.25);
+  transform: scale(1.08);
+  transition: all 0.2s ease;
+}
+
+/* ============================================
+   FEATURE REFERENCE GRID
+   ============================================ */
+.features-ref {
+  padding: clamp(var(--space-16), 8vw, var(--space-32)) var(--space-6);
+  max-width: var(--max-w);
+  margin: 0 auto;
+}
+.features-ref-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-4);
+  margin-top: var(--space-10);
+}
+@media (max-width: 900px) {
+  .features-ref-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 640px) {
+  .features-ref-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 400px) {
+  .features-ref-grid { grid-template-columns: 1fr; }
+}
+.feature-ref-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-5);
+  cursor: pointer;
+  transition: border-color var(--duration) var(--easing), background var(--duration) var(--easing);
+}
+.feature-ref-card:hover {
+  border-color: rgba(0, 212, 255, 0.2);
+  background: var(--surface-2);
+}
+.feature-ref-icon {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  background: rgba(0, 212, 255, 0.08);
+  color: var(--accent);
+  margin-bottom: var(--space-3);
+}
+.feature-ref-icon i {
+  width: 18px;
+  height: 18px;
+}
+.feature-ref-card h4 {
+  font-size: var(--text-sm);
+  font-weight: 700;
+  margin-bottom: var(--space-1);
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+.feature-ref-card p {
+  font-size: var(--text-xs);
+  color: var(--text-faint);
+  line-height: 1.5;
+  margin-bottom: var(--space-2);
+}
+.feature-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  padding: var(--space-1) var(--space-3);
+  border-radius: 100px;
+  letter-spacing: 0.02em;
+}
+.feature-badge.status-ready {
+  background: rgba(34, 197, 94, 0.1);
+  color: var(--accent-green);
+}
+.feature-badge.status-wip {
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--accent-amber);
+}
+.feature-badge.status-new {
+  background: rgba(0, 212, 255, 0.1);
+  color: var(--accent);
+}
+
+/* ============================================
+   TECH STACK
+   ============================================ */
+.tech-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-4);
+  margin-top: var(--space-10);
+}
+@media (max-width: 900px) {
+  .tech-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 640px) {
+  .tech-grid { grid-template-columns: repeat(2, 1fr); }
+}
+.tech-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-6) var(--space-4);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  text-align: center;
+  transition: border-color var(--duration) var(--easing), background var(--duration) var(--easing);
+}
+.tech-item:hover {
+  border-color: rgba(0, 212, 255, 0.15);
+  background: var(--surface-2);
+}
+.tech-item-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  background: rgba(0, 212, 255, 0.06);
+  color: var(--accent);
+}
+.tech-item-icon i {
+  width: 20px;
+  height: 20px;
+}
+.tech-item-name {
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+.tech-item-role {
+  font-size: var(--text-xs);
+  color: var(--text-faint);
+}
+
+/* ============================================
+   ROTE LINIEN
+   ============================================ */
+.redlines-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-5);
+  margin-top: var(--space-10);
+}
+@media (max-width: 768px) {
+  .redlines-grid { grid-template-columns: 1fr; }
+}
+.redline-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-8);
+  transition: border-color var(--duration) var(--easing);
+}
+.redline-card:hover {
+  border-color: rgba(239, 68, 68, 0.2);
+}
+.redline-icon {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  background: rgba(239, 68, 68, 0.08);
+  color: var(--accent-red);
+  margin-bottom: var(--space-5);
+}
+.redline-icon i {
+  width: 22px;
+  height: 22px;
+}
+.redline-card h3 {
+  font-size: var(--text-base);
+  font-weight: 700;
+  margin-bottom: var(--space-3);
+  letter-spacing: -0.01em;
+}
+.redline-card p {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+/* ============================================
+   ROADMAP
+   ============================================ */
+.roadmap-timeline {
+  position: relative;
+  margin-top: var(--space-10);
+  padding-left: var(--space-10);
+}
+.roadmap-timeline::before {
+  content: '';
+  position: absolute;
+  left: 15px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--border);
+}
+.roadmap-item {
+  position: relative;
+  padding-bottom: var(--space-10);
+}
+.roadmap-item:last-child {
+  padding-bottom: 0;
+}
+.roadmap-dot {
+  position: absolute;
+  left: calc(-1 * var(--space-10) + 8px);
+  top: 4px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 2px solid var(--border);
+  z-index: 1;
+}
+.roadmap-item.active .roadmap-dot {
+  border-color: var(--accent);
+  background: var(--accent);
+  box-shadow: 0 0 12px rgba(0, 212, 255, 0.3);
+}
+.roadmap-phase {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-faint);
+  margin-bottom: var(--space-2);
+}
+.roadmap-item.active .roadmap-phase {
+  color: var(--accent);
+}
+.roadmap-title {
+  font-size: var(--text-lg);
+  font-weight: 700;
+  margin-bottom: var(--space-2);
+  letter-spacing: -0.01em;
+}
+.roadmap-desc {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: 1.6;
+  max-width: 50ch;
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+.footer {
+  border-top: 1px solid var(--border);
+  padding: var(--space-12) var(--space-6);
+  text-align: center;
+}
+.footer-inner {
+  max-width: var(--max-w);
+  margin: 0 auto;
+}
+.footer-brand {
+  font-size: var(--text-base);
+  font-weight: 700;
+  margin-bottom: var(--space-2);
+}
+.footer-sub {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  margin-bottom: var(--space-1);
+}
+.footer-version {
+  font-size: var(--text-xs);
+  color: var(--text-faint);
+  margin-bottom: var(--space-5);
+}
+.footer-attribution {
+  font-size: var(--text-xs);
+  color: var(--text-faint);
+}
+.footer-attribution a {
+  color: var(--text-muted);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color var(--duration) var(--easing);
+}
+.footer-attribution a:hover {
+  color: var(--text-primary);
+}
+
+/* ============================================
+   MODAL — Enhanced
+   ============================================ */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s var(--easing);
+  padding: var(--space-6);
+}
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  max-width: 720px;
+  width: 100%;
+  padding: 0;
+  overflow: hidden;
+  position: relative;
+  transform: scale(0.95);
+  transition: transform 0.3s var(--easing);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.modal-overlay.active .modal {
+  transform: scale(1);
+}
+.modal-close {
+  position: absolute;
+  top: var(--space-4);
+  right: var(--space-4);
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  background: rgba(0,0,0,0.3);
+  z-index: 10;
+  transition: background var(--duration) var(--easing), color var(--duration) var(--easing);
+}
+.modal-close:hover {
+  background: var(--surface-2);
+  color: var(--text-primary);
+}
+.modal-close i {
+  width: 20px;
+  height: 20px;
+}
+.modal-media {
+  aspect-ratio: 16/9;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid var(--border);
+  gap: var(--space-3);
+  position: relative;
+}
+.modal-media-icon {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(0, 212, 255, 0.1);
+  color: var(--accent);
+}
+.modal-media-icon i {
+  width: 28px;
+  height: 28px;
+}
+.modal-media-text {
+  font-size: var(--text-sm);
+  color: var(--text-faint);
+}
+.modal-body {
+  padding: var(--space-8);
+}
+.modal-badge-row {
+  margin-bottom: var(--space-4);
+}
+.modal-title {
+  font-size: var(--text-lg);
+  font-weight: 700;
+  margin-bottom: var(--space-4);
+  letter-spacing: -0.01em;
+}
+.modal-desc {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+.modal-example {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-4) var(--space-5);
+  margin-top: var(--space-4);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  font-style: italic;
+  line-height: 1.6;
+}
+.modal-example::before {
+  content: '💡 ';
+}
+.modal-carousel-placeholder {
+  margin-top: var(--space-5);
+  aspect-ratio: 16/9;
+  background: var(--bg);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal-carousel-placeholder span {
+  font-size: var(--text-xs);
+  color: var(--text-faint);
+}
+
+/* ============================================
+   RESPONSIVE — TIMELINE MOBILE
+   ============================================ */
+@media (max-width: 768px) {
+  .timeline-container {
+    padding-left: 32px;
+  }
+  .timeline-container::before {
+    left: 7px;
+  }
+  .timeline-time {
+    position: relative;
+    left: auto;
+    top: auto;
+    display: inline-block;
+    margin-bottom: var(--space-2);
+    font-size: var(--text-xs);
+    width: auto;
+    padding: var(--space-1) var(--space-3);
+  }
+  .timeline-dot {
+    top: 8px;
+    width: 14px;
+    height: 14px;
+    left: -25px;
+  }
+  .timeline-content {
+    padding-left: 0;
+  }
+  .timeline-break-content {
+    padding-left: var(--space-4);
+    margin-left: 0;
+  }
+  .timeline-media {
+    max-width: 100%;
+  }
+}
+
+/* ============================================
+   REDUCED MOTION
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transition: none; }
+  .hero-badge-dot { animation: none; }
+  *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+}
+
+/* ============================================
+   FOCUS VISIBLE
+   ============================================ */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+</style>
+</head>
+<body>
+
+<!-- Skip Link -->
+<a href="#main" class="skip-link">Zum Inhalt springen</a>
+
+<!-- NAV -->
+<nav class="nav" role="navigation" aria-label="Hauptnavigation">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo" aria-label="FindandSolve Startseite">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+        <rect x="2" y="2" width="24" height="24" rx="6" stroke="currentColor" stroke-width="1.5"/>
+        <circle cx="12" cy="12" r="4.5" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M15.5 15.5L20 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M20 8L22 10" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M21 12H23" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M18 6V4" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      FindandSolve
+    </a>
+
+    <button class="nav-toggle" aria-label="Navigation öffnen" aria-expanded="false">
+      <i data-lucide="menu"></i>
+    </button>
+
+    <ul class="nav-links" role="list">
+      <li><a href="#alltag">Ein Tag</a></li>
+      <li><a href="#ki-vergleich">KI-Vergleich</a></li>
+      <li><a href="#anbindung">Anbindung</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#philosophie">Philosophie</a></li>
+      <li><a href="#fs-buddy">FS-Buddy</a></li>
+      <li><a href="#roadmap">Roadmap</a></li>
+      <li><a href="#alltag" class="nav-cta">Demo ansehen</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-bg" aria-hidden="true"></div>
+  <div class="hero-gradient" aria-hidden="true"></div>
+  <div class="hero-content">
+    <div class="hero-badge reveal">
+      <span class="hero-badge-dot" aria-hidden="true"></span>
+      Maklerbüro 3.0 — Manifesto Edition
+    </div>
+    <h1 class="reveal">Findand<span class="brand-gradient">Solve</span></h1>
+    <p class="hero-tagline reveal">Erlebe einen ganzen Arbeitstag. Automatisiert.</p>
+    <p class="hero-desc reveal">Gebaut in Rockenhausen. Powered by AI. Vom Makler, für den Makler.</p>
+    <div class="hero-stats reveal">
+      <div class="hero-stat">
+        <span class="hero-stat-number">16</span>
+        <span class="hero-stat-label">Features</span>
+      </div>
+      <div class="hero-stat-divider" aria-hidden="true"></div>
+      <div class="hero-stat">
+        <span class="hero-stat-number">9</span>
+        <span class="hero-stat-label">APIs</span>
+      </div>
+      <div class="hero-stat-divider" aria-hidden="true"></div>
+      <div class="hero-stat">
+        <span class="hero-stat-number">4</span>
+        <span class="hero-stat-label">Devices</span>
+      </div>
+    </div>
+    <span class="hero-price reveal">Bald als SaaS verfügbar</span>
+  </div>
+</section>
+
+<!-- MAIN -->
+<main id="main">
+<!-- EIN TAG MIT FINDANDSOLVE — TIMELINE -->
+<section class="timeline-section" id="alltag">
+  <p class="section-label reveal">Dein neuer Alltag</p>
+  <h2 class="section-title reveal">Ein Tag mit <span class="brand-gradient">FindandSolve</span>.</h2>
+  <p class="section-subtitle reveal">Vom ersten Kaffee bis zum Feierabend. So sieht der Makleralltag aus, wenn die Maschine die Arbeit macht.</p>
+
+  <div class="timeline-container">
+
+    <!-- 07:45 -->
+    <div class="timeline-entry reveal" data-has-media="true">
+      <span class="timeline-time">07:45</span>
+      <div class="timeline-dot" aria-hidden="true"></div>
+      <div class="timeline-content">
+        <span class="timeline-tag">Mastertask</span>
+        <h3 class="timeline-headline">Kaffee &amp; Überblick</h3>
+        <p class="timeline-body">Du öffnest FindandSolve. Keine 47 offenen Tabs. Dein Dashboard zeigt nur das, was heute zählt. Grüne Ampeln, alles im Griff. Eine rote: „Antrag KFZ Müller — Frist morgen." Du weißt sofort, was zu tun ist.</p>
+        <div class="timeline-media clickable" id="triggerDataAggregation" role="button" tabindex="0" aria-label="Daten-Aggregation Demo starten" style="position:relative;overflow:hidden;padding:0;">
+          <img src="assets/da-preview.png" alt="Datenabgleich Vorschau" style="width:100%;height:100%;object-fit:cover;object-position:center;display:block;opacity:0.7;transition:opacity 0.3s ease;">
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:rgba(8,8,15,0.35);transition:background 0.3s ease;" class="da-preview-overlay">
+            <div class="timeline-media-icon"><i data-lucide="play"></i></div>
+            <span class="timeline-media-text" style="color:rgba(255,255,255,0.85);">Klick: Automatischer Datenabgleich starten</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 08:15 -->
+    <div class="timeline-entry reveal">
+      <span class="timeline-time">08:15</span>
+      <div class="timeline-dot" aria-hidden="true"></div>
+      <div class="timeline-content">
+        <span class="timeline-tag">BiPRO</span>
+        <h3 class="timeline-headline">BiPRO räumt auf, du nicht</h3>
+        <p class="timeline-body">Über Nacht hat BiPRO 23 Dokumente reingeschoben. Kündigungsbestätigungen? Automatisch erledigt. Policen? Dem Kunden zugeordnet. Du machst: nichts. Außer kurz lächeln.</p>
+      </div>
+    </div>
+
+    <!-- 08:30 -->
+    <div class="timeline-entry reveal">
+      <span class="timeline-time">08:30</span>
+      <div class="timeline-dot" aria-hidden="true"></div>
+      <div class="timeline-content">
+        <span class="timeline-tag">KFZ-Prüfung</span>
+        <h3 class="timeline-headline">Die Beitragsrechnung, die sich selbst prüft</h3>
+        <p class="timeline-body">Neue KFZ-Beitragsrechnungen sind da. FindandSolve prüft automatisch: TK ja/nein, Werkstattbindung, SF-Klassen. Deine KI-Regel greift: „Neuwagen → VHV Exklusiv." Du bestätigst mit einem Tap.</p>
+      </div>
+    </div>
+
+    <!-- 09:00 -->
+    <div class="timeline-entry reveal">
+      <span class="timeline-time">09:00</span>
+      <div class="timeline-dot" aria-hidden="true"></div>
+      <div class="timeline-content">
+        <span class="timeline-tag">Dokumenten-Sync</span>
+        <h3 class="timeline-headline">Post von Pool A</h3>
+        <p class="timeline-body">Der Streubestand bei Pool A hat neue Dokumente. Automatisch synchronisiert, dem Kunden zugeordnet. Die KI erkennt: PHV Single für 80 € — deine Regel sagt „über 60 € prüfen." Angebot wird vorbereitet. Du prüfst, klickst, raus.</p>
+      </div>
+    </div>
+
+    <!-- 09:30 -->
+    <div class="timeline-entry reveal" data-has-media="true">
+      <span class="timeline-time">09:30</span>
+      <div class="timeline-dot" aria-hidden="true"></div>
+      <div class="timeline-content">
+        <span class="timeline-tag">Second Screen</span>
+        <h3 class="timeline-headline">Schadenfall Frau Weber</h3>
+        <p class="timeline-body">Links: Vertragsdaten Frau Weber. Rechts: Kostenvoranschlag, Mailverkehr, WhatsApp-Chat, Live-Status. Beide Screens reden miteinander. Du brauchst ein Gewerbe-Widget? Mail an uns — morgen ist es live.</p>
+        <div class="timeline-media">
+          <div class="timeline-media-icon"><i data-lucide="play"></i></div>
+          <span class="timeline-media-text">Demo kommt bald</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 10:15 -->
+    <div class="timeline-entry reveal" data-has-media="true">
+      <span class="timeline-time">10:15</span>
+      <div class="timeline-dot" aria-hidden="true"></div>
+      <div class="timeline-content">
+        <span class="timeline-tag">PDF-Splitter</span>
+        <h3 class="timeline-headline">Ein Dokument, drei Dateien</h3>
+        <p class="timeline-body">Herr Schmidt schickt Fahrzeugschein, Brief und Führerschein in einer PDF. Du lädst hoch, wählst die Splits — drei saubere Dokumente, dem Kunden zugeordnet.</p>
+        <div class="timeline-media clickable" id="triggerPDFSplitter" role="button" tabindex="0" aria-label="PDF-Splitter Demo starten" style="position:relative;overflow:hidden;padding:0;">
+          <img src="assets/ps-preview.png" alt="PDF-Splitter Vorschau" style="width:100%;height:100%;object-fit:cover;object-position:top center;display:block;opacity:0.7;transition:opacity 0.3s ease;">
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:rgba(8,8,15,0.35);transition:background 0.3s ease;" class="da-preview-overlay">
+            <div class="timeline-media-icon"><i data-lucide="scissors"></i></div>
+            <span class="timeline-media-text" style="color:rgba(255,255,255,0.85);">Klick: PDF-Splitter live testen</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 10:30 -->
+    <div class="timeline-entry reveal">
+      <span class="timeline-time">10:30</span>
+      <div class="timeline-dot" aria-hidden="true"></div>
+      <div class="timeline-content">
+        <span class="timeline-tag">Dokumentenzuordnung</span>
+        <h3 class="timeline-headline">Nachtrag oder Versicherungsschein?</h3>
+        <p class="timeline-body">Ein Dokument kommt rein. „Versicherungsschein 454545, Nachtrag Nr. 2..." Andere Software: Versicherungsschein. FindandSolve: Nachtrag. Korrekt. 95% bessere Trefferquote durch KI statt Keywords.</p>
+      </div>
+    </div>
+
+    <!-- 11:00 -->
+    <div class="timeline-entry reveal" data-has-media="true">
+      <span class="timeline-time">11:00</span>
+      <div class="timeline-dot" aria-hidden="true"></div>
+      <div class="timeline-content">
+        <span class="timeline-tag">Omnichannel</span>
+        <h3 class="timeline-headline">WhatsApp, Mail, alles an einem Ort</h3>
+        <p class="timeline-body">Kundin fragt per WhatsApp nach dem Schadenstand. Du antwortest direkt aus FindandSolve. Kein Tab-Wechsel, kein Drittanbieter. Danach schickst du per Mail ein Angebot — gleicher Ort, gleicher Flow.</p>
+        <div class="timeline-media">
+          <div class="timeline-media-icon"><i data-lucide="play"></i></div>
+          <span class="timeline-media-text">Demo kommt bald</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 11:30 -->
+    <div class="timeline-entry reveal">
+      <span class="timeline-time">11:30</span>
+      <div class="timeline-dot" aria-hidden="true"></div>
+      <div class="timeline-content">
+        <span class="timeline-tag">Digitale Unterschriften</span>
+        <h3 class="timeline-headline">Unterschrift ohne Umwege</h3>
+        <p class="timeline-body">Antrag fertig, Kunde wartet. Digitale Unterschrift direkt aus dem Dashboard. Kein PW-Tab, kein Tool-Hopping. Im Flow bleiben.</p>
+      </div>
+    </div>
+
+    <!-- 12:00 — BREAK -->
+    <div class="timeline-entry is-break reveal">
+      <span class="timeline-time">12:00</span>
+      <div class="timeline-dot" aria-hidden="true"></div>
+      <div class="timeline-break-content">
+        <h3 class="timeline-headline">Mittagspause. Ernsthaft.</h3>
+        <p class="timeline-body">Du gehst tatsächlich Mittag essen. Keine 5 offenen Tabs, die auf dich warten. FindandSolve arbeitet weiter: Dokumente zuordnen, Tasks erstellen, Ampeln aktualisieren.</p>
+        <p class="timeline-body" style="margin-top:12px;color:var(--accent);font-style:italic;">Beim Essen fällt dir ein: „Moment — bei Professional Works zahle ich gerade 79 € im Monat für Datenabgleich? Im Premium-Tarif sogar 179 €? Dafür könnte ich drei mal richtig gut Mittag essen. Das macht doch FindandSolve längst für mich … Herr Ober, ich nehme jetzt doch den Nachtisch.“</p>
+      </div>
+    </div>
+
+    <!-- 13:30 -->
+    <div class="timeline-entry reveal">
+      <span class="timeline-time">13:30</span>
+      <div class="timeline-dot" aria-hidden="true"></div>
+      <div class="timeline-content">
+        <span class="timeline-tag">KI-Kampagnen</span>
+        <h3 class="timeline-headline">Kampagne für den Herbst</h3>
+        <p class="timeline-body">Elementarversicherung Wohngebäude — du willst alle betroffenen Kunden anschreiben. FindandSolve wertet den Bestand aus, identifiziert die Zielgruppe, bereitet die Kampagne vor. Du prüfst und startest.</p>
+      </div>
+    </div>
+
+    <!-- 14:00 -->
+    <div class="timeline-entry reveal">
+      <span class="timeline-time">14:00</span>
+      <div class="timeline-dot" aria-hidden="true"></div>
+      <div class="timeline-content">
+        <span class="timeline-tag">Kundengeschenke</span>
+        <h3 class="timeline-headline">Herr Müller wird 30</h3>
+        <p class="timeline-body">Geburtstag Herr Müller. Ein Klick aus dem Dashboard — Geschenk raus. Kein Suchen, kein Bestellen, kein Vergessen.</p>
+      </div>
+    </div>
+
+    <!-- 14:30 -->
+    <div class="timeline-entry reveal" data-has-media="true">
+      <span class="timeline-time">14:30</span>
+      <div class="timeline-dot" aria-hidden="true"></div>
+      <div class="timeline-content">
+        <span class="timeline-tag">Kundenportal + DIN 77230</span>
+        <h3 class="timeline-headline">Der Kunde hilft sich selbst</h3>
+        <p class="timeline-body">Frau Bauer will ihre Vertragsübersicht für die Steuer. Sie loggt sich ein, druckt aus, sieht dabei ihre DIN 77230 Analyse: PHV ✅, BU ❌, Elementar ❌. Nächste Woche ruft sie an: „Ich glaube, ich brauche eine BU." Cross-Selling, das sich von allein verkauft.</p>
+        <div class="timeline-media clickable" id="triggerKundenportal" role="button" tabindex="0" aria-label="Kundenportal live testen" style="position:relative;overflow:hidden;padding:0;">
+          <img src="assets/kp-preview.png" alt="Kundenportal Vorschau" style="width:100%;height:100%;object-fit:cover;object-position:top center;display:block;opacity:0.7;transition:opacity 0.3s ease;">
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:rgba(8,8,15,0.35);transition:background 0.3s ease;" class="da-preview-overlay">
+            <div class="timeline-media-icon"><i data-lucide="monitor-smartphone"></i></div>
+            <span class="timeline-media-text" style="color:rgba(255,255,255,0.85);">Klick: Kundenportal live testen</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 15:00 -->
+    <div class="timeline-entry reveal" data-has-media="true">
+      <span class="timeline-time">15:00</span>
+      <div class="timeline-dot" aria-hidden="true"></div>
+      <div class="timeline-content">
+        <span class="timeline-tag">KI-Regeln 3-Layer</span>
+        <h3 class="timeline-headline">Dein KI-Regelwerk. Dein Standard.</h3>
+        <p class="timeline-body">Ein neuer Mandant, PKV-Beratung. Dein 3-Layer-Regelsystem greift: Global → Sparte → Kunde. Die KI kennt deine Empfehlungen. Kein generischer Vergleich — dein Angebot, nach deinem Standard. Human in the Loop: Du bestätigst.</p>
+        <div class="timeline-media clickable" id="triggerKIRegeln" role="button" tabindex="0" aria-label="KI-Regeln Demo öffnen" style="position:relative;overflow:hidden;padding:0;">
+          <img src="assets/kr-preview.png" alt="KI-Regeln 3-Layer Vorschau" style="width:100%;height:100%;object-fit:cover;object-position:top center;display:block;opacity:0.7;transition:opacity 0.3s ease;">
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:rgba(8,8,15,0.35);transition:background 0.3s ease;" class="da-preview-overlay">
+            <div class="timeline-media-icon"><i data-lucide="sliders-horizontal"></i></div>
+            <span class="timeline-media-text" style="color:rgba(255,255,255,0.85);">Klick: KI-Regeln live testen</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 15:45 -->
+    <div class="timeline-entry reveal" data-has-media="true">
+      <span class="timeline-time">15:45</span>
+      <div class="timeline-dot" aria-hidden="true"></div>
+      <div class="timeline-content">
+        <span class="timeline-tag">Multi-Firmen</span>
+        <h3 class="timeline-headline">Zwei Firmen, ein Blick</h3>
+        <p class="timeline-body">GmbH A und GmbH B — beide im selben Dashboard. Kein Browser-Wechsel, keine überlappenden Daten. Alles auf einen Blick.</p>
+        <div class="timeline-media" style="padding:0;overflow:hidden;">
+          <img src="assets/multi-firmen.png" alt="Firma A und Firma B in einem FindandSolve Dashboard" style="width:100%;height:100%;object-fit:cover;display:block;">
+        </div>
+      </div>
+    </div>
+
+    <!-- 16:30 -->
+    <div class="timeline-entry reveal" data-has-media="true">
+      <span class="timeline-time">16:30</span>
+      <div class="timeline-dot" aria-hidden="true"></div>
+      <div class="timeline-content">
+        <span class="timeline-tag">KFZ-Bestand-Optimierung</span>
+        <h3 class="timeline-headline">85 KFZ-Verträge. Eine Excel. Ein Klick.</h3>
+        <p class="timeline-body">Die Itzehoer hat dir die Liste geschickt. 85 Kunden, KFZ-Bestand. Du wirfst die Excel in den Optimierer — FindandSolve vergleicht automatisch mit dem Markt. 34 Verträge mit Einsparpotenzial. 4.847 € weniger für deine Kunden, 34 Angebote fertig zum Versand. Der perfekte Tagesabschluss.</p>
+        <div class="timeline-media clickable" id="triggerKFZ" role="button" tabindex="0" aria-label="KFZ-Optimierer Demo starten" style="position:relative;overflow:hidden;padding:0;">
+          <img src="assets/kfz-preview.png" alt="KFZ-Bestand-Optimierer Vorschau" style="width:100%;height:100%;object-fit:cover;object-position:top center;display:block;opacity:0.7;transition:opacity 0.3s ease;">
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:rgba(8,8,15,0.35);transition:background 0.3s ease;" class="da-preview-overlay">
+            <div class="timeline-media-icon"><i data-lucide="car"></i></div>
+            <span class="timeline-media-text" style="color:rgba(255,255,255,0.85);">Klick: KFZ-Optimierer live testen</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 17:00 — BREAK / FEIERABEND -->
+    <div class="timeline-entry is-break reveal" data-has-media="true">
+      <span class="timeline-time">17:00</span>
+      <div class="timeline-dot" aria-hidden="true"></div>
+      <div class="timeline-break-content">
+        <h3 class="timeline-headline">Feierabend. Wirklich.</h3>
+        <p class="timeline-body">FindandSolve hängt per API an PW. Keine 5–10 Tabs nach einer Beratung. Ein Workflow, ein System. Du machst den Laptop zu — und es fühlt sich richtig an.</p>
+        <div class="timeline-media" style="margin-left: 0;">
+          <div class="timeline-media-icon"><i data-lucide="play"></i></div>
+          <span class="timeline-media-text">Demo kommt bald</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Timeline CTA -->
+  <div class="timeline-cta reveal">
+    <h3>So könnte dein Alltag aussehen.</h3>
+    <div class="timeline-cta-buttons">
+      <a href="#features" class="btn-primary">
+        <i data-lucide="play"></i>
+        Demo ansehen
+      </a>
+      <a href="/cdn-cgi/l/email-protection#1b70777a7c5b7d6d7636767a70777e69357f7e" class="btn-secondary">
+        <i data-lucide="mail"></i>
+        Kontakt aufnehmen
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- KI VERGLEICH -->
+<section class="ki-compare" id="ki-vergleich">
+  <p class="section-label reveal">Der Beweis</p>
+  <h2 class="section-title reveal">Warum KI nicht gleich KI ist.</h2>
+  <p class="section-subtitle reveal">Eine Frage. Vier KIs. Lies die Antworten selbst.</p>
+
+  <div class="ki-question reveal">
+    <div class="ki-question-icon"><i data-lucide="message-circle-question"></i></div>
+    <p class="ki-question-text">Macht eine Sterbegeldversicherung der DELA<br>für eine 28-jährige Kundin Sinn?</p>
+    <p class="ki-question-context">Das DELA-Angebot wurde als PDF beigefügt. Monatsbeitrag 12,41 €, Beitragszahlung bis 65, Versicherungssumme 7.500 €.</p>
+  </div>
+
+  <div class="ki-grid">
+
+    <!-- PWX -->
+    <div class="ki-card reveal">
+      <div class="ki-card-header">
+        <span class="ki-card-name">PWX</span>
+        <span class="ki-card-price free">Kostenlos</span>
+      </div>
+      <div class="ki-stars">
+        <div class="ki-stars-icons">
+          <svg class="ki-star half" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="ki-star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="ki-star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="ki-star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="ki-star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <span class="ki-stars-label">0,5 / 5</span>
+      </div>
+      <div class="ki-card-body">
+        <p>Ich kann dir dazu keine fachliche oder wertende Meinung geben, ob sich diese spezielle Absicherung für Frau Schmidt hinsichtlich Preis-Leistung lohnt. Als Experte von Professional Works darf ich keine individuellen Produktempfehlungen abgeben.</p>
+        <p class="ki-verdict">Ergebnis: Komplette Verweigerung. Null Mehrwert für den Makler.</p>
+      </div>
+    </div>
+
+    <!-- Google Gemini -->
+    <div class="ki-card reveal">
+      <div class="ki-card-header">
+        <span class="ki-card-name">Google Gemini</span>
+        <span class="ki-card-price free">Kostenlos</span>
+      </div>
+      <div class="ki-stars">
+        <div class="ki-stars-icons">
+          <svg class="ki-star filled" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="ki-star filled" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="ki-star half" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="ki-star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="ki-star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <span class="ki-stars-label">2,5 / 5</span>
+      </div>
+      <div class="ki-card-body">
+        <p>Grundsätzlich richtige Richtung: Laufzeit, Einzahlungen vs. Auszahlung, Alternativen. <strong>Aber:</strong> Behauptet, die Einzahlungen übersteigen die Versicherungssumme &mdash; was bei diesem Angebot schlicht falsch ist. Nennt Zusatzleistungen, bleibt aber oberflächlich.</p>
+        <p class="ki-verdict">Ergebnis: Brauchbarer Einstieg, aber faktisch ungenau.</p>
+      </div>
+    </div>
+
+    <!-- Claude Sonnet -->
+    <div class="ki-card reveal">
+      <div class="ki-card-header">
+        <span class="ki-card-name">Claude Sonnet 4.6</span>
+        <span class="ki-card-price free">Kostenlos</span>
+      </div>
+      <div class="ki-stars">
+        <div class="ki-stars-icons">
+          <svg class="ki-star filled" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="ki-star filled" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="ki-star filled" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="ki-star filled" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="ki-star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <span class="ki-stars-label">4 / 5</span>
+      </div>
+      <div class="ki-card-body">
+        <p><strong>Solide Analyse.</strong> Korrekte Rechnung: 5.510 € rein, 7.500 € raus = +1.990 €. Pro &amp; Contra strukturiert. Erwähnt ETF-Sparplan als Alternative, Opportunitätskosten, Schonvermögen. <strong>Fehlt:</strong> DELA-spezifische Details wie Testsieger-Status und Mitgliederdividende.</p>
+        <p class="ki-verdict">Ergebnis: Starke Analyse &mdash; fast Beratungsniveau.</p>
+      </div>
+    </div>
+
+    <!-- Perplexity Opus (BEST) -->
+    <div class="ki-card reveal">
+      <div class="ki-card-header">
+        <span class="ki-card-name">Perplexity + Opus 4.6</span>
+        <span class="ki-card-price paid">Nicht kostenlos</span>
+      </div>
+      <div class="ki-stars">
+        <div class="ki-stars-icons">
+          <svg class="ki-star filled" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="ki-star filled" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="ki-star filled" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="ki-star filled" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg class="ki-star filled" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <span class="ki-stars-label">5 / 5</span>
+      </div>
+      <div class="ki-card-body">
+        <p><strong>Vollständige Makler-Analyse mit Quellen.</strong> Exakte Zahlen (5.510 € rein, 7.500 € raus), Sparplan-Gegenrechnung bei 2% und 3%, Schonvermögen-Thematik, Steuervorteile, DELA-Testsieger-Status (MORGEN &amp; MORGEN), Mitgliederdividende. Klare Wenn-dann-Empfehlung: Basics zuerst (BU, Haftpflicht), dann DELA als Ergänzung.</p>
+        <div class="ki-best-highlight">
+          <strong>Entscheidend:</strong> Perplexity + Opus nutzt Echtzeit-Websuche (RAG). Das Modell bekommt nicht nur das PDF, sondern recherchiert automatisch aktuelle DELA-Testberichte, Bestattungskosten und Verbraucherzentralen-Empfehlungen dazu &mdash; mit Quellenlinks zum Nachprüfen.
+        </div>
+        <p class="ki-verdict">Ergebnis: Das ist die Antwort, die du dem Kunden direkt vorlesen kannst.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="ki-takeaway reveal">
+    <div class="ki-takeaway-icon"><i data-lucide="lightbulb"></i></div>
+    <div class="ki-takeaway-text">
+      <strong>Was heißt das für FindandSolve?</strong> Wir integrieren nicht irgendeine KI. Wir integrieren die beste &mdash; mit Zugriff auf euren Vertragsbestand, Echtzeit-Daten und Quellenbelegen. Damit du Antworten bekommst, die du deinem Kunden direkt weitergeben kannst.
+    </div>
+  </div>
+
+</section>
+
+<!-- MVP ANBINDUNG -->
+<section class="mvp-section" id="anbindung">
+  <p class="section-label reveal">Integration</p>
+  <h2 class="section-title reveal">So dockt FindandSolve an euer System an.</h2>
+  <p class="section-subtitle reveal">Egal welches Maklerverwaltungsprogramm — wir finden den schnellsten Weg rein.</p>
+
+  <div class="mvp-scenarios">
+
+    <!-- Szenario 1: PW Ready -->
+    <div class="mvp-card mvp-featured reveal">
+      <div class="mvp-card-top">
+        <span class="mvp-badge instant">Sofort startklar</span>
+        <span class="mvp-time">~ 5 Minuten</span>
+      </div>
+      <div class="mvp-card-icon"><i data-lucide="zap"></i></div>
+      <h3>Professional Works</h3>
+      <p class="mvp-card-subtitle">Euer MVP hat bereits einen fertigen Adapter.</p>
+      <ul class="mvp-steps">
+        <li class="mvp-step">
+          <span class="mvp-step-num">1</span>
+          <span class="mvp-step-text"><strong>API-Schlüssel erstellen</strong> — in PW unter Einstellungen → API einen neuen Schlüssel generieren.</span>
+        </li>
+        <li class="mvp-step">
+          <span class="mvp-step-num">2</span>
+          <span class="mvp-step-text"><strong>Bei FindandSolve eingeben</strong> — Schlüssel einmal in euer FindandSolve-Konto übertragen.</span>
+        </li>
+        <li class="mvp-step">
+          <span class="mvp-step-num">3</span>
+          <span class="mvp-step-text"><strong>Fertig.</strong> Alle 16 Features greifen ab sofort auf euren PW-Bestand zu.</span>
+        </li>
+      </ul>
+      <div class="mvp-result">
+        <i data-lucide="check-circle-2"></i>
+        Sofort einsatzbereit
+      </div>
+    </div>
+
+    <!-- Szenario 2: API vorhanden -->
+    <div class="mvp-card reveal">
+      <div class="mvp-card-top">
+        <span class="mvp-badge medium">API vorhanden</span>
+        <span class="mvp-time">~ 1–2 Tage</span>
+      </div>
+      <div class="mvp-card-icon"><i data-lucide="plug"></i></div>
+      <h3>Euer MVP hat eine API</h3>
+      <p class="mvp-card-subtitle">Schnittstelle da? Dann geht es schnell.</p>
+      <ul class="mvp-steps">
+        <li class="mvp-step">
+          <span class="mvp-step-num">1</span>
+          <span class="mvp-step-text"><strong>API-Schlüssel abrufen</strong> — wie bei PW: in eurem MVP den Zugangscode generieren.</span>
+        </li>
+        <li class="mvp-step">
+          <span class="mvp-step-num">2</span>
+          <span class="mvp-step-text"><strong>Schnittstellenbeschreibung schicken</strong> — schickt uns die technische Dokumentation eurer API. Wir lesen sie einmalig aus.</span>
+        </li>
+        <li class="mvp-step">
+          <span class="mvp-step-num">3</span>
+          <span class="mvp-step-text"><strong>Adapter wird gebaut</strong> — wir passen die Schnittstelle einmalig an. Danach ist euer MVP für alle Makler in 5 Minuten anbindbar.</span>
+        </li>
+      </ul>
+      <div class="mvp-result">
+        <i data-lucide="check-circle-2"></i>
+        Danach für alle in 5 Minuten startklar
+      </div>
+    </div>
+
+    <!-- Szenario 3: Keine API -->
+    <div class="mvp-card reveal">
+      <div class="mvp-card-top">
+        <span class="mvp-badge custom">Kein API-Zugang</span>
+        <span class="mvp-time">~ 2–4 Tage</span>
+      </div>
+      <div class="mvp-card-icon"><i data-lucide="hard-drive-download"></i></div>
+      <h3>Euer MVP hat keine API</h3>
+      <p class="mvp-card-subtitle">Keine Schnittstelle, zu teuer oder noch in Planung? Kein Problem.</p>
+      <ul class="mvp-steps">
+        <li class="mvp-step">
+          <span class="mvp-step-num">1</span>
+          <span class="mvp-step-text"><strong>Daten exportieren</strong> — einmalig eure Kunden- und Vertragsliste herunterladen. Optional: Dokumente ebenfalls lokal sichern (beschleunigt den Prozess).</span>
+        </li>
+        <li class="mvp-step">
+          <span class="mvp-step-num">2</span>
+          <span class="mvp-step-text"><strong>Bei uns importieren</strong> — wir verknüpfen alles, ordnen zu und importieren den Bestand in FindandSolve.</span>
+        </li>
+        <li class="mvp-step">
+          <span class="mvp-step-num">3</span>
+          <span class="mvp-step-text"><strong>System lernt euer MVP</strong> — wo speichert es Verträge? Wo sind die Links zu Angebotsrechnern, das BiPRO-Postfach? Einmaliger Aufwand: Unsere Software lernt, wo alles hinmuss.</span>
+        </li>
+      </ul>
+      <div class="mvp-result">
+        <i data-lucide="check-circle-2"></i>
+        Danach für alle in 5 Minuten startklar
+      </div>
+      <p class="mvp-card-note">Einmaliger Aufwand pro MVP. Sobald ein Adapter steht, profitieren alle Makler mit dem gleichen System.</p>
+    </div>
+
+  </div>
+
+  <!-- Privacy Banner -->
+  <div class="mvp-privacy reveal">
+    <div class="mvp-privacy-icon"><i data-lucide="shield-check"></i></div>
+    <div class="mvp-privacy-content">
+      <h3>Wir sehen keine Kundendaten. Punkt.</h3>
+      <p>Alle Daten werden <strong>direkt in eurem Browser verschlüsselt</strong> — bevor sie unser System erreichen. Bei uns auf dem Server liegt nur eine wilde Kombination aus Zahlen und Buchstaben. Erst bei euch lokal wird alles wieder entschlüsselt und lesbar.</p>
+      <div class="mvp-privacy-visual">
+        <span class="mvp-encrypt-box plain">Max Mustermann</span>
+        <span class="mvp-encrypt-arrow">→</span>
+        <span class="mvp-encrypt-box encrypted">a7f2e9c1...x4b8</span>
+        <span class="mvp-encrypt-arrow">→</span>
+        <span class="mvp-encrypt-box plain">Max Mustermann</span>
+      </div>
+      <p style="margin-top: 12px;"><strong>Ende-zu-Ende-Verschlüsselung.</strong> Kein Makler muss sich Sorgen machen, dass sensible Kundendaten bei Dritten einsehbar sind. Nicht mal bei uns.</p>
+    </div>
+  </div>
+
+</section>
+
+<!-- DER SMARTE WECHSEL -->
+<section class="wechsel-section" id="wechsel">
+  <div class="wechsel-hero">
+    <div class="wechsel-badge reveal"><i data-lucide="sparkles"></i> Unsere Empfehlung</div>
+    <h2 class="section-title reveal">Der smarte Wechsel.</h2>
+    <p class="section-subtitle reveal">Du zahlst für dein MVP. Du zahlst für Zusatzbausteine. Du wartest auf Features, die nie kommen.<br>Es gibt einen besseren Weg — und er kostet dich nichts.</p>
+  </div>
+
+  <!-- Flow: MVP → PW kostenlos → FindandSolve -->
+  <div class="wechsel-flow reveal">
+    <div class="wechsel-flow-card">
+      <div class="wechsel-flow-icon"><i data-lucide="building-2"></i></div>
+      <div class="wf-label">Aktuell</div>
+      <div class="wf-value">Dein MVP</div>
+      <div class="wf-sub">Kosten + Lock-In</div>
+    </div>
+    <div class="wechsel-flow-arrow"><i data-lucide="arrow-right"></i></div>
+    <div class="wechsel-flow-card">
+      <div class="wechsel-flow-icon"><i data-lucide="arrow-right-left"></i></div>
+      <div class="wf-label">Wechsel zu</div>
+      <div class="wf-value">Professional Works</div>
+      <div class="wf-sub">0,00 € Business-Tarif</div>
+    </div>
+    <div class="wechsel-flow-arrow"><i data-lucide="arrow-right"></i></div>
+    <div class="wechsel-flow-card highlight">
+      <div class="wechsel-flow-icon"><i data-lucide="rocket"></i></div>
+      <div class="wf-label">Obendrauf</div>
+      <div class="wf-value" style="background:linear-gradient(135deg,#00d4ff 0%,#38bdf8 40%,#a78bfa 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">FindandSolve</div>
+      <div class="wf-sub">Alles. In einem.</div>
+    </div>
+  </div>
+
+  <!-- 4 Argument Cards -->
+  <div class="wechsel-grid">
+
+    <!-- Card 1: Courtage -->
+    <div class="wechsel-card reveal">
+      <div class="wechsel-card-head">
+        <div class="wechsel-card-icon green"><i data-lucide="wallet"></i></div>
+        <div class="wechsel-card-title">Courtage? 1:1 übernommen.</div>
+      </div>
+      <p>Deine bestehenden Courtagevereinbarungen werden per Courtageumzug vollständig übertragen. Kein Cent geht verloren.</p>
+      <ul>
+        <li>Kostenloser Courtageumzug über PW</li>
+        <li>Bestehende Konditionen bleiben erhalten</li>
+        <li>Optional sogar bessere Konditionen möglich</li>
+      </ul>
+    </div>
+
+    <!-- Card 2: Freiheit -->
+    <div class="wechsel-card reveal">
+      <div class="wechsel-card-head">
+        <div class="wechsel-card-icon"><i data-lucide="unlock"></i></div>
+        <div class="wechsel-card-title">Freiheit. Kein Lock-In.</div>
+      </div>
+      <p>Du bist nicht an ein Maklerportal gefesselt. Direktverbindungen werden durch unsere Software und/oder über PW eingepflegt und verwaltet.</p>
+      <ul>
+        <li>0 % Migrations-Risiko</li>
+        <li>Direktanbindungen unabhängig vom Portal</li>
+        <li>Kein Vendor-Lock-In — deine Daten gehören dir</li>
+      </ul>
+    </div>
+
+    <!-- Card 3: Unabhängigkeit -->
+    <div class="wechsel-card reveal">
+      <div class="wechsel-card-head">
+        <div class="wechsel-card-icon amber"><i data-lucide="shield-check"></i></div>
+        <div class="wechsel-card-title">Keine Abhängigkeit mehr.</div>
+      </div>
+      <p>Wann kommen neue KI-Features bei eurem MVP? Was kosten sie? Und funktionieren sie überhaupt? Bei uns ist KI kein Buzzword — sie ist das Fundament.</p>
+      <ul>
+        <li>Keine Wartezeit auf KI-Updates eures MVPs</li>
+        <li>Keine Zusatzkosten für Einzelbausteine</li>
+        <li>Alles inklusive — von Tag 1</li>
+      </ul>
+    </div>
+
+    <!-- Card 4: Sofort einsetzbar -->
+    <div class="wechsel-card reveal">
+      <div class="wechsel-card-head">
+        <div class="wechsel-card-icon purple"><i data-lucide="zap"></i></div>
+        <div class="wechsel-card-title">Sofort einsetzbar.</div>
+      </div>
+      <p>FindandSolve ist 100 % auf Professional Works aufgebaut. Kein monatelanges Onboarding, keine Kompatibilitätsprobleme. PW-Account da? Läuft.</p>
+      <ul>
+        <li>Nahtlose Integration mit PW</li>
+        <li>Daten-Sync zu allen Direktverbindungen</li>
+        <li>Auch Verbindungen, die noch nicht bei PW sind</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- Price Banner -->
+  <div class="wechsel-price-banner reveal">
+    <div class="wechsel-price-left">
+      <div class="wpl-label">FindandSolve komplett</div>
+      <div class="wpl-price">249 € <span>/ Monat</span></div>
+    </div>
+    <div class="wechsel-price-right">
+      <div class="wpr-item"><i data-lucide="check"></i> Professional Works: 0 €</div>
+      <div class="wpr-item"><i data-lucide="check"></i> Alle KI-Features inklusive</div>
+      <div class="wpr-item"><i data-lucide="check"></i> Alle Updates inklusive</div>
+      <div class="wpr-item"><i data-lucide="check"></i> Courtageumzug kostenlos</div>
+    </div>
+  </div>
+  <p class="wechsel-footnote reveal">* Für die WhatsApp Business API fallen lediglich die Kosten von Meta an — ca. 2–6 €/Monat für den durchschnittlichen Makler bei reiner Kundenkommunikation. Massen-Kampagnen werden nach Meta-Tarif berechnet.</p>
+
+</section>
+
+<!-- SCHLUSS MIT INSELLÖSUNGEN -->
+<section class="insel-section" id="inselloesungen">
+  <p class="section-label reveal">Ehrliche Rechnung</p>
+  <h2 class="section-title reveal">Schluss mit Insellösungen.</h2>
+  <p class="section-subtitle reveal">Auf den ersten Blick wirken wir teuer. Auf den zweiten spart ihr Hunderte Euro — weil alles schon drin ist.</p>
+
+  <div class="insel-grid">
+
+    <!-- 1: WhatsApp -->
+    <div class="insel-card reveal">
+      <div class="insel-card-header">
+        <div class="insel-card-icon"><i data-lucide="message-circle"></i></div>
+        <div>
+          <div class="insel-card-title">WhatsApp-Integration</div>
+          <div class="insel-card-desc">Kommunikation, Dokumentenzuordnung, Chat pro Vorgang. Bewusst keine Chatbots — persönlicher Kontakt zählt.</div>
+        </div>
+      </div>
+      <div class="insel-prices">
+        <div class="insel-price-col market">
+          <div class="insel-price-label">Insellösung</div>
+          <div class="insel-price-value">59–199 €</div>
+          <div class="insel-price-note">je nach Umfang/Monat</div>
+        </div>
+        <div class="insel-price-col ours">
+          <div class="insel-price-label">FindandSolve</div>
+          <div class="insel-price-value">0 €</div>
+          <div class="insel-price-note">inklusive</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2: Jahresgespräche -->
+    <div class="insel-card reveal">
+      <div class="insel-card-header">
+        <div class="insel-card-icon"><i data-lucide="clipboard-list"></i></div>
+        <div>
+          <div class="insel-card-title">Jahresgespräche</div>
+          <div class="insel-card-desc">Schicke Formulare per E-Mail oder WhatsApp senden. Mit KI-Unterstützung — keine generischen Fragebögen.</div>
+        </div>
+      </div>
+      <div class="insel-prices">
+        <div class="insel-price-col market">
+          <div class="insel-price-label">Insellösung</div>
+          <div class="insel-price-value">39–59 €</div>
+          <div class="insel-price-note">pro Monat</div>
+        </div>
+        <div class="insel-price-col ours">
+          <div class="insel-price-label">FindandSolve</div>
+          <div class="insel-price-value">0 €</div>
+          <div class="insel-price-note">inklusive + KI</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3: Google & Empfehlungsmarketing -->
+    <div class="insel-card reveal">
+      <div class="insel-card-header">
+        <div class="insel-card-icon"><i data-lucide="star"></i></div>
+        <div>
+          <div class="insel-card-title">Google- &amp; Empfehlungsmarketing</div>
+          <div class="insel-card-desc">Nach positiver Schadenregulierung automatisch um Bewertung bitten. Eigene Empfehlungs-Landingpage inklusive.</div>
+        </div>
+      </div>
+      <div class="insel-prices">
+        <div class="insel-price-col market">
+          <div class="insel-price-label">Insellösung</div>
+          <div class="insel-price-value">49–89 €</div>
+          <div class="insel-price-note">+ Onboarding bis 2.000 €</div>
+        </div>
+        <div class="insel-price-col ours">
+          <div class="insel-price-label">FindandSolve</div>
+          <div class="insel-price-value">0 €</div>
+          <div class="insel-price-note">direkt im Workflow</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4: Digitale Unterschrift -->
+    <div class="insel-card reveal">
+      <div class="insel-card-header">
+        <div class="insel-card-icon"><i data-lucide="pen-tool"></i></div>
+        <div>
+          <div class="insel-card-title">Digitale Unterschrift</div>
+          <div class="insel-card-desc">Maklervollmachten, Kündigungen, Anträge — direkt aus eurem System versenden und unterschreiben lassen.</div>
+        </div>
+      </div>
+      <div class="insel-prices">
+        <div class="insel-price-col market">
+          <div class="insel-price-label">Insellösung</div>
+          <div class="insel-price-value">ab 29 €</div>
+          <div class="insel-price-note">pauschal oder 1 €/Signatur</div>
+        </div>
+        <div class="insel-price-col ours">
+          <div class="insel-price-label">FindandSolve</div>
+          <div class="insel-price-value">0 €</div>
+          <div class="insel-price-note">inklusive</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5: Datenabgleich -->
+    <div class="insel-card reveal">
+      <div class="insel-card-header">
+        <div class="insel-card-icon"><i data-lucide="database"></i></div>
+        <div>
+          <div class="insel-card-title">Datenabgleich</div>
+          <div class="insel-card-desc">Auch nicht zugeschlüsselte Bestände, andere Pools, nicht gewollter Lock-in? Bei uns kein Thema.</div>
+        </div>
+      </div>
+      <div class="insel-prices">
+        <div class="insel-price-col market">
+          <div class="insel-price-label">Insellösung</div>
+          <div class="insel-price-value">29–189 €</div>
+          <div class="insel-price-note">teils pro Gesellschaft</div>
+        </div>
+        <div class="insel-price-col ours">
+          <div class="insel-price-label">FindandSolve</div>
+          <div class="insel-price-value">0 €</div>
+          <div class="insel-price-note">inklusive</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6: Maklerhomepage -->
+    <div class="insel-card reveal">
+      <div class="insel-card-header">
+        <div class="insel-card-icon"><i data-lucide="globe"></i></div>
+        <div>
+          <div class="insel-card-title">Maklerhomepage</div>
+          <div class="insel-card-desc">Vorlagen, kostenloser Editor, Anleitung zum Self-Hosting. Eure Website für 0 €.</div>
+        </div>
+      </div>
+      <div class="insel-prices">
+        <div class="insel-price-col market">
+          <div class="insel-price-label">Insellösung</div>
+          <div class="insel-price-value">19–69 €</div>
+          <div class="insel-price-note">pro Monat</div>
+        </div>
+        <div class="insel-price-col ours">
+          <div class="insel-price-label">FindandSolve</div>
+          <div class="insel-price-value">0 €</div>
+          <div class="insel-price-note">Vorlagen + Anleitung</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7: E-Mail & Kampagnen -->
+    <div class="insel-card reveal" style="grid-column: 1 / -1;">
+      <div class="insel-card-header">
+        <div class="insel-card-icon"><i data-lucide="mail"></i></div>
+        <div>
+          <div class="insel-card-title">Kampagnen &amp; Newsletter</div>
+          <div class="insel-card-desc">Klasse statt Masse. Zielgruppengenau für euren Bestand. Warum einem Mieter Werbung für Gebäudeversicherung senden? Lieber dem Hundebesitzer einen Newsletter zu Hunde-HV, Hunde-KV und Hunde-OP.</div>
+        </div>
+      </div>
+      <div class="insel-prices">
+        <div class="insel-price-col market">
+          <div class="insel-price-label">Insellösung</div>
+          <div class="insel-price-value">29–79 €</div>
+          <div class="insel-price-note">pro Monat + Kontingente</div>
+        </div>
+        <div class="insel-price-col ours">
+          <div class="insel-price-label">FindandSolve</div>
+          <div class="insel-price-value">0 €</div>
+          <div class="insel-price-note">mit KI-Zielgruppen</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Totals -->
+  <div class="insel-total reveal">
+    <p class="insel-total-label">Was ihr jeden Monat an Insellösungen zahlt — vs. was bei uns inklusive ist:</p>
+    <div class="insel-total-row">
+      <div class="insel-total-item">
+        <div class="insel-total-price old">253–763 €</div>
+        <div class="insel-total-sub">7 separate Insellösungen/Monat</div>
+      </div>
+      <div class="insel-total-vs">→</div>
+      <div class="insel-total-item">
+        <div class="insel-total-price new">0 € Aufpreis</div>
+        <div class="insel-total-sub">Alles in FindandSolve inklusive</div>
+      </div>
+    </div>
+    <p class="insel-total-msg">Ihr zahlt bei uns <strong>einen Preis für eine Plattform</strong> — nicht sieben Rechnungen von sieben Anbietern. Keine versteckten Kosten, kein Extra-Onboarding, keine Insellösungs-Odyssee. Alles aus einer Hand.</p>
+  </div>
+
+</section>
+
+<!-- PHILOSOPHIE -->
+<section class="section buddy-section" id="philosophie">
+  <div class="section-bg" aria-hidden="true"></div>
+  <div style="position:relative; z-index:1;">
+    <p class="section-label reveal">Philosophie</p>
+    <h2 class="section-title reveal">Du gehst nicht zur Arbeit.<br>Die Arbeit kommt zu dir.</h2>
+    <div class="philosophy-grid">
+      <div class="philosophy-card reveal">
+        <div class="philosophy-card-icon"><i data-lucide="brain-circuit"></i></div>
+        <h3>Ambient Intelligence</h3>
+        <p>Software passt sich deinem Kontext an — nicht umgekehrt. Keine Menüs, keine Klickorgien. Die richtige Information zur richtigen Zeit.</p>
+      </div>
+      <div class="philosophy-card reveal">
+        <div class="philosophy-card-icon"><i data-lucide="user-check"></i></div>
+        <h3>Human-in-the-Loop</h3>
+        <p>AI macht 95%, du bestätigst per Tap. Du bleibst der Entscheider — die Maschine macht die Arbeit.</p>
+      </div>
+      <div class="philosophy-card reveal">
+        <div class="philosophy-card-icon"><i data-lucide="layers"></i></div>
+        <h3>Eine Plattform</h3>
+        <p>Eine App. Ein Backend. Kein Insellösungs-Chaos. Alles aus einer Hand, nahtlos integriert.</p>
+      </div>
+      <div class="philosophy-card reveal">
+        <div class="philosophy-card-icon"><i data-lucide="monitor-smartphone"></i></div>
+        <h3>Desktop-First</h3>
+        <p>Komplex bauen am Desktop, Ergebnisse überall. Volle Power am Schreibtisch, smartes Ergebnis auf jedem Device.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FS-BUDDY -->
+<section class="section" id="fs-buddy">
+  <p class="section-label reveal">FS-Buddy</p>
+  <h2 class="section-title reveal">Suchmaschine vs. Agent</h2>
+  <p class="section-subtitle reveal">Andere zeigen dir Daten. FS-Buddy handelt für dich. Das ist kein Feature-Unterschied – das ist eine andere Dimension.</p>
+
+  <div class="buddy-comparison">
+    <div class="buddy-card reveal">
+      <span class="buddy-card-label">Klassische KI-Assistenten</span>
+      <h3>Suchen &amp; Anzeigen</h3>
+      <p>1 Frage = 1 Antwort → Liste → Ende. Du suchst, klickst, kopierst, fügst ein. Jedes Mal aufs Neue.</p>
+    </div>
+    <div class="buddy-card highlighted reveal">
+      <span class="buddy-card-label">FS-Buddy</span>
+      <h3>Verstehen &amp; Handeln</h3>
+      <p>1 Nachricht → kompletter Workflow mit 8 Schritten. FS-Buddy versteht den Kontext und erledigt die Arbeit.</p>
+    </div>
+  </div>
+
+  <div class="terminal reveal">
+    <div class="terminal-header">
+      <span class="terminal-dot" aria-hidden="true"></span>
+      <span class="terminal-dot" aria-hidden="true"></span>
+      <span class="terminal-dot" aria-hidden="true"></span>
+      <span class="terminal-title">Eine Nachricht → Acht Schritte</span>
+    </div>
+    <div class="terminal-body">
+      <div class="terminal-input">
+        <span class="terminal-prompt">→</span>
+        <span class="terminal-msg">"Erstell ein Angebot für Herrn Müller, PKV, Beamter, 32 Jahre."</span>
+      </div>
+      <div class="terminal-line"><span class="terminal-step">01</span> <span class="terminal-text">Kundendaten aus CRM laden</span></div>
+      <div class="terminal-line"><span class="terminal-step">02</span> <span class="terminal-text">Beamtenstatus &amp; Beihilfe verifizieren</span></div>
+      <div class="terminal-line"><span class="terminal-step">03</span> <span class="terminal-text">Passende Tarife über 3 APIs abfragen</span></div>
+      <div class="terminal-line"><span class="terminal-step">04</span> <span class="terminal-text">Top-3 Empfehlungen berechnen</span></div>
+      <div class="terminal-line"><span class="terminal-step">05</span> <span class="terminal-text">Angebotsdokument generieren</span></div>
+      <div class="terminal-line"><span class="terminal-step">06</span> <span class="terminal-text">Persönliches Anschreiben erstellen</span></div>
+      <div class="terminal-line"><span class="terminal-step">07</span> <span class="terminal-text">Video-Landingpage vorbereiten</span></div>
+      <div class="terminal-line"><span class="terminal-step">08</span> <span class="terminal-highlight">→ Zur Freigabe bereit. Ein Tap.</span></div>
+    </div>
+  </div>
+
+  <a href="#alltag" class="buddy-cta reveal">
+    <i data-lucide="play"></i>
+    Demo ansehen
+  </a>
+</section>
+
+<!-- FEATURE REFERENCE GRID -->
+<section class="features-ref" id="features">
+  <p class="section-label reveal">Alle Features</p>
+  <h2 class="section-title reveal">Alle Features auf einen Blick.</h2>
+  <p class="section-subtitle reveal">16 Features, die echte Probleme lösen. Klick für Details.</p>
+
+  <div class="features-ref-grid" id="features-ref-grid">
+    <!-- Populated by JS -->
+  </div>
+</section>
+
+<!-- TECH STACK -->
+<section class="section" id="tech-stack">
+  <p class="section-label reveal">Tech Stack</p>
+  <h2 class="section-title reveal">Die Architektur</h2>
+  <p class="section-subtitle reveal">Moderne Technologie, bewusst gewählt. Jedes Tool hat seinen Platz.</p>
+
+  <div class="tech-grid">
+    <div class="tech-item reveal">
+      <div class="tech-item-icon"><i data-lucide="database"></i></div>
+      <span class="tech-item-name">Supabase</span>
+      <span class="tech-item-role">Datenbank &amp; Auth</span>
+    </div>
+    <div class="tech-item reveal">
+      <div class="tech-item-icon"><i data-lucide="layout-grid"></i></div>
+      <span class="tech-item-name">WeWeb</span>
+      <span class="tech-item-role">Frontend Builder</span>
+    </div>
+    <div class="tech-item reveal">
+      <div class="tech-item-icon"><i data-lucide="code"></i></div>
+      <span class="tech-item-name">Python / FastAPI</span>
+      <span class="tech-item-role">Backend &amp; Logik</span>
+    </div>
+    <div class="tech-item reveal">
+      <div class="tech-item-icon"><i data-lucide="sparkles"></i></div>
+      <span class="tech-item-name">Gemini AI</span>
+      <span class="tech-item-role">AI Engine</span>
+    </div>
+    <div class="tech-item reveal">
+      <div class="tech-item-icon"><i data-lucide="workflow"></i></div>
+      <span class="tech-item-name">Make / n8n</span>
+      <span class="tech-item-role">Automations</span>
+    </div>
+    <div class="tech-item reveal">
+      <div class="tech-item-icon"><i data-lucide="cloud"></i></div>
+      <span class="tech-item-name">Bunny.net</span>
+      <span class="tech-item-role">CDN &amp; Storage</span>
+    </div>
+    <div class="tech-item reveal">
+      <div class="tech-item-icon"><i data-lucide="building-2"></i></div>
+      <span class="tech-item-name">Professional Works</span>
+      <span class="tech-item-role">MVP-Anbindung</span>
+    </div>
+    <div class="tech-item reveal">
+      <div class="tech-item-icon"><i data-lucide="message-square"></i></div>
+      <span class="tech-item-name">Wassenger</span>
+      <span class="tech-item-role">WhatsApp API</span>
+    </div>
+    <div class="tech-item reveal">
+      <div class="tech-item-icon"><i data-lucide="mail-check"></i></div>
+      <span class="tech-item-name">Pingen</span>
+      <span class="tech-item-role">Briefversand</span>
+    </div>
+    <div class="tech-item reveal">
+      <div class="tech-item-icon"><i data-lucide="send"></i></div>
+      <span class="tech-item-name">Resend</span>
+      <span class="tech-item-role">E-Mail API</span>
+    </div>
+    <div class="tech-item reveal">
+      <div class="tech-item-icon"><i data-lucide="briefcase"></i></div>
+      <span class="tech-item-name">Google Workspace</span>
+      <span class="tech-item-role">Produktivität</span>
+    </div>
+    <div class="tech-item reveal">
+      <div class="tech-item-icon"><i data-lucide="glasses"></i></div>
+      <span class="tech-item-name">Meta Ray-Ban</span>
+      <span class="tech-item-role">Smart Glasses</span>
+    </div>
+  </div>
+</section>
+
+<!-- ROTE LINIEN -->
+<section class="section" id="manifesto">
+  <p class="section-label reveal">Manifesto</p>
+  <h2 class="section-title reveal">2 Rote Linien. Keine Kompromisse.</h2>
+
+  <div class="redlines-grid">
+    <div class="redline-card reveal">
+      <div class="redline-icon"><i data-lucide="phone-off"></i></div>
+      <h3>Keine AI-Outbound-Calls</h3>
+      <p>Unsere KI schreibt, plant, bereitet vor. Aber das Telefon gehört dir. Die menschliche Stimme ist heilig.</p>
+    </div>
+    <div class="redline-card reveal">
+      <div class="redline-icon"><i data-lucide="lock-open"></i></div>
+      <h3>Kein Lock-in</h3>
+      <p>Deine Daten gehören dir. Dein Bestand gehört dir. Du kannst jederzeit gehen. Goldene Käfige bauen andere.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<section class="section" id="roadmap">
+  <p class="section-label reveal">Roadmap</p>
+  <h2 class="section-title reveal">Der Weg nach vorne</h2>
+
+  <div class="roadmap-timeline">
+    <div class="roadmap-item active reveal">
+      <div class="roadmap-dot" aria-hidden="true"></div>
+      <span class="roadmap-phase">Phase 1 — Aktuell</span>
+      <h3 class="roadmap-title">Kern-Features + Open Demo</h3>
+      <p class="roadmap-desc">Grundlegende Module fertigstellen, öffentliche Demo-Umgebung aufbauen und erstes Feedback sammeln.</p>
+    </div>
+    <div class="roadmap-item active reveal">
+      <div class="roadmap-dot" aria-hidden="true"></div>
+      <span class="roadmap-phase">Phase 2 — Aktuell</span>
+      <h3 class="roadmap-title">Omnichannel + AI-Agents + FS-Buddy</h3>
+      <p class="roadmap-desc">Kanalübergreifende Kommunikation, autonome AI-Agents und den FS-Buddy als zentralen Assistenten etablieren.</p>
+    </div>
+    <div class="roadmap-item reveal">
+      <div class="roadmap-dot" aria-hidden="true"></div>
+      <span class="roadmap-phase">Phase 3</span>
+      <h3 class="roadmap-title">WhatsApp + Beta-Tester</h3>
+      <p class="roadmap-desc">WhatsApp Business Integration, geschlossenes Beta-Programm starten und mit echten Maklern testen.</p>
+    </div>
+    <div class="roadmap-item reveal">
+      <div class="roadmap-dot" aria-hidden="true"></div>
+      <span class="roadmap-phase">Phase 4</span>
+      <h3 class="roadmap-title">Multi-Device + Ambient Intelligence</h3>
+      <p class="roadmap-desc">Kontextbewusste Erfahrung über alle Geräte hinweg. Smart Glasses Integration und adaptive UI.</p>
+    </div>
+    <div class="roadmap-item reveal">
+      <div class="roadmap-dot" aria-hidden="true"></div>
+      <span class="roadmap-phase">Phase 5</span>
+      <h3 class="roadmap-title">SaaS Launch</h3>
+      <p class="roadmap-desc">Öffentlicher Start als vollständige SaaS-Plattform. Skalierung, Onboarding und Community-Aufbau.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <p class="footer-brand">FindandSolve · Maklerbüro 3.0</p>
+    <p class="footer-sub">Gebaut in Rockenhausen · Powered by AI</p>
+    <p class="footer-version">Stand: März 2026 · v5.0</p>
+    <p class="footer-attribution">
+      <a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer">Created with Perplexity Computer</a>
+    </p>
+  </div>
+</footer>
+
+<!-- DATA AGGREGATION OVERLAY -->
+<div class="da-overlay" id="daOverlay">
+  <div class="da-backdrop"></div>
+  <button class="da-close" id="daClose" aria-label="Schließen"><i data-lucide="x"></i></button>
+  <div class="da-container">
+    <!-- Statement -->
+    <div class="da-statement" id="daStatement">
+      <div class="da-statement-text">Schluss mit manuellem<br><span>Daten sammeln.</span></div>
+    </div>
+
+    <!-- Main content (hidden during statement) -->
+    <div id="daMain" style="display:none;">
+      <div class="da-time" id="daTime">07:45 Uhr</div>
+      <div class="da-subtitle">Automatischer Abruf gestartet</div>
+
+      <div class="da-flow" id="daFlow">
+        <div class="da-sources">
+          <div class="da-source" id="daSrc1">
+            <div class="da-source-icon" style="background:#3b82f6">KAB</div>
+            <div class="da-source-name">Maklerpool KAB</div>
+          </div>
+          <div class="da-source" id="daSrc2">
+            <div class="da-source-icon" style="background:#8b5cf6">DEG</div>
+            <div class="da-source-name">Degenia</div>
+          </div>
+          <div class="da-source" id="daSrc3">
+            <div class="da-source-icon" style="background:#ef4444">JAN</div>
+            <div class="da-source-name">Janitos</div>
+          </div>
+          <div class="da-source" id="daSrc4">
+            <div class="da-source-icon" style="background:#f59e0b">VHV</div>
+            <div class="da-source-name">VHV</div>
+          </div>
+          <div class="da-source" id="daSrc5">
+            <div class="da-source-icon" style="background:#10b981">KRA</div>
+            <div class="da-source-name">KRAVAG</div>
+          </div>
+        </div>
+
+        <div class="da-arrows">
+          <div class="da-arrow" id="daArrow1"></div>
+          <div class="da-arrow" id="daArrow2"></div>
+          <div class="da-arrow" id="daArrow3"></div>
+          <div class="da-arrow" id="daArrow4"></div>
+          <div class="da-arrow" id="daArrow5"></div>
+        </div>
+
+        <div class="da-hub">
+          <div class="da-hub-ring" id="daHubRing"></div>
+          <div class="da-hub-logo">FindandSolve</div>
+          <div class="da-hub-sub">KI-Verarbeitung</div>
+        </div>
+      </div>
+
+      <!-- KI Processing -->
+      <div class="da-ki hidden" id="daKi">
+        <div class="da-ki-header">
+          <div class="da-ki-spinner" id="daKiSpinner"></div>
+          <span class="da-ki-title" id="daKiTitle">Daten werden verarbeitet...</span>
+        </div>
+        <div class="da-ki-steps" id="daKiSteps"></div>
+        <div class="da-ki-success hidden" id="daKiSuccess">
+          <div class="da-ki-success-icon">✓</div>
+          <span>Alle Daten verarbeitet &amp; priorisiert</span>
+        </div>
+      </div>
+
+      <!-- Results -->
+      <div class="da-results hidden" id="daResults">
+        <div class="da-results-time">07:50 Uhr — Deine Morgenübersicht</div>
+        <div class="da-results-list">
+          <div class="da-result-item dringend">
+            <div class="da-result-prio">DRINGEND</div>
+            <div class="da-result-info">
+              <div class="da-result-title">Schadenakte Volker Werner — Gutachtertermin bestätigen</div>
+              <div class="da-result-source">KRAVAG · Heute eingegangen</div>
+            </div>
+            <div class="da-result-ki">KI: Termin automatisch bestätigen</div>
+          </div>
+          <div class="da-result-item dringend">
+            <div class="da-result-prio">DRINGEND</div>
+            <div class="da-result-info">
+              <div class="da-result-title">Nachtrag KFZ-Police Elisabeth Osborne — Prämienanpassung</div>
+              <div class="da-result-source">Degenia · Heute eingegangen</div>
+            </div>
+            <div class="da-result-ki">KI: Kundin informieren &amp; bestätigen</div>
+          </div>
+          <div class="da-result-item mittel">
+            <div class="da-result-prio">MITTEL</div>
+            <div class="da-result-info">
+              <div class="da-result-title">3 neue Dokumente — Bestandsübertragung KAB</div>
+              <div class="da-result-source">KAB · Heute eingegangen</div>
+            </div>
+            <div class="da-result-ki">KI: Zuordnung &amp; Ablage vorbereitet</div>
+          </div>
+          <div class="da-result-item niedrig">
+            <div class="da-result-prio">NIEDRIG</div>
+            <div class="da-result-info">
+              <div class="da-result-title">Janitos — Neue Police Unfallversicherung Thomas Fischer</div>
+              <div class="da-result-source">Janitos · Heute eingegangen</div>
+            </div>
+            <div class="da-result-ki">KI: In Kundendossier einpflegen</div>
+          </div>
+        </div>
+        <div class="da-results-actions">
+          <button class="da-confirm-btn" id="daConfirmBtn">Alle bestätigen</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- KUNDENPORTAL IFRAME OVERLAY -->
+<div class="kp-overlay" id="kpOverlay">
+  <div class="kp-overlay-backdrop" id="kpBackdrop"></div>
+  <div class="kp-overlay-header">
+    <div class="kp-overlay-title"><i data-lucide="monitor-smartphone"></i> FindandSolve Kundenportal — Live Demo</div>
+    <button class="kp-overlay-close" id="kpClose" aria-label="Zurück zur Website"><i data-lucide="x"></i></button>
+  </div>
+  <div class="kp-iframe-wrap">
+    <iframe id="kpIframe" title="Kundenportal Demo" loading="lazy"></iframe>
+  </div>
+</div>
+
+<!-- KFZ OPTIMIERER IFRAME OVERLAY -->
+<div class="kp-overlay" id="kfzOverlay">
+  <div class="kp-overlay-backdrop" id="kfzBackdrop"></div>
+  <div class="kp-overlay-header">
+    <div class="kp-overlay-title"><i data-lucide="car"></i> FindandSolve KFZ-Bestand-Optimierer</div>
+    <button class="kp-overlay-close" id="kfzClose" aria-label="Zurück zur Website"><i data-lucide="x"></i></button>
+  </div>
+  <div class="kp-iframe-wrap">
+    <iframe id="kfzIframe" title="KFZ-Optimierer Demo" loading="lazy"></iframe>
+  </div>
+</div>
+
+<!-- KI-REGELN IFRAME OVERLAY -->
+<div class="kp-overlay" id="krOverlay">
+  <div class="kp-overlay-backdrop" id="krBackdrop"></div>
+  <div class="kp-overlay-header">
+    <div class="kp-overlay-title"><i data-lucide="sliders-horizontal"></i> FindandSolve KI-Regeln — 3-Layer System</div>
+    <button class="kp-overlay-close" id="krClose" aria-label="Zurück zur Website"><i data-lucide="x"></i></button>
+  </div>
+  <div class="kp-iframe-wrap">
+    <iframe id="krIframe" title="KI-Regeln Demo" loading="lazy"></iframe>
+  </div>
+</div>
+
+<div class="kp-overlay" id="psOverlay">
+  <div class="kp-overlay-backdrop" id="psBackdrop"></div>
+  <div class="kp-overlay-header">
+    <div class="kp-overlay-title"><i data-lucide="scissors"></i> FindandSolve PDF-Splitter</div>
+    <button class="kp-overlay-close" id="psClose" aria-label="Zurück zur Website"><i data-lucide="x"></i></button>
+  </div>
+  <div class="kp-iframe-wrap">
+    <iframe id="psIframe" title="PDF-Splitter Demo" loading="lazy"></iframe>
+  </div>
+</div>
+
+<!-- DEMO MODAL — Enhanced -->
+<div class="modal-overlay" id="demo-modal" role="dialog" aria-modal="true" aria-label="Feature Detail Modal">
+  <div class="modal">
+    <button class="modal-close" aria-label="Schließen">
+      <i data-lucide="x"></i>
+    </button>
+    <div class="modal-media">
+      <div class="modal-media-icon">
+        <i data-lucide="play-circle"></i>
+      </div>
+      <span class="modal-media-text">Demo-Video kommt bald</span>
+    </div>
+    <div class="modal-body">
+      <div class="modal-badge-row">
+        <span class="feature-badge" id="modal-badge"></span>
+      </div>
+      <h3 class="modal-title" id="modal-feature-name"></h3>
+      <p class="modal-desc" id="modal-feature-desc"></p>
+      <div class="modal-example" id="modal-feature-example" style="display:none;"></div>
+      <div class="modal-carousel-placeholder" id="modal-carousel">
+        <span>Screenshots kommen bald</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Lucide Icons -->
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Init Lucide — wait for script to load
+  function initLucide() {
+    if (typeof lucide !== 'undefined') {
+      lucide.createIcons();
+    } else {
+      setTimeout(initLucide, 100);
+    }
+  }
+  initLucide();
+
+  // ========================================
+  // Feature Data (all 16 features)
+  // ========================================
+  var features = [
+    {
+      id: 'ki-regeln',
+      title: 'KI-Regeln: 3-Layer-System',
+      icon: 'brain-circuit',
+      status: 'ready',
+      shortDesc: 'Global → Sparte → Kunde. Dein Standard.',
+      desc: 'Dreistufiges Regelsystem: Global, nach Sparte und pro Kunde. Beispiel: \u201eBei Neuwagen immer VHV Exklusiv wegen Neuwertentschädigung\u201c \u2014 einmal hinterlegt, die KI hält sich daran. Jederzeit anpassbar, ohne Entwickler.',
+      example: '"Bei Neuwagen immer VHV Exklusiv wegen Neuwertentschädigung empfehlen" \u2192 hinterlegt, fertig.'
+    },
+    {
+      id: 'second-screen',
+      title: 'Second Screen \u2014 Pro Task & Kunde',
+      icon: 'panel-right',
+      status: 'ready',
+      shortDesc: 'Zwei Screens, ein System. Modular.',
+      desc: 'Im Main Dashboard siehst du Vertragsdaten \u2014 im Second Screen Kostenvoranschläge, E-Mail- und WhatsApp-Verlauf. Modular erweiterbar: Du brauchst ein neues Widget? E-Mail an uns \u2014 1 Tag später live. Für alle verfügbar.',
+      example: 'Schadensfall: Second Screen zeigt KV, Mailverkehr und Live-Tracking. Ein modularer Marktplatz für Widgets.'
+    },
+    {
+      id: 'dokument-sync',
+      title: 'Dokumenten-Sync bei fremden Pools',
+      icon: 'folder-sync',
+      status: 'ready',
+      shortDesc: 'Automatisch synchronisiert & zugeordnet.',
+      desc: 'Kein manuelles Herunterladen mehr. Dokumente werden automatisch dem Kunden zugeordnet und anhand eurer KI-Regeln verarbeitet. Tasks und Sub-Tasks werden automatisch erstellt. Human in the Loop: Ihr prüft \u2014 wenn es passt, Button klicken, Angebot raus.',
+      example: 'Streubestand bei Pool A \u2014 PHV Single 80 \u20ac. KI-Regel: PHV über 60 \u20ac prüfen. Angebot wird vorbereitet, Sub-Task erstellt: "Nachfassen in 5 Tagen."'
+    },
+    {
+      id: 'omnichannel',
+      title: 'WhatsApp & E-Mail \u2014 Omnichannel',
+      icon: 'message-circle',
+      status: 'ready',
+      shortDesc: 'Alle Kanäle nativ integriert.',
+      desc: 'Alle Kommunikationskanäle direkt in der Software. Kein Tab-Wechsel, keine externen Tools. Kostenlos integriert.',
+      example: ''
+    },
+    {
+      id: 'digitale-unterschriften',
+      title: 'Digitale Unterschriften',
+      icon: 'pen-tool',
+      status: 'ready',
+      shortDesc: 'Direkt aus dem Dashboard versenden.',
+      desc: 'Direkt aus dem Dashboard versenden. Kein Tab-Wechsel nötig \u2014 alles im Flow. Funktioniert auch über PW, aber ohne Umwege.',
+      example: ''
+    },
+    {
+      id: 'pw-vorteil',
+      title: 'Vorteil für PW-User',
+      icon: 'piggy-bank',
+      status: 'ready',
+      shortDesc: 'Downgrade PW, spare sofort.',
+      desc: 'Den Datenabgleich übernimmt FindandSolve \u2014 und wertet die Daten gleich mit aus. Ihr spart sofort.',
+      example: ''
+    },
+    {
+      id: 'kfz-pruefung',
+      title: 'KFZ-Beitragsrechnungen automatisch',
+      icon: 'car',
+      status: 'ready',
+      shortDesc: 'Automatisch prüfen per KI-Regeln.',
+      desc: 'Neuwagen \u2192 VHV Exklusiv. Junge Fahrer? \u2192 KRAVAG und VHV prüfen, Einschluss Zusatzfahrer. Automatisch, regelbasiert, euer Standard.',
+      example: 'Junge Fahrer vorhanden? \u2192 KRAVAG und VHV prüfen, Einschluss Zusatzfahrer automatisch.'
+    },
+    {
+      id: 'mastertask',
+      title: 'Intelligente Mastertask mit Ampel',
+      icon: 'list-checks',
+      status: 'ready',
+      shortDesc: 'Nur relevante Tasks, mit Ampelsystem.',
+      desc: 'Beispiel: \u201eAusbildungsende 01.09.2030 \u2014 Rentenversicherung besprechen.\u201c Erst 6 Monate vorher sichtbar. Antrag zum 01.10. noch nicht aufgenommen? Am 01.09. wird die Ampel rot.',
+      example: 'Antrag zum 01.10.2026 \u2192 noch grün. Am 01.09. kein Antrag? \u2192 Ampel rot.'
+    },
+    {
+      id: 'ki-kampagnen',
+      title: 'KI-Kampagnen planen',
+      icon: 'megaphone',
+      status: 'wip',
+      shortDesc: 'Bestand auswerten, Kampagne starten.',
+      desc: 'Bestand auswerten, Zielgruppe identifizieren, Kampagne aufsetzen \u2014 alles KI-gestützt. Aktuell in Vorbereitung: Elementar-Kampagne Wohngebäude.',
+      example: ''
+    },
+    {
+      id: 'kundengeschenke',
+      title: 'Kundengeschenke per Knopfdruck',
+      icon: 'gift',
+      status: 'ready',
+      shortDesc: 'Ein Klick — Geschenk raus.',
+      desc: 'Direkt aus dem Dashboard oder Second Screen ein Geschenk an den Kunden senden. Ein Klick \u2014 fertig.',
+      example: ''
+    },
+    {
+      id: 'kundenportal',
+      title: 'Kundenportal \u2014 Desktop First + DIN 77230',
+      icon: 'layout-dashboard',
+      status: 'ready',
+      shortDesc: 'Kunden sehen Lücken selbst.',
+      desc: 'Desktop First: Kunden schauen 1x im Jahr nach \u2014 dann brauchen sie kein Mobile First. Vertragsübersicht, Steuer-Dokumente, Fremdverträge eintragen. DIN 77230 Analyse immer aktuell: PHV \u2705, BU \u274c, Elementar \u274c \u2014 der Kunde kommt von allein auf euch zu.',
+      example: 'Kunde sieht: PHV \u2705, BU \u274c, Elementar \u274c \u2192 kommt von allein auf euch zu.'
+    },
+    {
+      id: 'bipro',
+      title: 'BiPRO-Postfach automatisiert',
+      icon: 'mail-open',
+      status: 'ready',
+      shortDesc: 'Automatisch auslesen & schließen.',
+      desc: 'BiPRO-Postfach wird automatisch ausgelesen, Vorgänge erkannt und geschlossen. Kündigungsbestätigung? \u2192 Vorgang erledigt, markiert. Automatisch.',
+      example: 'Kündigungsbestätigung im Postfach? \u2192 Offener Vorgang erkannt \u2192 erledigt, markiert.'
+    },
+    {
+      id: 'multi-firmen',
+      title: 'Multi-Firmen-Dashboard',
+      icon: 'building-2',
+      status: 'ready',
+      shortDesc: 'Mehrere Firmen, ein Dashboard.',
+      desc: 'Mehrere Firmen bei PW? Kein Browser-Wechsel mehr. Beide Firmen verknüpft in einem Dashboard \u2014 alles auf einen Blick.',
+      example: ''
+    },
+    {
+      id: 'pdf-splitter',
+      title: 'Intelligenter PDF-Splitter',
+      icon: 'scissors',
+      status: 'ready',
+      shortDesc: 'Eine PDF → sauber getrennt.',
+      desc: 'Kunde schickt Fahrzeugschein, Brief und Führerschein in einer PDF? Hochladen, Splitt wählen, fertig. Drei Dokumente, getrennt und zugeordnet.',
+      example: ''
+    },
+    {
+      id: 'dokument-zuordnung',
+      title: '95% bessere Dokumentenzuordnung',
+      icon: 'scan-search',
+      status: 'ready',
+      shortDesc: 'KI statt Keywords. 95% Trefferquote.',
+      desc: 'PW-Keywords versagen oft. Beispiel: Versicherungsschein mit Nachtrag und Sonderkündigungsrecht \u2014 PW legt es als Schein ab. FindandSolve erkennt den Nachtrag. 95% bessere Trefferquote.',
+      example: '"Versicherungsschein 454545, Nachtrag Nr. 2" \u2192 PW: Versicherungsschein. FindandSolve: Nachtrag. Korrekt.'
+    },
+    {
+      id: 'api-einsatzbereit',
+      title: 'Sofort einsatzbereit via API',
+      icon: 'plug-zap',
+      status: 'ready',
+      shortDesc: 'Per API an PW, sofort nutzbar.',
+      desc: 'Per API an PW angedockt und sofort nutzbar. Optional PW-Ansicht umstellen. Keine 5\u201310 Tabs mehr nach einer Beratung \u2014 alles in einem Workflow.',
+      example: ''
+    }
+  ];
+
+  // ========================================
+  // Build Feature Reference Grid
+  // ========================================
+  var refGrid = document.getElementById('features-ref-grid');
+  if (refGrid) {
+    features.forEach(function(f) {
+      var statusLabel = f.status === 'ready' ? 'Fertig' : (f.status === 'wip' ? 'In Entwicklung' : f.status);
+      var statusClass = f.status === 'ready' ? 'status-ready' : (f.status === 'wip' ? 'status-wip' : 'status-new');
+
+      var card = document.createElement('div');
+      card.className = 'feature-ref-card reveal';
+      card.setAttribute('data-feature-id', f.id);
+      card.setAttribute('role', 'button');
+      card.setAttribute('tabindex', '0');
+      card.setAttribute('aria-label', 'Details zu ' + f.title + ' ansehen');
+      card.innerHTML =
+        '<div class="feature-ref-icon"><i data-lucide="' + f.icon + '"></i></div>' +
+        '<h4>' + f.title + '</h4>' +
+        '<p>' + f.shortDesc + '</p>' +
+        '<span class="feature-badge ' + statusClass + '">' + statusLabel + '</span>';
+      refGrid.appendChild(card);
+    });
+  }
+
+  // ========================================
+  // Scroll-aware nav
+  // ========================================
+  var nav = document.querySelector('.nav');
+  var lastScrollY = 0;
+  function onScroll() {
+    var sy = window.scrollY;
+    if (sy > 60) {
+      nav.classList.add('scrolled');
+    } else {
+      nav.classList.remove('scrolled');
+    }
+    lastScrollY = sy;
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  // ========================================
+  // Mobile nav toggle
+  // ========================================
+  var toggle = document.querySelector('.nav-toggle');
+  var links = document.querySelector('.nav-links');
+  if (toggle && links) {
+    toggle.addEventListener('click', function() {
+      var isOpen = links.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', String(isOpen));
+    });
+    // Close on link click
+    links.querySelectorAll('a').forEach(function(a) {
+      a.addEventListener('click', function() {
+        links.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+  }
+
+  // ========================================
+  // Scroll reveal with IntersectionObserver and stagger
+  // ========================================
+  var revealElements = document.querySelectorAll('.reveal');
+  var observer;
+  if ('IntersectionObserver' in window) {
+    observer = new IntersectionObserver(function(entries) {
+      var visibleEntries = entries.filter(function(e) { return e.isIntersecting; });
+      visibleEntries.forEach(function(entry, i) {
+        var delay = i * 50;
+        setTimeout(function() {
+          entry.target.classList.add('visible');
+        }, delay);
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: 0.1 });
+    revealElements.forEach(function(el) {
+      observer.observe(el);
+    });
+  } else {
+    revealElements.forEach(function(el) {
+      el.classList.add('visible');
+    });
+  }
+
+  // Re-init Lucide after dynamic content is added
+  setTimeout(function() {
+    if (typeof lucide !== 'undefined') {
+      lucide.createIcons();
+    }
+    // Observe newly added reveal elements
+    if (observer) {
+      document.querySelectorAll('.reveal:not(.visible)').forEach(function(el) {
+        observer.observe(el);
+      });
+    }
+  }, 200);
+
+  // ========================================
+  // Demo Modal — Enhanced
+  // ========================================
+  var modal = document.getElementById('demo-modal');
+  var modalTitle = document.getElementById('modal-feature-name');
+  var modalDesc = document.getElementById('modal-feature-desc');
+  var modalExample = document.getElementById('modal-feature-example');
+  var modalBadge = document.getElementById('modal-badge');
+  var modalClose = modal.querySelector('.modal-close');
+
+  function findFeature(id) {
+    for (var i = 0; i < features.length; i++) {
+      if (features[i].id === id) return features[i];
+    }
+    return null;
+  }
+
+  function openModal(featureId) {
+    var f = findFeature(featureId);
+    if (!f) return;
+
+    modalTitle.textContent = f.title;
+    modalDesc.textContent = f.desc;
+
+    // Badge
+    if (f.status === 'ready') {
+      modalBadge.textContent = 'Fertig';
+      modalBadge.className = 'feature-badge status-ready';
+    } else if (f.status === 'wip') {
+      modalBadge.textContent = 'In Entwicklung';
+      modalBadge.className = 'feature-badge status-wip';
+    } else {
+      modalBadge.textContent = f.status;
+      modalBadge.className = 'feature-badge status-new';
+    }
+
+    // Example
+    if (f.example) {
+      modalExample.textContent = f.example;
+      modalExample.style.display = 'block';
+    } else {
+      modalExample.style.display = 'none';
+    }
+
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    modalClose.focus();
+  }
+
+  function closeModal() {
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  // Attach click handlers to feature ref cards (using event delegation)
+  document.addEventListener('click', function(e) {
+    var card = e.target.closest('.feature-ref-card[data-feature-id]');
+    if (card) {
+      openModal(card.getAttribute('data-feature-id'));
+    }
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      var card = e.target.closest('.feature-ref-card[data-feature-id]');
+      if (card) {
+        e.preventDefault();
+        openModal(card.getAttribute('data-feature-id'));
+      }
+    }
+  });
+
+  modalClose.addEventListener('click', closeModal);
+  modal.addEventListener('click', function(e) {
+    if (e.target === modal) {
+      closeModal();
+    }
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && modal.classList.contains('active')) {
+      closeModal();
+    }
+  });
+});
+</script>
+
+<!-- DATA AGGREGATION ANIMATION -->
+<script>
+(function() {
+  'use strict';
+
+  var overlay = document.getElementById('daOverlay');
+  var trigger = document.getElementById('triggerDataAggregation');
+  var closeBtn = document.getElementById('daClose');
+  var animRunning = false;
+  var animTimeouts = [];
+
+  function clearAllTimeouts() {
+    animTimeouts.forEach(function(t) { clearTimeout(t); });
+    animTimeouts = [];
+  }
+
+  function schedule(fn, ms) {
+    var t = setTimeout(fn, ms);
+    animTimeouts.push(t);
+    return t;
+  }
+
+  function resetState() {
+    clearAllTimeouts();
+    animRunning = false;
+
+    // Reset statement
+    document.getElementById('daStatement').classList.remove('active');
+    document.getElementById('daMain').style.display = 'none';
+
+    // Reset sources & arrows
+    ['daSrc1','daSrc2','daSrc3','daSrc4','daSrc5'].forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) el.classList.remove('active','done');
+    });
+    ['daArrow1','daArrow2','daArrow3','daArrow4','daArrow5'].forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) el.classList.remove('active','done');
+    });
+
+    // Reset hub
+    var ring = document.getElementById('daHubRing');
+    if (ring) ring.classList.remove('active','done');
+
+    // Reset flow visibility
+    var flow = document.getElementById('daFlow');
+    if (flow) flow.style.display = '';
+
+    // Reset KI
+    var ki = document.getElementById('daKi');
+    if (ki) ki.classList.add('hidden');
+    var kiSuccess = document.getElementById('daKiSuccess');
+    if (kiSuccess) kiSuccess.classList.add('hidden');
+    var kiSpinner = document.getElementById('daKiSpinner');
+    if (kiSpinner) { kiSpinner.classList.remove('done'); kiSpinner.innerHTML = ''; }
+    var kiTitle = document.getElementById('daKiTitle');
+    if (kiTitle) kiTitle.textContent = 'Daten werden verarbeitet...';
+    var kiSteps = document.getElementById('daKiSteps');
+    if (kiSteps) kiSteps.innerHTML = '';
+
+    // Reset results
+    var results = document.getElementById('daResults');
+    if (results) results.classList.add('hidden');
+    var confirmBtn = document.getElementById('daConfirmBtn');
+    if (confirmBtn) {
+      confirmBtn.textContent = 'Alle best\u00e4tigen';
+      confirmBtn.classList.remove('confirmed');
+    }
+
+    // Reset time
+    var timeEl = document.getElementById('daTime');
+    if (timeEl) timeEl.textContent = '07:45 Uhr';
+  }
+
+  function openOverlay() {
+    if (animRunning) return;
+    resetState();
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    // Re-init lucide icons in overlay
+    if (window.lucide) lucide.createIcons();
+    runAnimation();
+  }
+
+  function closeOverlay() {
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+    clearAllTimeouts();
+    animRunning = false;
+  }
+
+  function runAnimation() {
+    animRunning = true;
+
+    // Skip statement, go straight to data flow
+    document.getElementById('daStatement').style.display = 'none';
+    document.getElementById('daMain').style.display = '';
+
+    schedule(function() {
+
+        // Phase 3: Animate sources one by one
+        var sources = ['daSrc1','daSrc2','daSrc3','daSrc4','daSrc5'];
+        var arrows = ['daArrow1','daArrow2','daArrow3','daArrow4','daArrow5'];
+        var idx = 0;
+
+        function animateNextSource() {
+          if (idx >= sources.length) {
+            // All sources done -> hub activates
+            var ring = document.getElementById('daHubRing');
+            ring.classList.add('active');
+
+            schedule(function() {
+              // Mark everything done
+              sources.forEach(function(id) { document.getElementById(id).classList.add('done'); });
+              arrows.forEach(function(id) { document.getElementById(id).classList.add('done'); });
+              ring.classList.remove('active');
+              ring.classList.add('done');
+
+              // Phase 4: KI Processing
+              schedule(function() {
+                document.getElementById('daFlow').style.display = 'none';
+                var ki = document.getElementById('daKi');
+                ki.classList.remove('hidden');
+
+                var stepTexts = [
+                  'Maklerpool KAB \u2014 3 neue Dokumente abgerufen',
+                  'Degenia \u2014 2 Nachtr\u00e4ge verarbeitet',
+                  'Janitos \u2014 1 Police aktualisiert',
+                  'VHV \u2014 Best\u00e4tigung eingegangen',
+                  'Dringlichkeit bewertet & sortiert',
+                  'KI-Vorschl\u00e4ge generiert'
+                ];
+
+                var stepsContainer = document.getElementById('daKiSteps');
+                stepsContainer.innerHTML = stepTexts.map(function(text, i) {
+                  return '<div class="da-ki-step" data-index="' + i + '">' +
+                    '<div class="da-ki-step-check">\u25CF</div>' +
+                    '<span>' + text + '</span></div>';
+                }).join('');
+
+                var si = 0;
+                function animateNextStep() {
+                  if (si >= stepTexts.length) {
+                    // All steps done
+                    schedule(function() {
+                      var spinner = document.getElementById('daKiSpinner');
+                      spinner.classList.add('done');
+                      spinner.innerHTML = '<span style="color:#10b981;font-weight:700">\u2713</span>';
+                      document.getElementById('daKiTitle').textContent = 'Verarbeitung abgeschlossen';
+                      document.getElementById('daKiSuccess').classList.remove('hidden');
+
+                      // Phase 5: Results
+                      schedule(function() {
+                        document.getElementById('daTime').textContent = '07:50 Uhr';
+                        ki.classList.add('hidden');
+                        document.getElementById('daResults').classList.remove('hidden');
+                        animRunning = false;
+                      }, 1200);
+                    }, 400);
+                    return;
+                  }
+
+                  var step = stepsContainer.querySelector('[data-index="' + si + '"]');
+                  if (step) {
+                    step.classList.add('visible');
+                    schedule(function() {
+                      step.classList.add('done');
+                      var check = step.querySelector('.da-ki-step-check');
+                      if (check) check.innerHTML = '\u2713';
+                    }, 350);
+                  }
+                  si++;
+                  schedule(animateNextStep, 700);
+                }
+                schedule(animateNextStep, 400);
+              }, 800);
+            }, 1000);
+            return;
+          }
+
+          var src = document.getElementById(sources[idx]);
+          var arrow = document.getElementById(arrows[idx]);
+          src.classList.add('active');
+          arrow.classList.add('active');
+          schedule(function() { arrow.classList.add('done'); }, 600);
+          idx++;
+          schedule(animateNextSource, 500);
+        }
+
+        schedule(animateNextSource, 300);
+    }, 300);
+  }
+
+  // Confirm button
+  document.getElementById('daConfirmBtn').addEventListener('click', function() {
+    this.innerHTML = '\u2713 Alle Aufgaben best\u00e4tigt';
+    this.classList.add('confirmed');
+    schedule(function() {
+      closeOverlay();
+
+    }, 1200);
+  });
+
+  // Event listeners
+  trigger.addEventListener('click', openOverlay);
+  trigger.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openOverlay(); }
+  });
+  closeBtn.addEventListener('click', closeOverlay);
+  overlay.querySelector('.da-backdrop').addEventListener('click', closeOverlay);
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && overlay.classList.contains('active')) closeOverlay();
+  });
+})();
+</script>
+
+<!-- IFRAME OVERLAY JS (Kundenportal + KI-Regeln) -->
+<script>
+(function() {
+  'use strict';
+
+  // Generic overlay handler
+  function initOverlay(cfg) {
+    var overlay = document.getElementById(cfg.overlayId);
+    var trigger = document.getElementById(cfg.triggerId);
+    var close = document.getElementById(cfg.closeId);
+    var backdrop = document.getElementById(cfg.backdropId);
+    var iframe = document.getElementById(cfg.iframeId);
+    var loaded = false;
+
+    function open() {
+      if (!loaded) { iframe.src = cfg.src; loaded = true; }
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+    function shut() {
+      overlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    if (trigger) {
+      trigger.addEventListener('click', open);
+      trigger.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
+      });
+    }
+    if (close) close.addEventListener('click', shut);
+    if (backdrop) backdrop.addEventListener('click', shut);
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && overlay.classList.contains('active')) shut();
+    });
+  }
+
+  // Kundenportal
+  initOverlay({
+    overlayId: 'kpOverlay', triggerId: 'triggerKundenportal',
+    closeId: 'kpClose', backdropId: 'kpBackdrop',
+    iframeId: 'kpIframe', src: 'kundenportal.html'
+  });
+
+  // KI-Regeln
+  initOverlay({
+    overlayId: 'krOverlay', triggerId: 'triggerKIRegeln',
+    closeId: 'krClose', backdropId: 'krBackdrop',
+    iframeId: 'krIframe', src: 'ki-regeln.html'
+  });
+
+  // KFZ-Optimierer
+  initOverlay({
+    overlayId: 'kfzOverlay', triggerId: 'triggerKFZ',
+    closeId: 'kfzClose', backdropId: 'kfzBackdrop',
+    iframeId: 'kfzIframe', src: 'kfz-optimierer.html'
+  });
+
+  // PDF-Splitter
+  initOverlay({
+    overlayId: 'psOverlay', triggerId: 'triggerPDFSplitter',
+    closeId: 'psClose', backdropId: 'psBackdrop',
+    iframeId: 'psIframe', src: 'pdf-splitter.html'
+  });
+})();
+</script>
+</body>
+</html>

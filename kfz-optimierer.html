@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KFZ-Bestand-Optimierer — findandsolve</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0B1120;
+  --surface: #1E293B;
+  --border: rgba(148,163,184,0.12);
+  --text: #F8FAFC;
+  --muted: #94A3B8;
+  --accent: #0D9488;
+  --accent-light: #14B8A6;
+  --accent-bg: rgba(13,148,136,0.1);
+  --accent-border: rgba(13,148,136,0.3);
+  --danger: #EF4444;
+  --success: #22C55E;
+  --success-bg: rgba(34,197,94,0.1);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html { font-size: 15px; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(148,163,184,0.2); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(148,163,184,0.35); }
+
+/* Layout */
+.app-shell { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+/* Header */
+.header {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 2.5rem;
+}
+.header-icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-light));
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; flex-shrink: 0;
+}
+.header h1 { font-size: 1.35rem; font-weight: 700; letter-spacing: -0.02em; }
+.header p { font-size: 0.8rem; color: var(--muted); margin-top: 1px; }
+
+/* Progress Stepper */
+.stepper {
+  display: flex; align-items: center; justify-content: center;
+  gap: 0; margin-bottom: 2.5rem; position: relative;
+}
+.step-item {
+  display: flex; align-items: center; gap: 0.5rem;
+  cursor: default; position: relative; z-index: 1;
+  padding: 0.4rem 0; transition: opacity var(--transition);
+}
+.step-item.clickable { cursor: pointer; }
+.step-item.clickable:hover .step-label { color: var(--accent-light); }
+.step-dot {
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 2px solid rgba(148,163,184,0.25);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 600; color: var(--muted);
+  transition: all var(--transition); flex-shrink: 0;
+  background: var(--bg);
+}
+.step-item.active .step-dot {
+  border-color: var(--accent-light);
+  background: var(--accent);
+  color: #fff; box-shadow: 0 0 12px rgba(20,184,166,0.35);
+}
+.step-item.completed .step-dot {
+  border-color: var(--accent-light);
+  background: var(--accent);
+  color: #fff;
+}
+.step-label {
+  font-size: 0.78rem; font-weight: 500; color: var(--muted);
+  transition: color var(--transition); white-space: nowrap;
+}
+.step-item.active .step-label { color: var(--text); }
+.step-item.completed .step-label { color: var(--accent-light); }
+.step-line {
+  width: 48px; height: 2px;
+  background: rgba(148,163,184,0.15);
+  margin: 0 0.3rem; flex-shrink: 0;
+  transition: background var(--transition);
+}
+.step-line.filled { background: var(--accent); }
+
+/* Panels */
+.panel {
+  display: none; opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+.panel.visible {
+  display: block;
+  animation: panelIn 0.45s ease forwards;
+}
+@keyframes panelIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Card */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem;
+}
+
+/* Step 1 — Upload */
+.dropzone {
+  border: 2px dashed rgba(148,163,184,0.2);
+  border-radius: var(--radius);
+  padding: 3.5rem 2rem;
+  text-align: center;
+  transition: border-color var(--transition), background var(--transition);
+  cursor: pointer;
+}
+.dropzone:hover {
+  border-color: var(--accent);
+  background: rgba(13,148,136,0.04);
+}
+.dropzone-icon {
+  width: 52px; height: 52px; margin: 0 auto 1.2rem;
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  background: var(--accent-bg); color: var(--accent-light);
+}
+.dropzone h3 { font-size: 1.05rem; font-weight: 600; margin-bottom: 0.3rem; }
+.dropzone .sub { font-size: 0.8rem; color: var(--muted); }
+.dropzone .formats { font-size: 0.72rem; color: rgba(148,163,184,0.5); margin-top: 0.6rem; }
+
+.divider-row {
+  display: flex; align-items: center; gap: 1rem;
+  margin: 1.5rem 0; color: var(--muted); font-size: 0.78rem;
+}
+.divider-row::before, .divider-row::after {
+  content: ''; flex: 1; height: 1px; background: var(--border);
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.65rem 1.4rem; border-radius: var(--radius-sm);
+  font-family: inherit; font-size: 0.85rem; font-weight: 600;
+  border: none; cursor: pointer; transition: all var(--transition);
+  text-decoration: none; white-space: nowrap;
+}
+.btn-primary {
+  background: var(--accent); color: #fff;
+}
+.btn-primary:hover { background: var(--accent-light); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(13,148,136,0.3); }
+.btn-outline {
+  background: transparent; color: var(--accent-light);
+  border: 1.5px solid var(--accent-border);
+}
+.btn-outline:hover { background: var(--accent-bg); border-color: var(--accent-light); }
+.btn-ghost {
+  background: transparent; color: var(--muted);
+  border: 1.5px solid var(--border);
+}
+.btn-ghost:hover { color: var(--text); border-color: rgba(148,163,184,0.3); }
+.btn-lg { padding: 0.8rem 2rem; font-size: 0.95rem; border-radius: var(--radius); }
+.btn-block { width: 100%; justify-content: center; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
+
+/* Step 2 — Processing */
+.processing-header { text-align: center; margin-bottom: 2rem; }
+.processing-header h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.4rem; }
+.processing-header p { color: var(--muted); font-size: 0.85rem; }
+
+.progress-track {
+  width: 100%; height: 6px; background: rgba(148,163,184,0.1);
+  border-radius: 3px; overflow: hidden; margin-bottom: 2rem;
+}
+.progress-fill {
+  height: 100%; width: 0%; border-radius: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-light));
+  transition: width 0.4s ease;
+}
+.progress-pct {
+  text-align: right; font-size: 0.75rem; color: var(--muted);
+  margin-top: -1.6rem; margin-bottom: 1.6rem; padding-right: 2px;
+}
+
+.check-list { display: flex; flex-direction: column; gap: 0.75rem; }
+.check-item {
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 0.85rem 1rem; border-radius: var(--radius-sm);
+  background: rgba(148,163,184,0.04);
+  border: 1px solid var(--border);
+  opacity: 0; transform: translateX(-10px);
+  transition: opacity 0.4s ease, transform 0.4s ease, border-color 0.4s ease, background 0.4s ease;
+}
+.check-item.show { opacity: 1; transform: translateX(0); }
+.check-item.done { border-color: rgba(34,197,94,0.2); background: rgba(34,197,94,0.04); }
+.check-icon {
+  width: 26px; height: 26px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: all 0.3s ease;
+  background: rgba(148,163,184,0.1); color: var(--muted);
+}
+.check-item.done .check-icon { background: var(--success-bg); color: var(--success); }
+.check-text { font-size: 0.85rem; font-weight: 500; }
+.check-item.done .check-text { color: var(--success); }
+
+/* Spinner */
+.spinner {
+  width: 16px; height: 16px; border: 2px solid rgba(148,163,184,0.2);
+  border-top-color: var(--accent-light); border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Step 3 — Results */
+.summary-banner {
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 1rem;
+  padding: 1.2rem 1.5rem;
+  background: var(--accent-bg);
+  border: 1px solid var(--accent-border);
+  border-radius: var(--radius);
+  margin-bottom: 1.5rem;
+}
+.summary-stat { display: flex; flex-direction: column; }
+.summary-stat .label { font-size: 0.75rem; color: var(--muted); margin-bottom: 2px; }
+.summary-stat .value { font-size: 1.15rem; font-weight: 700; color: var(--accent-light); }
+
+.results-table-wrap {
+  overflow-x: auto; border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+table {
+  width: 100%; border-collapse: collapse;
+  font-size: 0.82rem;
+}
+thead th {
+  padding: 0.75rem 1rem;
+  text-align: left; font-weight: 600; font-size: 0.72rem;
+  text-transform: uppercase; letter-spacing: 0.04em;
+  color: var(--muted); background: rgba(148,163,184,0.04);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+tbody td {
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+tbody tr { transition: background var(--transition); }
+tbody tr:hover { background: rgba(148,163,184,0.04); }
+tbody tr:last-child td { border-bottom: none; }
+.customer-name { font-weight: 600; }
+.customer-plate { font-size: 0.72rem; color: var(--muted); margin-top: 1px; }
+.amount { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.amount-old { color: var(--muted); }
+.amount-new { color: var(--accent-light); font-weight: 600; }
+.saving { color: var(--success); font-weight: 600; white-space: nowrap; }
+
+.badge {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  padding: 0.25rem 0.6rem; border-radius: 999px;
+  font-size: 0.7rem; font-weight: 600; white-space: nowrap;
+}
+.badge-success {
+  background: var(--success-bg);
+  color: var(--success); border: 1px solid rgba(34,197,94,0.2);
+}
+
+.results-footer {
+  display: flex; justify-content: flex-end; margin-top: 1.5rem;
+}
+
+/* Step 4 — Offer */
+.offer-controls {
+  display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;
+}
+.select-wrap {
+  position: relative; flex: 1; min-width: 200px;
+}
+.select-wrap select {
+  width: 100%; appearance: none;
+  padding: 0.6rem 2.5rem 0.6rem 1rem;
+  background: var(--surface); color: var(--text);
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  font-family: inherit; font-size: 0.85rem;
+  cursor: pointer; outline: none;
+  transition: border-color var(--transition);
+}
+.select-wrap select:focus { border-color: var(--accent); }
+.select-wrap::after {
+  content: ''; position: absolute; right: 12px; top: 50%;
+  transform: translateY(-50%);
+  border: 5px solid transparent; border-top-color: var(--muted);
+  pointer-events: none;
+}
+
+.letter-preview {
+  background: #111827;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem 2.2rem;
+  font-size: 0.88rem;
+  line-height: 1.75;
+  position: relative;
+}
+.letter-preview .sender {
+  font-size: 0.75rem; color: var(--muted);
+  margin-bottom: 1.5rem; padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+.letter-preview .greeting { margin-bottom: 1rem; }
+.letter-preview .body-text { color: rgba(248,250,252,0.85); margin-bottom: 1rem; }
+.letter-preview .comparison-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 1rem 1.2rem;
+  margin: 1.2rem 0;
+  display: flex; gap: 2rem; flex-wrap: wrap;
+}
+.comparison-box .col { flex: 1; min-width: 120px; }
+.comparison-box .col-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 0.3rem; }
+.comparison-box .col-insurer { font-weight: 600; font-size: 0.9rem; }
+.comparison-box .col-amount { font-size: 1.4rem; font-weight: 700; margin-top: 0.2rem; }
+.comparison-box .col-amount.old { color: var(--muted); }
+.comparison-box .col-amount.new { color: var(--accent-light); }
+.comparison-box .col-saving {
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; min-width: 100px;
+}
+.comparison-box .col-saving .save-amount { font-size: 1.5rem; font-weight: 700; color: var(--success); }
+.comparison-box .col-saving .save-label { font-size: 0.7rem; color: var(--muted); }
+.letter-preview .closing { margin-top: 1rem; }
+
+.offer-actions {
+  display: flex; gap: 0.75rem; margin-top: 1.5rem; flex-wrap: wrap;
+}
+.offer-footer {
+  margin-top: 2rem; padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+
+/* Toast */
+.toast {
+  position: fixed; bottom: 2rem; right: 2rem;
+  padding: 0.8rem 1.3rem; border-radius: var(--radius-sm);
+  background: var(--surface); border: 1px solid var(--accent-border);
+  color: var(--text); font-size: 0.85rem; font-weight: 500;
+  display: flex; align-items: center; gap: 0.6rem;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  opacity: 0; transform: translateY(20px);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+  z-index: 100; pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+
+/* File loading animation overlay */
+.file-anim {
+  display: none; text-align: center; padding: 2rem 0;
+}
+.file-anim.show { display: block; animation: panelIn 0.3s ease forwards; }
+.file-anim .file-icon-wrap {
+  width: 64px; height: 64px; margin: 0 auto 1rem;
+  border-radius: 50%; background: var(--accent-bg);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--accent-light);
+  animation: pulse-ring 1.2s ease-in-out infinite;
+}
+@keyframes pulse-ring {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(20,184,166,0.25); }
+  50% { box-shadow: 0 0 0 14px rgba(20,184,166,0); }
+}
+.file-anim p { color: var(--muted); font-size: 0.85rem; }
+.file-anim .filename { color: var(--text); font-weight: 600; font-size: 0.95rem; margin-bottom: 0.25rem; }
+
+/* Responsive */
+@media (max-width: 640px) {
+  .app-shell { padding: 1.2rem 1rem 3rem; }
+  .step-label { display: none; }
+  .step-line { width: 28px; }
+  .card { padding: 1.2rem; }
+  .summary-banner { flex-direction: column; }
+  table { font-size: 0.75rem; }
+  thead th, tbody td { padding: 0.5rem 0.6rem; }
+  .comparison-box { flex-direction: column; gap: 1rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="app-shell">
+  <!-- Header -->
+  <div class="header">
+    <div class="header-icon"><i data-lucide="car" style="width:22px;height:22px"></i></div>
+    <div>
+      <h1>KFZ-Bestand-Optimierer</h1>
+      <p>Automatische Tarifanalyse & Wechselempfehlungen</p>
+    </div>
+  </div>
+
+  <!-- Stepper -->
+  <div class="stepper" id="stepper">
+    <div class="step-item active" data-step="1">
+      <div class="step-dot">1</div>
+      <span class="step-label">Upload</span>
+    </div>
+    <div class="step-line" id="line-1-2"></div>
+    <div class="step-item" data-step="2">
+      <div class="step-dot">2</div>
+      <span class="step-label">Berechnung</span>
+    </div>
+    <div class="step-line" id="line-2-3"></div>
+    <div class="step-item" data-step="3">
+      <div class="step-dot">3</div>
+      <span class="step-label">Ergebnisse</span>
+    </div>
+    <div class="step-line" id="line-3-4"></div>
+    <div class="step-item" data-step="4">
+      <div class="step-dot">4</div>
+      <span class="step-label">Kundenangebot</span>
+    </div>
+  </div>
+
+  <!-- Step 1: Upload -->
+  <div class="panel visible" id="panel-1">
+    <div class="card">
+      <div class="dropzone" id="dropzone">
+        <div class="dropzone-icon"><i data-lucide="upload-cloud" style="width:26px;height:26px"></i></div>
+        <h3>Excel-Datei hier ablegen</h3>
+        <p class="sub">oder klicken zum Auswählen</p>
+        <p class="formats">.xlsx, .xls, .csv — Max. 10 MB</p>
+      </div>
+
+      <div class="file-anim" id="fileAnim">
+        <div class="file-icon-wrap"><i data-lucide="file-spreadsheet" style="width:28px;height:28px"></i></div>
+        <p class="filename">demo_kfz_bestand_2024.xlsx</p>
+        <p>Datei wird geladen…</p>
+      </div>
+
+      <div class="divider-row">oder Demo starten</div>
+
+      <div style="text-align:center">
+        <button class="btn btn-outline btn-lg" id="btnDemo">
+          <i data-lucide="file-spreadsheet" style="width:18px;height:18px"></i>
+          Demo-Daten laden
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 2: Berechnung -->
+  <div class="panel" id="panel-2">
+    <div class="card">
+      <div class="processing-header">
+        <h2>85 KFZ-Verträge werden analysiert…</h2>
+        <p>Bitte warten Sie, während wir die besten Tarife ermitteln.</p>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="progress-pct" id="progressPct">0 %</div>
+      <div class="check-list" id="checkList">
+        <div class="check-item" data-idx="0">
+          <div class="check-icon"><i data-lucide="check" style="width:14px;height:14px"></i></div>
+          <span class="check-text">Aktuelle Beiträge erfasst</span>
+        </div>
+        <div class="check-item" data-idx="1">
+          <div class="check-icon"><div class="spinner"></div></div>
+          <span class="check-text">Marktvergleich läuft…</span>
+        </div>
+        <div class="check-item" data-idx="2">
+          <div class="check-icon"><i data-lucide="check" style="width:14px;height:14px"></i></div>
+          <span class="check-text">SF-Klassen geprüft</span>
+        </div>
+        <div class="check-item" data-idx="3">
+          <div class="check-icon"><i data-lucide="check" style="width:14px;height:14px"></i></div>
+          <span class="check-text">Optimierungspotenzial berechnet</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 3: Ergebnisse -->
+  <div class="panel" id="panel-3">
+    <div class="summary-banner">
+      <div class="summary-stat">
+        <span class="label">Optimierbare Verträge</span>
+        <span class="value">34 von 85 Verträgen</span>
+      </div>
+      <div class="summary-stat" style="text-align:right">
+        <span class="label">Gesamtersparnis pro Jahr</span>
+        <span class="value">4.847 € / Jahr</span>
+      </div>
+    </div>
+
+    <div class="results-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Kunde</th>
+            <th>Aktuell</th>
+            <th>Empfehlung</th>
+            <th>Ersparnis / Jahr</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="resultsBody"></tbody>
+      </table>
+    </div>
+
+    <div class="results-footer">
+      <button class="btn btn-primary" id="btnToOffers">
+        Weiter zu Kundenangeboten
+        <i data-lucide="arrow-right" style="width:16px;height:16px"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Step 4: Kundenangebot -->
+  <div class="panel" id="panel-4">
+    <div class="offer-controls">
+      <div class="select-wrap">
+        <select id="customerSelect"></select>
+      </div>
+    </div>
+
+    <div class="letter-preview" id="letterPreview"></div>
+
+    <div class="offer-actions">
+      <button class="btn btn-outline" id="btnPdf">
+        <i data-lucide="file-text" style="width:16px;height:16px"></i>
+        Angebot als PDF generieren
+      </button>
+      <button class="btn btn-outline" id="btnEmail">
+        <i data-lucide="mail" style="width:16px;height:16px"></i>
+        Per E-Mail versenden
+      </button>
+    </div>
+
+    <div class="offer-footer">
+      <button class="btn btn-primary btn-lg btn-block" id="btnAllOffers">
+        <i data-lucide="files" style="width:18px;height:18px"></i>
+        Alle 34 Angebote generieren
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+(() => {
+  'use strict';
+
+  /* ── Demo Data ── */
+  const customers = [
+    { name:'Müller, Thomas',    plate:'HH-TM 4421',  sfClass:'SF 12', current:'Allianz',   currentAmt:847, rec:'HUK-COBURG',    recAmt:612, saving:235 },
+    { name:'Schmidt, Andrea',   plate:'HH-AS 7788',  sfClass:'SF 8',  current:'HUK-COBURG',currentAmt:923, rec:'VHV',           recAmt:714, saving:209 },
+    { name:'Weber, Klaus',      plate:'PI-KW 1190',  sfClass:'SF 15', current:'VHV',        currentAmt:634, rec:'Itzehoer',      recAmt:489, saving:145 },
+    { name:'Fischer, Sandra',   plate:'HH-SF 3302',  sfClass:'SF 5',  current:'AXA',        currentAmt:1120,rec:'Allianz',       recAmt:912, saving:208 },
+    { name:'Wagner, Peter',     plate:'SE-PW 5561',  sfClass:'SF 20', current:'Itzehoer',   currentAmt:412, rec:'HUK-COBURG',    recAmt:318, saving:94  },
+    { name:'Becker, Julia',     plate:'HH-JB 6643',  sfClass:'SF 3',  current:'Gothaer',    currentAmt:1340,rec:'VHV',           recAmt:1087,saving:253 },
+    { name:'Hoffmann, Markus',  plate:'PI-MH 2278',  sfClass:'SF 10', current:'HDI',        currentAmt:789, rec:'Itzehoer',      recAmt:623, saving:166 },
+    { name:'Koch, Sabine',      plate:'HH-SK 9914',  sfClass:'SF 7',  current:'Allianz',    currentAmt:967, rec:'AXA',           recAmt:781, saving:186 },
+    { name:'Richter, Frank',    plate:'OD-FR 4450',  sfClass:'SF 22', current:'Württemb.',  currentAmt:378, rec:'HUK-COBURG',    recAmt:295, saving:83  },
+    { name:'Klein, Monika',     plate:'HH-MK 1127',  sfClass:'SF 6',  current:'VHV',        currentAmt:1045,rec:'Gothaer',       recAmt:847, saving:198 },
+    { name:'Wolf, Jürgen',      plate:'SE-JW 8832',  sfClass:'SF 14', current:'AXA',        currentAmt:598, rec:'Itzehoer',      recAmt:459, saving:139 },
+    { name:'Schröder, Heike',   plate:'HH-HS 5509',  sfClass:'SF 9',  current:'HUK-COBURG',currentAmt:876, rec:'Allianz',       recAmt:694, saving:182 },
+  ];
+
+  /* ── State ── */
+  let currentStep = 1;
+
+  /* ── DOM refs ── */
+  const $ = (s) => document.querySelector(s);
+  const $$ = (s) => document.querySelectorAll(s);
+  const panels = { 1: $('#panel-1'), 2: $('#panel-2'), 3: $('#panel-3'), 4: $('#panel-4') };
+  const stepItems = $$('.step-item');
+  const lines = { '1-2': $('#line-1-2'), '2-3': $('#line-2-3'), '3-4': $('#line-3-4') };
+
+  /* ── Helpers ── */
+  function fmt(n) { return n.toLocaleString('de-DE') + ' €'; }
+
+  function showToast(icon, msg) {
+    const t = $('#toast');
+    t.innerHTML = `<i data-lucide="${icon}" style="width:16px;height:16px;color:var(--accent-light)"></i> ${msg}`;
+    lucide.createIcons({ nameAttr: 'data-lucide', attrs: {} });
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2800);
+  }
+
+  /* ── Step Navigation ── */
+  function goToStep(step) {
+    if (step === currentStep) return;
+    // Hide current
+    panels[currentStep].classList.remove('visible');
+
+    currentStep = step;
+
+    // Update stepper
+    stepItems.forEach(si => {
+      const s = +si.dataset.step;
+      si.classList.remove('active', 'completed', 'clickable');
+      if (s < step) { si.classList.add('completed', 'clickable'); }
+      else if (s === step) { si.classList.add('active'); }
+    });
+    // Update lines
+    Object.entries(lines).forEach(([key, el]) => {
+      const [a] = key.split('-').map(Number);
+      el.classList.toggle('filled', a < step);
+    });
+
+    // Show panel after a tiny delay for animation
+    setTimeout(() => {
+      panels[step].classList.add('visible');
+      lucide.createIcons({ nameAttr: 'data-lucide', attrs: {} });
+    }, 60);
+
+    // Start processing if step 2
+    if (step === 2) runProcessing();
+    // Render letter if step 4
+    if (step === 4) renderLetter(0);
+  }
+
+  /* ── Stepper click (back nav) ── */
+  $('#stepper').addEventListener('click', (e) => {
+    const item = e.target.closest('.step-item');
+    if (!item) return;
+    const s = +item.dataset.step;
+    if (item.classList.contains('clickable') || item.classList.contains('completed')) {
+      goToStep(s);
+    }
+  });
+
+  /* ── Step 1 ── */
+  $('#btnDemo').addEventListener('click', () => {
+    // Show file animation
+    $('#dropzone').style.display = 'none';
+    $('#fileAnim').classList.add('show');
+    setTimeout(() => goToStep(2), 1200);
+  });
+
+  $('#dropzone').addEventListener('click', () => {
+    // Simulate same as demo for the demo
+    $('#btnDemo').click();
+  });
+
+  /* ── Step 2: Processing ── */
+  function runProcessing() {
+    const fill = $('#progressFill');
+    const pct = $('#progressPct');
+    const items = $$('.check-item');
+
+    // Reset
+    fill.style.width = '0%';
+    pct.textContent = '0 %';
+    items.forEach(it => { it.classList.remove('show', 'done'); });
+
+    const schedule = [
+      { time: 300,  idx: 0, progress: 15 },
+      { time: 700,  idx: 0, progress: 25, done: true },
+      { time: 1000, idx: 1, progress: 40 },
+      { time: 1800, idx: 1, progress: 55, done: true, replaceSpinner: true },
+      { time: 2100, idx: 2, progress: 70 },
+      { time: 2500, idx: 2, progress: 80, done: true },
+      { time: 2800, idx: 3, progress: 90 },
+      { time: 3300, idx: 3, progress: 100, done: true },
+    ];
+
+    schedule.forEach(({ time, idx, progress, done, replaceSpinner }) => {
+      setTimeout(() => {
+        const item = items[idx];
+        item.classList.add('show');
+        fill.style.width = progress + '%';
+        pct.textContent = progress + ' %';
+
+        if (replaceSpinner) {
+          // Replace spinner with checkmark
+          const iconWrap = item.querySelector('.check-icon');
+          iconWrap.innerHTML = '<i data-lucide="check" style="width:14px;height:14px"></i>';
+          lucide.createIcons({ nameAttr: 'data-lucide', attrs: {} });
+          item.querySelector('.check-text').textContent = 'Marktvergleich abgeschlossen';
+        }
+
+        if (done) item.classList.add('done');
+      }, time);
+    });
+
+    // Auto advance
+    setTimeout(() => goToStep(3), 4000);
+  }
+
+  /* ── Step 3: Results Table ── */
+  function buildTable() {
+    const tbody = $('#resultsBody');
+    tbody.innerHTML = customers.map((c, i) => `
+      <tr>
+        <td>
+          <div class="customer-name">${c.name}</div>
+          <div class="customer-plate">${c.plate} · ${c.sfClass}</div>
+        </td>
+        <td>
+          <div class="amount amount-old">${c.current}</div>
+          <div class="amount amount-old">${fmt(c.currentAmt)}</div>
+        </td>
+        <td>
+          <div class="amount amount-new">${c.rec}</div>
+          <div class="amount amount-new">${fmt(c.recAmt)}</div>
+        </td>
+        <td><span class="saving">${fmt(c.saving)} / Jahr</span></td>
+        <td><span class="badge badge-success"><i data-lucide="check-circle" style="width:12px;height:12px"></i> Angebot bereit</span></td>
+      </tr>
+    `).join('');
+  }
+  buildTable();
+
+  $('#btnToOffers').addEventListener('click', () => {
+    buildCustomerSelect();
+    goToStep(4);
+  });
+
+  /* ── Step 4: Offer ── */
+  function buildCustomerSelect() {
+    const sel = $('#customerSelect');
+    sel.innerHTML = customers.map((c, i) =>
+      `<option value="${i}">${c.name} — Ersparnis ${fmt(c.saving)}/Jahr</option>`
+    ).join('');
+  }
+
+  function renderLetter(idx) {
+    const c = customers[idx];
+    const surname = c.name.split(',')[0].trim();
+    const isFrau = ['Andrea','Sandra','Julia','Sabine','Monika','Heike'].some(n => c.name.includes(n));
+    const anrede = isFrau ? 'Frau' : 'Herr';
+
+    $('#letterPreview').innerHTML = `
+      <div class="sender">
+        <strong>Ihr Versicherungsmakler</strong> · Musterstraße 12 · 20095 Hamburg<br>
+        Tel. 040 / 123 456 78 · info@makler-muster.de
+      </div>
+      <div class="greeting"><strong>Sehr geehrte/r ${anrede} ${surname},</strong></div>
+      <div class="body-text">
+        im Rahmen unserer jährlichen Bestandsanalyse haben wir Ihren aktuellen KFZ-Versicherungsvertrag
+        (Kennzeichen <strong>${c.plate}</strong>, ${c.sfClass}) mit den aktuellen Markttarifen verglichen.
+      </div>
+      <div class="body-text">
+        Wir freuen uns, Ihnen mitteilen zu können, dass wir eine <strong>günstigere Absicherung bei
+        gleichem Leistungsumfang</strong> für Sie gefunden haben:
+      </div>
+      <div class="comparison-box">
+        <div class="col">
+          <div class="col-label">Aktueller Tarif</div>
+          <div class="col-insurer">${c.current}</div>
+          <div class="col-amount old">${fmt(c.currentAmt)}</div>
+        </div>
+        <div class="col-saving">
+          <div class="save-amount">− ${fmt(c.saving)}</div>
+          <div class="save-label">Ersparnis / Jahr</div>
+        </div>
+        <div class="col">
+          <div class="col-label">Empfohlener Tarif</div>
+          <div class="col-insurer">${c.rec}</div>
+          <div class="col-amount new">${fmt(c.recAmt)}</div>
+        </div>
+      </div>
+      <div class="body-text">
+        Der Wechsel ist zum nächsten Stichtag problemlos möglich. Gerne übernehmen wir sämtliche
+        Formalitäten für Sie — Sie müssen sich um nichts kümmern.
+      </div>
+      <div class="body-text">
+        Haben Sie Fragen oder möchten Sie das Angebot annehmen? Wir sind jederzeit für Sie erreichbar.
+      </div>
+      <div class="closing">
+        Mit freundlichen Grüßen<br>
+        <strong>Ihr Makler-Team</strong>
+      </div>
+    `;
+    lucide.createIcons({ nameAttr: 'data-lucide', attrs: {} });
+  }
+
+  $('#customerSelect').addEventListener('change', (e) => {
+    renderLetter(+e.target.value);
+  });
+
+  $('#btnPdf').addEventListener('click', () => {
+    const c = customers[$('#customerSelect').value];
+    showToast('file-text', `PDF für ${c.name} wird erstellt…`);
+  });
+
+  $('#btnEmail').addEventListener('click', () => {
+    const c = customers[$('#customerSelect').value];
+    showToast('mail', `E-Mail an ${c.name} gesendet.`);
+  });
+
+  $('#btnAllOffers').addEventListener('click', () => {
+    showToast('files', '34 Angebote werden generiert…');
+  });
+
+  /* ── Init icons ── */
+  lucide.createIcons({ nameAttr: 'data-lucide', attrs: {} });
+})();
+</script>
+</body>
+</html>

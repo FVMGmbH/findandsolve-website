@@ -1,0 +1,3192 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="dark">
+<head>
+<!--
+   ______                            __
+  / ____/___  ____ ___  ____  __  __/ /____  _____
+ / /   / __ \/ __ `__ \/ __ \/ / / / __/ _ \/ ___/
+/ /___/ /_/ / / / / / / /_/ / /_/ / /_/  __/ /
+\____/\____/_/ /_/ /_/ .___/\__,_/\__/\___/_/
+                    /_/
+        Created with Perplexity Computer
+        https://www.perplexity.ai/computer
+-->
+
+<!-- Perplexity Computer Attribution — SEO Meta Tags -->
+<meta name="generator" content="Perplexity Computer">
+<meta name="author" content="Perplexity Computer">
+<meta property="og:see_also" content="https://www.perplexity.ai/computer">
+<link rel="author" href="https://www.perplexity.ai/computer">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FVM Kundenportal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+/* ============================================
+   FVM KUNDENPORTAL — DESIGN TOKENS & BASE
+   ============================================ */
+:root {
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  /* Spacing (4px system) */
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+  --space-5: 20px; --space-6: 24px; --space-8: 32px; --space-10: 40px;
+  --space-12: 48px; --space-16: 64px;
+  /* Type scale */
+  --text-xs: 0.6875rem; --text-sm: 0.8125rem; --text-base: 0.9375rem;
+  --text-lg: 1.125rem; --text-xl: 1.375rem; --text-2xl: 1.75rem;
+  --text-3xl: 2.25rem; --text-4xl: 3rem;
+  /* Radius */
+  --radius-sm: 6px; --radius-md: 10px; --radius-lg: 14px; --radius-xl: 20px;
+  /* Transitions */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-fast: 150ms; --duration-normal: 250ms; --duration-slow: 400ms;
+  /* Primary accent */
+  --accent: #20808D; --accent-light: #4f98a3; --accent-dim: #1a6672;
+  --accent-bg: rgba(32,128,141,0.12); --accent-bg-hover: rgba(32,128,141,0.2);
+  /* Sidebar width */
+  --sidebar-w: 260px;
+  --header-h: 60px;
+}
+
+/* DARK THEME (default) */
+[data-theme="dark"] {
+  --bg-root: #0b0f13;
+  --bg-surface: #111920;
+  --bg-card: #19222c;
+  --bg-card-hover: #1f2a36;
+  --bg-elevated: #212c38;
+  --bg-input: #151d26;
+  --border: rgba(255,255,255,0.08);
+  --border-strong: rgba(255,255,255,0.14);
+  --text-primary: #e8ecf0;
+  --text-secondary: #8b9bb0;
+  --text-muted: #5a6a7e;
+  --text-inverse: #0b0f13;
+  --status-green: #22c55e; --status-green-bg: rgba(34,197,94,0.12);
+  --status-red: #ef4444; --status-red-bg: rgba(239,68,68,0.12);
+  --status-yellow: #f59e0b; --status-yellow-bg: rgba(245,158,11,0.12);
+  --status-blue: #3b82f6; --status-blue-bg: rgba(59,130,246,0.12);
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.3);
+  --shadow-elevated: 0 4px 16px rgba(0,0,0,0.4);
+  --sidebar-bg: #0e141a;
+  --header-bg: rgba(14,20,26,0.85);
+  --login-bg: #080c10;
+  --chart-grid: rgba(255,255,255,0.06);
+  --scrollbar-track: #111920;
+  --scrollbar-thumb: #2a3644;
+}
+
+/* LIGHT THEME */
+[data-theme="light"] {
+  --bg-root: #f3f4f6;
+  --bg-surface: #ffffff;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f9fafb;
+  --bg-elevated: #ffffff;
+  --bg-input: #f3f4f6;
+  --border: rgba(0,0,0,0.08);
+  --border-strong: rgba(0,0,0,0.14);
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --text-muted: #9ca3af;
+  --text-inverse: #ffffff;
+  --status-green: #16a34a; --status-green-bg: rgba(22,163,74,0.1);
+  --status-red: #dc2626; --status-red-bg: rgba(220,38,38,0.1);
+  --status-yellow: #d97706; --status-yellow-bg: rgba(217,119,6,0.1);
+  --status-blue: #2563eb; --status-blue-bg: rgba(37,99,235,0.1);
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-elevated: 0 4px 16px rgba(0,0,0,0.1);
+  --sidebar-bg: #ffffff;
+  --header-bg: rgba(255,255,255,0.85);
+  --login-bg: #f3f4f6;
+  --chart-grid: rgba(0,0,0,0.06);
+  --scrollbar-track: #f3f4f6;
+  --scrollbar-thumb: #d1d5db;
+}
+
+/* ============================================
+   RESET & BASE
+   ============================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; }
+body {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: 1.5;
+  color: var(--text-primary);
+  background: var(--bg-root);
+  -webkit-font-smoothing: antialiased;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--scrollbar-track); }
+::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+a { color: var(--accent-light); text-decoration: none; }
+a:hover { text-decoration: underline; }
+button { font-family: inherit; cursor: pointer; border: none; }
+input, textarea, select { font-family: inherit; font-size: inherit; }
+
+/* ============================================
+   LOGIN PAGE
+   ============================================ */
+#login-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: var(--login-bg);
+  position: relative;
+}
+.login-container {
+  width: 420px;
+  max-width: 90vw;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-10);
+  box-shadow: var(--shadow-elevated);
+}
+.login-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-8);
+}
+.login-logo svg { flex-shrink: 0; }
+.login-logo-text {
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.login-logo-text span { color: var(--accent); }
+.login-subtitle {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  margin-bottom: var(--space-8);
+}
+.form-group {
+  margin-bottom: var(--space-5);
+}
+.form-group label {
+  display: block;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-2);
+}
+.form-input {
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-size: var(--text-base);
+  transition: border-color var(--duration-fast) ease;
+  outline: none;
+}
+.form-input:focus { border-color: var(--accent); }
+.form-input::placeholder { color: var(--text-muted); }
+.form-link {
+  font-size: var(--text-sm);
+  color: var(--accent-light);
+  text-align: right;
+  display: block;
+  margin-top: var(--space-1);
+}
+.btn-primary {
+  width: 100%;
+  padding: var(--space-3) var(--space-6);
+  background: var(--accent);
+  color: #fff;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: var(--text-base);
+  transition: all var(--duration-fast) ease;
+  margin-top: var(--space-6);
+}
+.btn-primary:hover { background: var(--accent-dim); transform: translateY(-1px); }
+.login-footer {
+  text-align: center;
+  margin-top: var(--space-6);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+.login-bg-decoration {
+  position: absolute;
+  width: 600px; height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(32,128,141,0.08) 0%, transparent 70%);
+  top: -200px; right: -200px;
+  pointer-events: none;
+}
+
+/* ============================================
+   APP SHELL
+   ============================================ */
+#app-shell {
+  display: none;
+  height: 100dvh;
+  grid-template-columns: var(--sidebar-w) 1fr;
+  grid-template-rows: var(--header-h) 1fr;
+}
+#app-shell.active {
+  display: grid;
+}
+
+/* SIDEBAR */
+.sidebar {
+  grid-row: 1 / -1;
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  z-index: 20;
+}
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-5) var(--space-5);
+  border-bottom: 1px solid var(--border);
+  min-height: var(--header-h);
+}
+.sidebar-brand-text {
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.sidebar-brand-text span { color: var(--accent); }
+.sidebar-nav { flex: 1; padding: var(--space-3); }
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--duration-fast) ease;
+  margin-bottom: 2px;
+  background: none;
+  width: 100%;
+  text-align: left;
+}
+.nav-item:hover { background: var(--accent-bg); color: var(--text-primary); }
+.nav-item.active {
+  background: var(--accent-bg);
+  color: var(--accent-light);
+  font-weight: 600;
+}
+.nav-item svg { width: 20px; height: 20px; flex-shrink: 0; opacity: 0.7; }
+.nav-item.active svg { opacity: 1; }
+.sidebar-footer {
+  padding: var(--space-4) var(--space-5);
+  border-top: 1px solid var(--border);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+/* HEADER */
+.header {
+  grid-column: 2;
+  background: var(--header-bg);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--space-6);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.header-left {
+  font-size: var(--text-lg);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+.header-user {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+.user-avatar {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: var(--text-sm);
+}
+.icon-btn {
+  width: 36px; height: 36px;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--duration-fast) ease;
+}
+.icon-btn:hover { background: var(--accent-bg); color: var(--accent-light); border-color: transparent; }
+.icon-btn svg { width: 18px; height: 18px; }
+.theme-toggle { position: relative; }
+.notification-badge {
+  position: relative;
+}
+.notification-badge::after {
+  content: '2';
+  position: absolute;
+  top: -4px; right: -4px;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--status-red);
+  color: #fff;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+/* MAIN CONTENT */
+.main-content {
+  grid-column: 2;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--space-6);
+  background: var(--bg-root);
+}
+
+/* ============================================
+   PAGES (hidden by default)
+   ============================================ */
+.page { display: none; }
+.page.active { display: block; animation: fadeIn var(--duration-normal) var(--ease-out); }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ============================================
+   SHARED COMPONENTS
+   ============================================ */
+
+/* Cards */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-card);
+  transition: all var(--duration-fast) ease;
+}
+.card-hover:hover { background: var(--bg-card-hover); border-color: var(--border-strong); }
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-5);
+}
+.card-title {
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.card-subtitle {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  margin-top: var(--space-1);
+}
+
+/* Grid layouts */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-5); }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-5); }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-5); }
+.grid-auto { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: var(--space-5); }
+
+/* Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px var(--space-3);
+  border-radius: 9999px;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.badge-green { background: var(--status-green-bg); color: var(--status-green); }
+.badge-red { background: var(--status-red-bg); color: var(--status-red); }
+.badge-yellow { background: var(--status-yellow-bg); color: var(--status-yellow); }
+.badge-blue { background: var(--status-blue-bg); color: var(--status-blue); }
+.badge-accent { background: var(--accent-bg); color: var(--accent-light); }
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  transition: all var(--duration-fast) ease;
+  cursor: pointer;
+  border: none;
+}
+.btn-filled { background: var(--accent); color: #fff; }
+.btn-filled:hover { background: var(--accent-dim); }
+.btn-outline { background: transparent; color: var(--accent-light); border: 1px solid var(--accent); }
+.btn-outline:hover { background: var(--accent-bg); }
+.btn-ghost { background: transparent; color: var(--text-secondary); }
+.btn-ghost:hover { background: var(--accent-bg); color: var(--accent-light); }
+.btn-danger { background: var(--status-red-bg); color: var(--status-red); }
+.btn-danger:hover { background: var(--status-red); color: #fff; }
+.btn-lg { padding: var(--space-3) var(--space-6); font-size: var(--text-base); }
+
+/* Tables */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.data-table th {
+  text-align: left;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--border);
+}
+.data-table td {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--border);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+.data-table tr:hover td { background: var(--bg-card-hover); }
+.data-table td:first-child { color: var(--text-primary); font-weight: 500; }
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: var(--space-1);
+  border-bottom: 1px solid var(--border);
+  margin-bottom: var(--space-5);
+}
+.tab {
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: all var(--duration-fast) ease;
+}
+.tab:hover { color: var(--text-primary); }
+.tab.active { color: var(--accent-light); border-bottom-color: var(--accent); }
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: var(--space-12) var(--space-6);
+  color: var(--text-muted);
+}
+.empty-state svg { width: 48px; height: 48px; margin-bottom: var(--space-4); opacity: 0.3; }
+.empty-state p { font-size: var(--text-sm); }
+
+/* Privacy banner */
+.privacy-banner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  background: var(--accent-bg);
+  border: 1px solid rgba(32,128,141,0.25);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-6);
+  font-size: var(--text-sm);
+  color: var(--accent-light);
+}
+.privacy-banner svg { flex-shrink: 0; width: 20px; height: 20px; }
+
+/* Progress bar */
+.progress-bar {
+  height: 8px;
+  border-radius: 4px;
+  background: var(--bg-input);
+  overflow: hidden;
+  position: relative;
+}
+.progress-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width var(--duration-slow) var(--ease-out);
+}
+
+/* Timeline / Stepper */
+.timeline { position: relative; padding-left: var(--space-8); }
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 11px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--border);
+}
+.timeline-item {
+  position: relative;
+  padding-bottom: var(--space-6);
+}
+.timeline-item:last-child { padding-bottom: 0; }
+.timeline-dot {
+  position: absolute;
+  left: calc(var(--space-8) * -1 + 4px);
+  top: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--bg-card);
+  border: 2px solid var(--text-muted);
+  z-index: 1;
+}
+.timeline-item.completed .timeline-dot { background: var(--status-green); border-color: var(--status-green); }
+.timeline-item.current .timeline-dot { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-bg); }
+.timeline-title { font-size: var(--text-sm); font-weight: 600; color: var(--text-primary); }
+.timeline-date { font-size: var(--text-xs); color: var(--text-muted); margin-top: 2px; }
+.timeline-desc { font-size: var(--text-xs); color: var(--text-secondary); margin-top: var(--space-1); }
+
+/* Ampel system */
+.ampel { display: inline-flex; align-items: center; gap: var(--space-2); font-size: var(--text-sm); font-weight: 500; }
+.ampel-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+.ampel-rot .ampel-dot { background: var(--status-red); }
+.ampel-gelb .ampel-dot { background: var(--status-yellow); }
+.ampel-gruen .ampel-dot { background: var(--status-green); }
+.ampel-rot { color: var(--status-red); }
+.ampel-gelb { color: var(--status-yellow); }
+.ampel-gruen { color: var(--status-green); }
+
+/* Accordions */
+.accordion { border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; }
+.accordion + .accordion { margin-top: var(--space-3); }
+.accordion-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-4) var(--space-5);
+  background: var(--bg-card);
+  cursor: pointer;
+  transition: background var(--duration-fast) ease;
+  width: 100%;
+  border: none;
+  color: var(--text-primary);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  text-align: left;
+}
+.accordion-header:hover { background: var(--bg-card-hover); }
+.accordion-chevron { transition: transform var(--duration-fast) ease; color: var(--text-muted); }
+.accordion.open .accordion-chevron { transform: rotate(180deg); }
+.accordion-body { display: none; padding: var(--space-4) var(--space-5); background: var(--bg-surface); border-top: 1px solid var(--border); }
+.accordion.open .accordion-body { display: block; }
+
+/* Modal */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(4px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+.modal-overlay.active { display: flex; }
+.modal {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-8);
+  max-width: 560px;
+  width: 90%;
+  box-shadow: var(--shadow-elevated);
+  max-height: 80vh;
+  overflow-y: auto;
+}
+.modal-title { font-size: var(--text-xl); font-weight: 700; margin-bottom: var(--space-5); }
+
+/* KPI card */
+.kpi-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-5);
+}
+.kpi-label { font-size: var(--text-xs); color: var(--text-muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; }
+.kpi-value { font-size: var(--text-2xl); font-weight: 700; color: var(--text-primary); margin-top: var(--space-1); }
+.kpi-sub { font-size: var(--text-xs); color: var(--text-secondary); margin-top: var(--space-1); }
+
+/* Filter bar */
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+  flex-wrap: wrap;
+}
+
+/* Wizard / Stepper */
+.wizard-steps {
+  display: flex;
+  gap: var(--space-2);
+  margin-bottom: var(--space-8);
+}
+.wizard-step {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+.wizard-step.active { color: var(--accent-light); }
+.wizard-step.done { color: var(--status-green); }
+.wizard-step-num {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  border: 2px solid var(--border);
+}
+.wizard-step.active .wizard-step-num { border-color: var(--accent); background: var(--accent-bg); color: var(--accent-light); }
+.wizard-step.done .wizard-step-num { border-color: var(--status-green); background: var(--status-green-bg); }
+.wizard-sep { width: 32px; height: 2px; background: var(--border); margin: 0 var(--space-1); }
+
+/* Chart container */
+.chart-container {
+  position: relative;
+  width: 100%;
+}
+
+/* Finanzscore gauge */
+.gauge-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-6);
+}
+.gauge-wrapper {
+  position: relative;
+  width: 200px;
+  height: 200px;
+}
+.gauge-wrapper canvas { width: 100% !important; height: 100% !important; }
+.gauge-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.gauge-value { font-size: var(--text-3xl); font-weight: 800; color: var(--text-primary); }
+.gauge-label { font-size: var(--text-xs); color: var(--text-muted); margin-top: var(--space-1); }
+.gauge-status {
+  margin-top: var(--space-3);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  padding: var(--space-1) var(--space-4);
+  border-radius: 9999px;
+}
+
+/* Drag & Drop upload zone */
+.upload-zone {
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-10);
+  text-align: center;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all var(--duration-fast) ease;
+}
+.upload-zone:hover { border-color: var(--accent); background: var(--accent-bg); }
+.upload-zone svg { width: 40px; height: 40px; margin-bottom: var(--space-3); opacity: 0.4; }
+.upload-zone p { font-size: var(--text-sm); }
+
+/* Section title */
+.section-title {
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--space-5);
+}
+.section-subtitle {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-6);
+  margin-top: calc(var(--space-2) * -1);
+}
+
+/* Product card */
+.product-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-5);
+  cursor: pointer;
+  transition: all var(--duration-fast) ease;
+  position: relative;
+}
+.product-card:hover { background: var(--bg-card-hover); border-color: var(--border-strong); transform: translateY(-2px); }
+.product-card-badge {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+}
+.product-card-icon {
+  width: 44px; height: 44px;
+  border-radius: var(--radius-sm);
+  background: var(--accent-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-4);
+  color: var(--accent-light);
+}
+.product-card-icon svg { width: 22px; height: 22px; }
+.product-card h3 { font-size: var(--text-base); font-weight: 600; margin-bottom: var(--space-2); }
+.product-card p { font-size: var(--text-sm); color: var(--text-secondary); line-height: 1.4; }
+
+/* Contract detail overlay */
+.detail-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: none;
+}
+.detail-overlay.active { display: flex; }
+.detail-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(4px);
+}
+.detail-panel {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 680px;
+  max-width: 95vw;
+  background: var(--bg-surface);
+  border-left: 1px solid var(--border);
+  overflow-y: auto;
+  padding: var(--space-8);
+  animation: slideIn var(--duration-normal) var(--ease-out);
+}
+@keyframes slideIn { from { transform: translateX(40px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+.detail-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-6);
+}
+.detail-close {
+  width: 36px; height: 36px;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--duration-fast) ease;
+}
+.detail-close:hover { background: var(--accent-bg); color: var(--accent-light); }
+
+/* Info row */
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--border);
+  font-size: var(--text-sm);
+}
+.info-row .info-label { color: var(--text-muted); }
+.info-row .info-value { color: var(--text-primary); font-weight: 500; }
+
+/* Settings section */
+.settings-section {
+  margin-bottom: var(--space-8);
+}
+.settings-section h3 {
+  font-size: var(--text-lg);
+  font-weight: 600;
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--border);
+}
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) 0;
+  font-size: var(--text-sm);
+}
+.settings-row label { color: var(--text-secondary); }
+
+/* Toggle switch */
+.toggle {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  background: var(--bg-input);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all var(--duration-fast) ease;
+}
+.toggle.active { background: var(--accent); border-color: var(--accent); }
+.toggle::after {
+  content: '';
+  position: absolute;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  top: 2px; left: 2px;
+  transition: transform var(--duration-fast) ease;
+}
+.toggle.active::after { transform: translateX(20px); }
+
+/* Footer */
+.app-footer {
+  margin-top: var(--space-10);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--border);
+  text-align: center;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+.app-footer a { color: var(--text-muted); }
+.app-footer a:hover { color: var(--accent-light); }
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .grid-4 { grid-template-columns: repeat(2, 1fr); }
+  .grid-3 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 1024px) {
+  :root { --sidebar-w: 60px; }
+  .sidebar-brand-text, .nav-item span, .sidebar-footer { display: none; }
+  .nav-item { justify-content: center; padding: var(--space-3); }
+}
+
+/* Pulse animation for current step */
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 4px var(--accent-bg); }
+  50% { box-shadow: 0 0 0 8px rgba(32,128,141,0.08); }
+}
+.timeline-item.current .timeline-dot { animation: pulse 2s ease infinite; }
+
+/* Chart.js dark mode fix */
+.chart-container canvas { max-width: 100%; }
+
+/* ============================================
+   IBAN VALIDATION
+   ============================================ */
+.iban-input-valid {
+  border-color: var(--status-green) !important;
+  box-shadow: 0 0 0 3px var(--status-green-bg);
+}
+.iban-input-invalid {
+  border-color: var(--status-red) !important;
+  box-shadow: 0 0 0 3px var(--status-red-bg);
+}
+#iban-result {
+  margin-top: var(--space-2);
+  font-size: var(--text-sm);
+  min-height: 20px;
+  transition: all var(--duration-fast) ease;
+}
+#iban-result.valid {
+  color: var(--status-green);
+}
+#iban-result.invalid {
+  color: var(--status-red);
+}
+
+/* ============================================
+   UPLOAD CONTRACT MULTI-STEP
+   ============================================ */
+.upload-step { display: none; }
+.upload-step.active { display: block; }
+.upload-action-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+  margin-top: var(--space-5);
+  margin-bottom: var(--space-5);
+}
+.upload-action-card {
+  background: var(--bg-surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-6);
+  cursor: pointer;
+  transition: all var(--duration-fast) ease;
+  text-align: center;
+}
+.upload-action-card:hover {
+  border-color: var(--accent);
+  background: var(--accent-bg);
+}
+.upload-action-card.selected {
+  border-color: var(--accent);
+  background: var(--accent-bg);
+}
+.upload-action-card svg {
+  width: 36px;
+  height: 36px;
+  margin-bottom: var(--space-3);
+  color: var(--accent-light);
+}
+.upload-action-card h4 {
+  font-size: var(--text-base);
+  font-weight: 600;
+  margin-bottom: var(--space-2);
+  color: var(--text-primary);
+}
+.upload-action-card p {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+.upload-action-card .upload-action-sub {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  margin-top: var(--space-2);
+  font-style: italic;
+}
+.upload-confirm {
+  text-align: center;
+  padding: var(--space-6) 0;
+}
+.upload-confirm svg {
+  width: 48px;
+  height: 48px;
+  color: var(--status-green);
+  margin-bottom: var(--space-4);
+}
+.upload-confirm h3 {
+  font-size: var(--text-lg);
+  font-weight: 600;
+  margin-bottom: var(--space-3);
+}
+.upload-confirm p {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* ============================================
+   VERTRAGSCHECK PAGE
+   ============================================ */
+.vcheck-banner {
+  background: var(--bg-card);
+  border: 1px solid var(--accent);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius-md);
+  padding: var(--space-6);
+  margin-bottom: var(--space-6);
+}
+.vcheck-banner h3 {
+  font-size: var(--text-base);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--space-3);
+}
+.vcheck-banner ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.vcheck-banner li {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.vcheck-banner li::before {
+  content: '•';
+  color: var(--accent-light);
+  font-weight: 700;
+}
+.vcheck-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-5);
+  margin-bottom: var(--space-8);
+}
+.vcheck-step {
+  text-align: center;
+  padding: var(--space-6);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  position: relative;
+}
+.vcheck-step-num {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--accent-bg);
+  color: var(--accent-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: var(--text-sm);
+  margin: 0 auto var(--space-3);
+}
+.vcheck-step h4 {
+  font-size: var(--text-base);
+  font-weight: 600;
+  margin-bottom: var(--space-2);
+}
+.vcheck-step p {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+.vcheck-upload-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-6);
+  margin-bottom: var(--space-6);
+}
+.vcheck-upload-section h3 {
+  font-size: var(--text-lg);
+  font-weight: 600;
+  margin-bottom: var(--space-5);
+}
+.vcheck-submitted {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-6);
+  margin-bottom: var(--space-6);
+}
+.vcheck-submitted h3 {
+  font-size: var(--text-lg);
+  font-weight: 600;
+  margin-bottom: var(--space-5);
+}
+.vcheck-entry {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: var(--space-4);
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-4);
+  gap: var(--space-4);
+}
+.vcheck-entry-info h4 {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  margin-bottom: var(--space-1);
+}
+.vcheck-entry-info p {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+.vcheck-stepper {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-top: var(--space-3);
+}
+.vcheck-stepper-dot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.vcheck-stepper-dot .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--border);
+}
+.vcheck-stepper-dot .dot.done {
+  background: var(--status-green);
+}
+.vcheck-stepper-dot .dot.current {
+  background: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-bg);
+}
+.vcheck-stepper-dot span {
+  font-size: 9px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+.vcheck-stepper-line {
+  width: 24px;
+  height: 2px;
+  background: var(--border);
+  margin-bottom: 14px;
+}
+.vcheck-stepper-line.done {
+  background: var(--status-green);
+}
+.vcheck-trust {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-6);
+  margin-bottom: var(--space-6);
+  text-align: center;
+}
+.vcheck-trust p {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: 1.6;
+  max-width: 700px;
+  margin: 0 auto;
+}
+@media (max-width: 768px) {
+  .vcheck-steps { grid-template-columns: 1fr; }
+  .upload-action-cards { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ==========================================
+     LOGIN PAGE
+     ========================================== -->
+<div id="login-page">
+  <div class="login-bg-decoration"></div>
+  <div class="login-container">
+    <div class="login-logo">
+      <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
+        <rect width="44" height="44" rx="10" fill="#20808D"/>
+        <path d="M12 14h20v3H12zM12 21h14v3H12zM12 28h18v3H12z" fill="#fff"/>
+        <circle cx="34" cy="29.5" r="4" fill="#fff" opacity="0.7"/>
+      </svg>
+      <div class="login-logo-text">FVM <span>Makler</span></div>
+    </div>
+    <p class="login-subtitle">Kundenportal — Ihre Versicherungen im Überblick</p>
+    <div class="form-group">
+      <label for="login-email">E-Mail-Adresse</label>
+      <input type="email" id="login-email" class="form-input" placeholder="max.mustermann@email.de" value="max.mustermann@email.de">
+    </div>
+    <div class="form-group">
+      <label for="login-pw">Passwort</label>
+      <input type="password" id="login-pw" class="form-input" placeholder="••••••••" value="demo1234">
+      <a href="#" class="form-link" onclick="return false">Passwort vergessen?</a>
+    </div>
+    <button class="btn-primary" onclick="doLogin()">Anmelden</button>
+    <p class="login-footer">Noch kein Konto? <a href="#" onclick="return false">Jetzt registrieren</a></p>
+  </div>
+</div>
+
+<!-- ==========================================
+     APP SHELL
+     ========================================== -->
+<div id="app-shell">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <svg width="32" height="32" viewBox="0 0 44 44" fill="none">
+        <rect width="44" height="44" rx="10" fill="#20808D"/>
+        <path d="M12 14h20v3H12zM12 21h14v3H12zM12 28h18v3H12z" fill="#fff"/>
+        <circle cx="34" cy="29.5" r="4" fill="#fff" opacity="0.7"/>
+      </svg>
+      <div class="sidebar-brand-text">FVM <span>Makler</span></div>
+    </div>
+    <nav class="sidebar-nav">
+      <button class="nav-item active" onclick="navigate('dashboard')" data-page="dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        <span>Dashboard</span>
+      </button>
+      <button class="nav-item" onclick="navigate('contracts')" data-page="contracts">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        <span>Verträge</span>
+      </button>
+      <button class="nav-item" onclick="navigate('documents')" data-page="documents">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
+        <span>Dokumente</span>
+      </button>
+      <button class="nav-item" onclick="navigate('claims')" data-page="claims">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span>Schaden melden</span>
+      </button>
+      <button class="nav-item" onclick="navigate('analysis')" data-page="analysis">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        <span>Bedarfsanalyse</span>
+      </button>
+      <button class="nav-item" onclick="navigate('products')" data-page="products">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        <span>Produktempfehlungen</span>
+      </button>
+      <button class="nav-item" onclick="navigate('contractcheck')" data-page="contractcheck">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        <span>Vertragscheck</span>
+      </button>
+      <button class="nav-item" onclick="navigate('finances')" data-page="finances">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        <span>Finanzen</span>
+      </button>
+      <button class="nav-item" onclick="navigate('settings')" data-page="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09a1.65 1.65 0 00-1.08-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09a1.65 1.65 0 001.51-1.08 1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001.08 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9c.26.604.852.997 1.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1.08z"/></svg>
+        <span>Einstellungen</span>
+      </button>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer">Created with Perplexity Computer</a>
+    </div>
+  </aside>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-left" id="header-title">Dashboard</div>
+    <div class="header-right">
+      <button class="icon-btn theme-toggle" onclick="toggleTheme()" title="Design wechseln">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"/></svg>
+      </button>
+      <button class="icon-btn notification-badge" title="Benachrichtigungen">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+      </button>
+      <div class="header-user">
+        <div class="user-avatar">MM</div>
+        <span>Max Mustermann</span>
+      </div>
+      <button class="icon-btn" onclick="doLogout()" title="Abmelden">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+
+    <!-- ==========================================
+         DASHBOARD PAGE
+         ========================================== -->
+    <div id="page-dashboard" class="page active">
+      <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:var(--space-6)">
+        <div>
+          <h1 style="font-size:var(--text-2xl);font-weight:700">Willkommen, Max</h1>
+          <p style="font-size:var(--text-sm);color:var(--text-secondary);margin-top:var(--space-1)">Sonntag, 8. März 2026</p>
+        </div>
+        <div class="kpi-card" style="text-align:center;min-width:180px">
+          <div class="kpi-label">Gesamtbeitrag</div>
+          <div class="kpi-value" style="color:var(--accent-light)">93,16 €</div>
+          <div class="kpi-sub">pro Monat</div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:280px 1fr;gap:var(--space-5);margin-bottom:var(--space-5)">
+        <!-- Finanzscore -->
+        <div class="card" style="display:flex;flex-direction:column;align-items:center;padding:var(--space-6)">
+          <div class="card-title" style="margin-bottom:var(--space-4);align-self:flex-start">Finanzscore</div>
+          <div class="gauge-wrapper">
+            <canvas id="gauge-dashboard"></canvas>
+            <div class="gauge-center">
+              <div class="gauge-value">22%</div>
+              <div class="gauge-label">von 100%</div>
+            </div>
+          </div>
+          <div class="gauge-status badge badge-red" style="margin-top:var(--space-3)">Dringender Handlungsbedarf</div>
+          <button class="btn btn-outline" style="margin-top:var(--space-4);width:100%" onclick="navigate('analysis')">Analyse ansehen</button>
+        </div>
+
+        <!-- Contracts + Next steps -->
+        <div style="display:flex;flex-direction:column;gap:var(--space-5)">
+          <!-- Contracts overview -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Meine Verträge</div>
+              <button class="btn btn-ghost" onclick="navigate('contracts')">Alle anzeigen →</button>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:var(--space-3)">
+              <!-- Contract 1 -->
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-3) var(--space-4);background:var(--bg-surface);border-radius:var(--radius-sm);border:1px solid var(--border);cursor:pointer" onclick="showContractDetail(0)" class="card-hover">
+                <div style="display:flex;align-items:center;gap:var(--space-4)">
+                  <div style="width:40px;height:40px;border-radius:var(--radius-sm);background:var(--accent-bg);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:var(--text-xs);color:var(--accent-light)">PKW</div>
+                  <div>
+                    <div style="font-weight:600;font-size:var(--text-sm)">KFZ-Versicherung</div>
+                    <div style="font-size:var(--text-xs);color:var(--text-muted)">KRAVAG Versicherung AG · 152546458</div>
+                  </div>
+                </div>
+                <div style="text-align:right">
+                  <div style="font-weight:600;font-size:var(--text-sm)">57,04 €/Mon.</div>
+                  <span class="badge badge-green">Aktiv</span>
+                </div>
+              </div>
+              <!-- Contract 2 -->
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-3) var(--space-4);background:var(--bg-surface);border-radius:var(--radius-sm);border:1px solid var(--border);cursor:pointer" onclick="showContractDetail(1)" class="card-hover">
+                <div style="display:flex;align-items:center;gap:var(--space-4)">
+                  <div style="width:40px;height:40px;border-radius:var(--radius-sm);background:var(--status-blue-bg);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:var(--text-xs);color:var(--status-blue)">PHV</div>
+                  <div>
+                    <div style="font-weight:600;font-size:var(--text-sm)">Privathaftpflicht</div>
+                    <div style="font-size:var(--text-xs);color:var(--text-muted)">Die Haftpflichtkasse</div>
+                  </div>
+                </div>
+                <div style="text-align:right">
+                  <div style="font-weight:600;font-size:var(--text-sm)">8,23 €/Mon.</div>
+                  <span class="badge badge-green">Aktiv</span>
+                </div>
+              </div>
+              <!-- Contract 3 -->
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-3) var(--space-4);background:var(--bg-surface);border-radius:var(--radius-sm);border:1px solid var(--border);cursor:pointer" onclick="showContractDetail(2)" class="card-hover">
+                <div style="display:flex;align-items:center;gap:var(--space-4)">
+                  <div style="width:40px;height:40px;border-radius:var(--radius-sm);background:var(--status-yellow-bg);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:var(--text-xs);color:var(--status-yellow)">RS</div>
+                  <div>
+                    <div style="font-weight:600;font-size:var(--text-sm)">Rechtsschutzversicherung</div>
+                    <div style="font-size:var(--text-xs);color:var(--text-muted)">KS/AUXILIA · 346454444333</div>
+                  </div>
+                </div>
+                <div style="text-align:right">
+                  <div style="font-weight:600;font-size:var(--text-sm)">27,89 €/Mon.</div>
+                  <span class="badge badge-green">Aktiv</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Open claims & next steps -->
+          <div class="grid-2">
+            <!-- Open Claim -->
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">Offener Schaden</div>
+                <span class="badge badge-yellow">In Bearbeitung</span>
+              </div>
+              <div style="font-size:var(--text-sm);font-weight:600;margin-bottom:var(--space-2)">KFZ-Schaden — KRAVAG</div>
+              <div style="font-size:var(--text-xs);color:var(--text-muted);margin-bottom:var(--space-4)">Gemeldet am 24.02.2026</div>
+              <div style="display:flex;gap:var(--space-2);align-items:center;margin-bottom:var(--space-3)">
+                <div style="flex:1">
+                  <div class="progress-bar"><div class="progress-fill" style="width:66%;background:var(--status-yellow)"></div></div>
+                </div>
+                <span style="font-size:var(--text-xs);color:var(--text-muted)">4/6 Schritte</span>
+              </div>
+              <div style="font-size:var(--text-xs);color:var(--text-secondary)">Aktuell: Regulierung prüfen</div>
+              <button class="btn btn-ghost" style="margin-top:var(--space-3)" onclick="navigate('claims')">Details →</button>
+            </div>
+
+            <!-- Next steps -->
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">Nächste Schritte</div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:var(--space-3)">
+                <div style="display:flex;align-items:flex-start;gap:var(--space-3);padding:var(--space-2) 0">
+                  <div style="width:8px;height:8px;border-radius:50%;background:var(--status-red);margin-top:6px;flex-shrink:0"></div>
+                  <div>
+                    <div style="font-size:var(--text-sm);font-weight:500">Berufsunfähigkeit absichern</div>
+                    <div style="font-size:var(--text-xs);color:var(--text-muted)">Kritische Absicherungslücke</div>
+                  </div>
+                </div>
+                <div style="display:flex;align-items:flex-start;gap:var(--space-3);padding:var(--space-2) 0">
+                  <div style="width:8px;height:8px;border-radius:50%;background:var(--status-red);margin-top:6px;flex-shrink:0"></div>
+                  <div>
+                    <div style="font-size:var(--text-sm);font-weight:500">Altersvorsorge aufbauen</div>
+                    <div style="font-size:var(--text-xs);color:var(--text-muted)">Keine Vorsorge vorhanden</div>
+                  </div>
+                </div>
+                <div style="display:flex;align-items:flex-start;gap:var(--space-3);padding:var(--space-2) 0">
+                  <div style="width:8px;height:8px;border-radius:50%;background:var(--status-yellow);margin-top:6px;flex-shrink:0"></div>
+                  <div>
+                    <div style="font-size:var(--text-sm);font-weight:500">Pflegeabsicherung prüfen</div>
+                    <div style="font-size:var(--text-xs);color:var(--text-muted)">Gesetzliche Pflege reicht nicht</div>
+                  </div>
+                </div>
+              </div>
+              <button class="btn btn-outline" style="margin-top:var(--space-4);width:100%" onclick="navigate('products')">Empfehlungen ansehen</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="app-footer">
+        <a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer">Created with Perplexity Computer</a> · FVM Makler Kundenportal · &copy; 2026
+      </div>
+    </div>
+
+    <!-- ==========================================
+         CONTRACTS PAGE
+         ========================================== -->
+    <div id="page-contracts" class="page">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-5)">
+        <h1 class="section-title" style="margin-bottom:0">Verträge</h1>
+        <button class="btn btn-filled btn-lg" onclick="showModal('upload-contract')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Vertrag hinzufügen
+        </button>
+      </div>
+
+      <div class="tabs" id="contract-tabs">
+        <button class="tab active" onclick="filterContracts('all',this)">Alle <span style="color:var(--text-muted);font-weight:400">3</span></button>
+        <button class="tab" onclick="filterContracts('aktiv',this)">Aktiv <span style="color:var(--text-muted);font-weight:400">3</span></button>
+        <button class="tab" onclick="filterContracts('ruhend',this)">Ruhend <span style="color:var(--text-muted);font-weight:400">0</span></button>
+        <button class="tab" onclick="filterContracts('storniert',this)">Storniert <span style="color:var(--text-muted);font-weight:400">0</span></button>
+      </div>
+
+      <div class="card" style="padding:0;overflow:hidden">
+        <table class="data-table" id="contracts-table">
+          <thead>
+            <tr>
+              <th>Sparte</th>
+              <th>Versicherer</th>
+              <th>Vertragsnummer</th>
+              <th>Beitrag</th>
+              <th>Zahlweise</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr onclick="showContractDetail(0)" style="cursor:pointer">
+              <td><span style="display:flex;align-items:center;gap:var(--space-2)"><span style="width:32px;height:32px;border-radius:var(--radius-sm);background:var(--accent-bg);display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:10px;color:var(--accent-light)">PKW</span> KFZ-Versicherung</span></td>
+              <td>KRAVAG Versicherung AG</td>
+              <td><code style="font-size:var(--text-xs);background:var(--bg-input);padding:2px 6px;border-radius:4px">152546458</code></td>
+              <td>684,48 €/Jahr</td>
+              <td>Jährlich</td>
+              <td><span class="badge badge-green">Aktiv</span></td>
+              <td><button class="btn btn-ghost" style="font-size:var(--text-xs)">Details →</button></td>
+            </tr>
+            <tr onclick="showContractDetail(1)" style="cursor:pointer">
+              <td><span style="display:flex;align-items:center;gap:var(--space-2)"><span style="width:32px;height:32px;border-radius:var(--radius-sm);background:var(--status-blue-bg);display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:10px;color:var(--status-blue)">PHV</span> Privathaftpflicht</span></td>
+              <td>Die Haftpflichtkasse</td>
+              <td><code style="font-size:var(--text-xs);background:var(--bg-input);padding:2px 6px;border-radius:4px">—</code></td>
+              <td>98,80 €/Jahr</td>
+              <td>Jährlich</td>
+              <td><span class="badge badge-green">Aktiv</span></td>
+              <td><button class="btn btn-ghost" style="font-size:var(--text-xs)">Details →</button></td>
+            </tr>
+            <tr onclick="showContractDetail(2)" style="cursor:pointer">
+              <td><span style="display:flex;align-items:center;gap:var(--space-2)"><span style="width:32px;height:32px;border-radius:var(--radius-sm);background:var(--status-yellow-bg);display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:10px;color:var(--status-yellow)">RS</span> Rechtsschutz</span></td>
+              <td>KS/AUXILIA Rechtsschutzversicherungs AG</td>
+              <td><code style="font-size:var(--text-xs);background:var(--bg-input);padding:2px 6px;border-radius:4px">346454444333</code></td>
+              <td>27,89 €/Mon.</td>
+              <td>Monatlich</td>
+              <td><span class="badge badge-green">Aktiv</span></td>
+              <td><button class="btn btn-ghost" style="font-size:var(--text-xs)">Details →</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="app-footer">
+        <a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer">Created with Perplexity Computer</a> · FVM Makler Kundenportal · &copy; 2026
+      </div>
+    </div>
+
+    <!-- ==========================================
+         DOCUMENTS PAGE
+         ========================================== -->
+    <div id="page-documents" class="page">
+      <h1 class="section-title">Dokumente</h1>
+      <p class="section-subtitle">Alle Vertragsdokumente und eigene Uploads an einem Ort.</p>
+
+      <div class="filter-bar">
+        <select class="form-input" style="width:200px;padding:var(--space-2) var(--space-3);font-size:var(--text-sm)">
+          <option>Alle Verträge</option>
+          <option>KFZ — KRAVAG</option>
+          <option>PHV — Haftpflichtkasse</option>
+          <option>RS — KS/AUXILIA</option>
+        </select>
+        <select class="form-input" style="width:200px;padding:var(--space-2) var(--space-3);font-size:var(--text-sm)">
+          <option>Alle Typen</option>
+          <option>Police</option>
+          <option>Beitragsrechnung</option>
+          <option>Nachtrag</option>
+          <option>Eigene</option>
+        </select>
+      </div>
+
+      <div class="card" style="padding:0;overflow:hidden;margin-bottom:var(--space-5)">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Dokument</th>
+              <th>Datum</th>
+              <th>Typ</th>
+              <th>Vertrag</th>
+              <th>Aktionen</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="display:flex;align-items:center;gap:var(--space-2)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--status-red);flex-shrink:0"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                Versicherungsschein_Police_05.03.2026.pdf
+              </td>
+              <td>05.03.2026</td>
+              <td><span class="badge badge-accent">Police</span></td>
+              <td>RS — KS/AUXILIA</td>
+              <td>
+                <button class="btn btn-ghost" style="font-size:var(--text-xs)">Ansehen</button>
+                <button class="btn btn-ghost" style="font-size:var(--text-xs)">Download</button>
+              </td>
+            </tr>
+            <tr>
+              <td style="display:flex;align-items:center;gap:var(--space-2)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--status-red);flex-shrink:0"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                Beitragsrechnung_01.03.2026.pdf
+              </td>
+              <td>01.03.2026</td>
+              <td><span class="badge badge-blue">Beitragsrechnung</span></td>
+              <td>RS — KS/AUXILIA</td>
+              <td>
+                <button class="btn btn-ghost" style="font-size:var(--text-xs)">Ansehen</button>
+                <button class="btn btn-ghost" style="font-size:var(--text-xs)">Download</button>
+              </td>
+            </tr>
+            <tr>
+              <td style="display:flex;align-items:center;gap:var(--space-2)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--status-red);flex-shrink:0"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                Beitragsrechnung_23.02.2026.pdf
+              </td>
+              <td>23.02.2026</td>
+              <td><span class="badge badge-blue">Beitragsrechnung</span></td>
+              <td>RS — KS/AUXILIA</td>
+              <td>
+                <button class="btn btn-ghost" style="font-size:var(--text-xs)">Ansehen</button>
+                <button class="btn btn-ghost" style="font-size:var(--text-xs)">Download</button>
+              </td>
+            </tr>
+            <tr>
+              <td style="display:flex;align-items:center;gap:var(--space-2)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--status-red);flex-shrink:0"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                Beitragsrechnung_23.02.2026(1).pdf
+              </td>
+              <td>23.02.2026</td>
+              <td><span class="badge badge-blue">Beitragsrechnung</span></td>
+              <td>RS — KS/AUXILIA</td>
+              <td>
+                <button class="btn btn-ghost" style="font-size:var(--text-xs)">Ansehen</button>
+                <button class="btn btn-ghost" style="font-size:var(--text-xs)">Download</button>
+              </td>
+            </tr>
+            <tr>
+              <td style="display:flex;align-items:center;gap:var(--space-2)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--status-red);flex-shrink:0"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                Beitragsrechnung_23.02.2026(2).pdf
+              </td>
+              <td>23.02.2026</td>
+              <td><span class="badge badge-blue">Beitragsrechnung</span></td>
+              <td>RS — KS/AUXILIA</td>
+              <td>
+                <button class="btn btn-ghost" style="font-size:var(--text-xs)">Ansehen</button>
+                <button class="btn btn-ghost" style="font-size:var(--text-xs)">Download</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="upload-zone" onclick="return false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        <p style="font-weight:500;color:var(--text-secondary)">Dokument hierher ziehen</p>
+        <p style="margin-top:var(--space-1)">oder klicken zum Auswählen</p>
+      </div>
+
+      <div class="app-footer">
+        <a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer">Created with Perplexity Computer</a> · FVM Makler Kundenportal · &copy; 2026
+      </div>
+    </div>
+
+    <!-- ==========================================
+         CLAIMS PAGE
+         ========================================== -->
+    <div id="page-claims" class="page">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-6)">
+        <h1 class="section-title" style="margin-bottom:0">Schaden melden & Tracking</h1>
+        <button class="btn btn-filled btn-lg" onclick="showClaimWizard()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Neuen Schaden melden
+        </button>
+      </div>
+
+      <div class="tabs">
+        <button class="tab active">Schadentracking</button>
+        <button class="tab" onclick="showClaimWizard()">Neuer Schaden</button>
+      </div>
+
+      <!-- Existing Claim -->
+      <div class="card" style="margin-bottom:var(--space-5)">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-6)">
+          <div>
+            <div style="font-size:var(--text-lg);font-weight:700">KFZ-Schaden</div>
+            <div style="font-size:var(--text-sm);color:var(--text-secondary)">KRAVAG Versicherung AG · Vertrag 152546458</div>
+          </div>
+          <span class="badge badge-yellow" style="font-size:var(--text-sm);padding:var(--space-2) var(--space-4)">Regulierung prüfen</span>
+        </div>
+
+        <div class="timeline">
+          <div class="timeline-item completed">
+            <div class="timeline-dot"></div>
+            <div class="timeline-title">Schaden gemeldet</div>
+            <div class="timeline-date">24.02.2026</div>
+            <div class="timeline-desc">Schadensmeldung eingegangen und registriert.</div>
+          </div>
+          <div class="timeline-item completed">
+            <div class="timeline-dot"></div>
+            <div class="timeline-title">Versicherer informiert</div>
+            <div class="timeline-date">25.02.2026</div>
+            <div class="timeline-desc">KRAVAG wurde über den Schadensfall informiert.</div>
+          </div>
+          <div class="timeline-item completed">
+            <div class="timeline-dot"></div>
+            <div class="timeline-title">Unterlagen eingereicht</div>
+            <div class="timeline-date">01.03.2026</div>
+            <div class="timeline-desc">Alle erforderlichen Dokumente und Fotos übermittelt.</div>
+          </div>
+          <div class="timeline-item current">
+            <div class="timeline-dot"></div>
+            <div class="timeline-title">Regulierung prüfen</div>
+            <div class="timeline-date">Aktuell</div>
+            <div class="timeline-desc">Der Versicherer prüft die Unterlagen und erstellt ein Regulierungsangebot.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-title">Kunden informieren</div>
+            <div class="timeline-date">Ausstehend</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-title">Abgeschlossen</div>
+            <div class="timeline-date">Ausstehend</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Claim wizard (hidden by default) -->
+      <div id="claim-wizard" style="display:none">
+        <div class="card">
+          <div class="card-title" style="margin-bottom:var(--space-5)">Neuen Schaden melden</div>
+          <div class="wizard-steps" id="wizard-steps">
+            <div class="wizard-step active"><div class="wizard-step-num">1</div><span>Vertrag</span></div>
+            <div class="wizard-sep"></div>
+            <div class="wizard-step"><div class="wizard-step-num">2</div><span>Details</span></div>
+            <div class="wizard-sep"></div>
+            <div class="wizard-step"><div class="wizard-step-num">3</div><span>Belege</span></div>
+            <div class="wizard-sep"></div>
+            <div class="wizard-step"><div class="wizard-step-num">4</div><span>Absenden</span></div>
+          </div>
+
+          <div id="wizard-step-1">
+            <div class="form-group">
+              <label>Vertrag / Sparte auswählen</label>
+              <select class="form-input">
+                <option>Bitte wählen...</option>
+                <option>KFZ — KRAVAG (152546458)</option>
+                <option>Privathaftpflicht — Die Haftpflichtkasse</option>
+                <option>Rechtsschutz — KS/AUXILIA (346454444333)</option>
+              </select>
+            </div>
+            <button class="btn btn-filled" onclick="wizardNext(2)">Weiter →</button>
+          </div>
+          <div id="wizard-step-2" style="display:none">
+            <div class="form-group">
+              <label>Schadendatum</label>
+              <input type="date" class="form-input">
+            </div>
+            <div class="form-group">
+              <label>Schadenhergang</label>
+              <textarea class="form-input" rows="5" placeholder="Bitte beschreiben Sie den Vorfall möglichst genau..."></textarea>
+            </div>
+            <div style="display:flex;gap:var(--space-3)">
+              <button class="btn btn-ghost" onclick="wizardNext(1)">← Zurück</button>
+              <button class="btn btn-filled" onclick="wizardNext(3)">Weiter →</button>
+            </div>
+          </div>
+          <div id="wizard-step-3" style="display:none">
+            <div class="upload-zone" style="margin-bottom:var(--space-5)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              <p style="font-weight:500;color:var(--text-secondary)">Fotos & Belege hochladen</p>
+              <p style="margin-top:var(--space-1)">oder klicken zum Auswählen</p>
+            </div>
+            <div style="display:flex;gap:var(--space-3)">
+              <button class="btn btn-ghost" onclick="wizardNext(2)">← Zurück</button>
+              <button class="btn btn-filled" onclick="wizardNext(4)">Weiter →</button>
+            </div>
+          </div>
+          <div id="wizard-step-4" style="display:none">
+            <div class="card" style="background:var(--bg-surface);margin-bottom:var(--space-5)">
+              <div style="font-weight:600;margin-bottom:var(--space-3)">Zusammenfassung</div>
+              <div class="info-row"><span class="info-label">Vertrag</span><span class="info-value">KFZ — KRAVAG</span></div>
+              <div class="info-row"><span class="info-label">Datum</span><span class="info-value">08.03.2026</span></div>
+              <div class="info-row"><span class="info-label">Hergang</span><span class="info-value">Wie beschrieben</span></div>
+              <div class="info-row"><span class="info-label">Belege</span><span class="info-value">0 Dateien</span></div>
+            </div>
+            <div style="display:flex;gap:var(--space-3)">
+              <button class="btn btn-ghost" onclick="wizardNext(3)">← Zurück</button>
+              <button class="btn btn-filled btn-lg" onclick="submitClaim()">Schaden absenden</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="app-footer">
+        <a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer">Created with Perplexity Computer</a> · FVM Makler Kundenportal · &copy; 2026
+      </div>
+    </div>
+
+    <!-- ==========================================
+         ANALYSIS PAGE (DIN 77230)
+         ========================================== -->
+    <div id="page-analysis" class="page">
+      <h1 class="section-title">Bedarfsanalyse nach DIN 77230</h1>
+      <p class="section-subtitle">Ihre persönliche Finanzanalyse — Basis für optimalen Versicherungsschutz.</p>
+
+      <div style="display:grid;grid-template-columns:300px 1fr;gap:var(--space-5);margin-bottom:var(--space-6)">
+        <!-- Gauge -->
+        <div class="card" style="display:flex;flex-direction:column;align-items:center">
+          <div class="card-title" style="align-self:flex-start;margin-bottom:var(--space-4)">Finanzscore</div>
+          <div class="gauge-wrapper">
+            <canvas id="gauge-analysis"></canvas>
+            <div class="gauge-center">
+              <div class="gauge-value">22%</div>
+              <div class="gauge-label">von 100%</div>
+            </div>
+          </div>
+          <div class="gauge-status badge badge-red" style="margin-top:var(--space-4)">Kritisch</div>
+          <p style="font-size:var(--text-xs);color:var(--text-secondary);text-align:center;margin-top:var(--space-3);line-height:1.5">
+            Ihr Finanzscore zeigt erheblichen Handlungsbedarf. Mehrere kritische Absicherungslücken wurden identifiziert.
+          </p>
+        </div>
+
+        <!-- Summary cards -->
+        <div>
+          <div class="grid-3" style="margin-bottom:var(--space-5)">
+            <div class="kpi-card">
+              <div class="kpi-label">Bestehende Verträge</div>
+              <div class="kpi-value" style="font-size:var(--text-xl)">3</div>
+              <div class="kpi-sub">Aktive Absicherungen</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-label">Kritische Lücken</div>
+              <div class="kpi-value" style="font-size:var(--text-xl);color:var(--status-red)">5</div>
+              <div class="kpi-sub">Sofortiger Handlungsbedarf</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-label">Gesamtbeitrag</div>
+              <div class="kpi-value" style="font-size:var(--text-xl)">93,16 €</div>
+              <div class="kpi-sub">1.117,96 €/Jahr</div>
+            </div>
+          </div>
+
+          <!-- Existing contracts -->
+          <div class="card">
+            <div class="card-title" style="margin-bottom:var(--space-4)">Bestehende Verträge</div>
+            <table class="data-table">
+              <thead>
+                <tr><th>Sparte</th><th>Versicherer</th><th>Beitrag</th><th>Bewertung</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>KFZ</td>
+                  <td>KRAVAG</td>
+                  <td>684,48 €/J.</td>
+                  <td><span class="ampel ampel-gruen"><span class="ampel-dot"></span> Abgedeckt</span></td>
+                </tr>
+                <tr>
+                  <td>Privathaftpflicht</td>
+                  <td>Haftpflichtkasse</td>
+                  <td>98,80 €/J.</td>
+                  <td><span class="ampel ampel-gruen"><span class="ampel-dot"></span> Abgedeckt</span></td>
+                </tr>
+                <tr>
+                  <td>Rechtsschutz</td>
+                  <td>KS/AUXILIA</td>
+                  <td>27,89 €/M.</td>
+                  <td><span class="ampel ampel-gruen"><span class="ampel-dot"></span> Abgedeckt</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Critical gaps -->
+      <div class="card" style="margin-bottom:var(--space-5);border-color:rgba(239,68,68,0.2)">
+        <div style="display:flex;align-items:center;gap:var(--space-3);margin-bottom:var(--space-5)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--status-red)" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <div class="card-title" style="color:var(--status-red)">Kritische Absicherungslücken</div>
+        </div>
+        <div class="grid-auto">
+          <div style="padding:var(--space-4);background:var(--status-red-bg);border-radius:var(--radius-sm);border-left:3px solid var(--status-red)">
+            <div style="font-weight:600;font-size:var(--text-sm);margin-bottom:var(--space-1)">Berufsunfähigkeit (BU)</div>
+            <div style="font-size:var(--text-xs);color:var(--text-secondary)">Kein Schutz bei Berufsunfähigkeit. Existenzgefährdend.</div>
+            <div class="progress-bar" style="margin-top:var(--space-3)"><div class="progress-fill" style="width:0%;background:var(--status-red)"></div></div>
+            <div style="font-size:var(--text-xs);color:var(--text-muted);margin-top:var(--space-1)">Zielerreichung: 0%</div>
+          </div>
+          <div style="padding:var(--space-4);background:var(--status-red-bg);border-radius:var(--radius-sm);border-left:3px solid var(--status-red)">
+            <div style="font-weight:600;font-size:var(--text-sm);margin-bottom:var(--space-1)">Altersvorsorge</div>
+            <div style="font-size:var(--text-xs);color:var(--text-secondary)">Keine private Altersvorsorge vorhanden. Versorgungslücke im Alter.</div>
+            <div class="progress-bar" style="margin-top:var(--space-3)"><div class="progress-fill" style="width:0%;background:var(--status-red)"></div></div>
+            <div style="font-size:var(--text-xs);color:var(--text-muted);margin-top:var(--space-1)">Zielerreichung: 0%</div>
+          </div>
+          <div style="padding:var(--space-4);background:var(--status-red-bg);border-radius:var(--radius-sm);border-left:3px solid var(--status-red)">
+            <div style="font-weight:600;font-size:var(--text-sm);margin-bottom:var(--space-1)">Pflegeabsicherung</div>
+            <div style="font-size:var(--text-xs);color:var(--text-secondary)">Keine Pflegezusatzversicherung. Pflegelücke ca. 2.000 €/Mon.</div>
+            <div class="progress-bar" style="margin-top:var(--space-3)"><div class="progress-fill" style="width:0%;background:var(--status-red)"></div></div>
+            <div style="font-size:var(--text-xs);color:var(--text-muted);margin-top:var(--space-1)">Zielerreichung: 0%</div>
+          </div>
+          <div style="padding:var(--space-4);background:var(--status-yellow-bg);border-radius:var(--radius-sm);border-left:3px solid var(--status-yellow)">
+            <div style="font-weight:600;font-size:var(--text-sm);margin-bottom:var(--space-1)">Unfallversicherung</div>
+            <div style="font-size:var(--text-xs);color:var(--text-secondary)">Kein privater Unfallschutz. Ergänzung zur BU empfohlen.</div>
+            <div class="progress-bar" style="margin-top:var(--space-3)"><div class="progress-fill" style="width:0%;background:var(--status-yellow)"></div></div>
+            <div style="font-size:var(--text-xs);color:var(--text-muted);margin-top:var(--space-1)">Zielerreichung: 0%</div>
+          </div>
+          <div style="padding:var(--space-4);background:var(--status-yellow-bg);border-radius:var(--radius-sm);border-left:3px solid var(--status-yellow)">
+            <div style="font-weight:600;font-size:var(--text-sm);margin-bottom:var(--space-1)">Hausratversicherung</div>
+            <div style="font-size:var(--text-xs);color:var(--text-secondary)">Kein Hausratschutz vorhanden. Einrichtung ungeschützt.</div>
+            <div class="progress-bar" style="margin-top:var(--space-3)"><div class="progress-fill" style="width:0%;background:var(--status-yellow)"></div></div>
+            <div style="font-size:var(--text-xs);color:var(--text-muted);margin-top:var(--space-1)">Zielerreichung: 0%</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Analysis by Bedarfsstufe -->
+      <div class="section-title" style="margin-top:var(--space-8)">Detailanalyse nach Bedarfsstufe</div>
+
+      <div class="accordion open">
+        <button class="accordion-header" onclick="toggleAccordion(this)">
+          <span>Bedarfsstufe 1 — Existenzsicherung</span>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-body">
+          <div style="display:flex;flex-direction:column;gap:var(--space-3)">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-3);background:var(--bg-card);border-radius:var(--radius-sm)">
+              <div style="display:flex;align-items:center;gap:var(--space-3)">
+                <span class="ampel ampel-gruen"><span class="ampel-dot"></span></span>
+                <div><div style="font-weight:500;font-size:var(--text-sm)">KFZ-Haftpflicht</div><div style="font-size:var(--text-xs);color:var(--text-muted)">Pflichtversicherung vorhanden</div></div>
+              </div>
+              <div style="width:100px"><div class="progress-bar"><div class="progress-fill" style="width:100%;background:var(--status-green)"></div></div></div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-3);background:var(--bg-card);border-radius:var(--radius-sm)">
+              <div style="display:flex;align-items:center;gap:var(--space-3)">
+                <span class="ampel ampel-gruen"><span class="ampel-dot"></span></span>
+                <div><div style="font-weight:500;font-size:var(--text-sm)">Privathaftpflicht</div><div style="font-size:var(--text-xs);color:var(--text-muted)">Absicherung vorhanden</div></div>
+              </div>
+              <div style="width:100px"><div class="progress-bar"><div class="progress-fill" style="width:100%;background:var(--status-green)"></div></div></div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-3);background:var(--bg-card);border-radius:var(--radius-sm)">
+              <div style="display:flex;align-items:center;gap:var(--space-3)">
+                <span class="ampel ampel-rot"><span class="ampel-dot"></span></span>
+                <div><div style="font-weight:500;font-size:var(--text-sm)">Berufsunfähigkeit</div><div style="font-size:var(--text-xs);color:var(--text-muted)">NICHT vorhanden — Existenzgefährdend</div></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:var(--space-3)">
+                <div style="width:100px"><div class="progress-bar"><div class="progress-fill" style="width:0%;background:var(--status-red)"></div></div></div>
+                <button class="btn btn-outline" style="font-size:var(--text-xs);white-space:nowrap" onclick="navigate('products')">Beratung anfragen</button>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-3);background:var(--bg-card);border-radius:var(--radius-sm)">
+              <div style="display:flex;align-items:center;gap:var(--space-3)">
+                <span class="ampel ampel-rot"><span class="ampel-dot"></span></span>
+                <div><div style="font-weight:500;font-size:var(--text-sm)">Pflegeabsicherung</div><div style="font-size:var(--text-xs);color:var(--text-muted)">Gesetzliche Pflege unzureichend</div></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:var(--space-3)">
+                <div style="width:100px"><div class="progress-bar"><div class="progress-fill" style="width:0%;background:var(--status-red)"></div></div></div>
+                <button class="btn btn-outline" style="font-size:var(--text-xs);white-space:nowrap" onclick="navigate('products')">Beratung anfragen</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion">
+        <button class="accordion-header" onclick="toggleAccordion(this)">
+          <span>Bedarfsstufe 2 — Erhalt des Lebensstandards</span>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-body">
+          <div style="display:flex;flex-direction:column;gap:var(--space-3)">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-3);background:var(--bg-card);border-radius:var(--radius-sm)">
+              <div style="display:flex;align-items:center;gap:var(--space-3)">
+                <span class="ampel ampel-rot"><span class="ampel-dot"></span></span>
+                <div><div style="font-weight:500;font-size:var(--text-sm)">Altersvorsorge</div><div style="font-size:var(--text-xs);color:var(--text-muted)">Keine private Altersvorsorge</div></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:var(--space-3)">
+                <div style="width:100px"><div class="progress-bar"><div class="progress-fill" style="width:0%;background:var(--status-red)"></div></div></div>
+                <button class="btn btn-outline" style="font-size:var(--text-xs);white-space:nowrap" onclick="navigate('products')">Beratung anfragen</button>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-3);background:var(--bg-card);border-radius:var(--radius-sm)">
+              <div style="display:flex;align-items:center;gap:var(--space-3)">
+                <span class="ampel ampel-gelb"><span class="ampel-dot"></span></span>
+                <div><div style="font-weight:500;font-size:var(--text-sm)">Unfallversicherung</div><div style="font-size:var(--text-xs);color:var(--text-muted)">Empfohlen als BU-Ergänzung</div></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:var(--space-3)">
+                <div style="width:100px"><div class="progress-bar"><div class="progress-fill" style="width:0%;background:var(--status-yellow)"></div></div></div>
+                <button class="btn btn-outline" style="font-size:var(--text-xs);white-space:nowrap" onclick="navigate('products')">Beratung anfragen</button>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-3);background:var(--bg-card);border-radius:var(--radius-sm)">
+              <div style="display:flex;align-items:center;gap:var(--space-3)">
+                <span class="ampel ampel-gelb"><span class="ampel-dot"></span></span>
+                <div><div style="font-weight:500;font-size:var(--text-sm)">Hausratversicherung</div><div style="font-size:var(--text-xs);color:var(--text-muted)">Einrichtung & Wertgegenstände ungeschützt</div></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:var(--space-3)">
+                <div style="width:100px"><div class="progress-bar"><div class="progress-fill" style="width:0%;background:var(--status-yellow)"></div></div></div>
+                <button class="btn btn-outline" style="font-size:var(--text-xs);white-space:nowrap" onclick="navigate('products')">Beratung anfragen</button>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-3);background:var(--bg-card);border-radius:var(--radius-sm)">
+              <div style="display:flex;align-items:center;gap:var(--space-3)">
+                <span class="ampel ampel-gruen"><span class="ampel-dot"></span></span>
+                <div><div style="font-weight:500;font-size:var(--text-sm)">Rechtsschutz</div><div style="font-size:var(--text-xs);color:var(--text-muted)">Absicherung vorhanden</div></div>
+              </div>
+              <div style="width:100px"><div class="progress-bar"><div class="progress-fill" style="width:100%;background:var(--status-green)"></div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion">
+        <button class="accordion-header" onclick="toggleAccordion(this)">
+          <span>Bedarfsstufe 3 — Vermögensaufbau & Zusatzschutz</span>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="accordion-body">
+          <div style="display:flex;flex-direction:column;gap:var(--space-3)">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-3);background:var(--bg-card);border-radius:var(--radius-sm)">
+              <div style="display:flex;align-items:center;gap:var(--space-3)">
+                <span class="ampel ampel-gelb"><span class="ampel-dot"></span></span>
+                <div><div style="font-weight:500;font-size:var(--text-sm)">Zahnzusatzversicherung</div><div style="font-size:var(--text-xs);color:var(--text-muted)">Empfohlen für Zahnersatz & Prophylaxe</div></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:var(--space-3)">
+                <div style="width:100px"><div class="progress-bar"><div class="progress-fill" style="width:0%;background:var(--status-yellow)"></div></div></div>
+                <button class="btn btn-outline" style="font-size:var(--text-xs);white-space:nowrap" onclick="navigate('products')">Beratung anfragen</button>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-3);background:var(--bg-card);border-radius:var(--radius-sm)">
+              <div style="display:flex;align-items:center;gap:var(--space-3)">
+                <span class="ampel ampel-gelb"><span class="ampel-dot"></span></span>
+                <div><div style="font-weight:500;font-size:var(--text-sm)">Krankenzusatz stationär</div><div style="font-size:var(--text-xs);color:var(--text-muted)">Chefarztbehandlung, Einzelzimmer</div></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:var(--space-3)">
+                <div style="width:100px"><div class="progress-bar"><div class="progress-fill" style="width:0%;background:var(--status-yellow)"></div></div></div>
+                <button class="btn btn-outline" style="font-size:var(--text-xs);white-space:nowrap" onclick="navigate('products')">Beratung anfragen</button>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-3);background:var(--bg-card);border-radius:var(--radius-sm)">
+              <div style="display:flex;align-items:center;gap:var(--space-3)">
+                <span class="ampel ampel-gelb"><span class="ampel-dot"></span></span>
+                <div><div style="font-weight:500;font-size:var(--text-sm)">Auslandsreisekranken</div><div style="font-size:var(--text-xs);color:var(--text-muted)">Empfohlen bei Auslandsreisen</div></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:var(--space-3)">
+                <div style="width:100px"><div class="progress-bar"><div class="progress-fill" style="width:0%;background:var(--status-yellow)"></div></div></div>
+                <button class="btn btn-outline" style="font-size:var(--text-xs);white-space:nowrap" onclick="navigate('products')">Beratung anfragen</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action priorities -->
+      <div class="section-title" style="margin-top:var(--space-8)">Handlungsempfehlungen</div>
+      <div class="grid-3">
+        <div class="card" style="border-top:3px solid var(--status-red)">
+          <div style="font-size:var(--text-xs);font-weight:600;color:var(--status-red);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:var(--space-3)">Sofort</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:var(--space-2)">
+            <li style="font-size:var(--text-sm);display:flex;align-items:flex-start;gap:var(--space-2)"><span style="color:var(--status-red)">●</span> Berufsunfähigkeitsversicherung abschließen</li>
+            <li style="font-size:var(--text-sm);display:flex;align-items:flex-start;gap:var(--space-2)"><span style="color:var(--status-red)">●</span> Private Altersvorsorge starten</li>
+            <li style="font-size:var(--text-sm);display:flex;align-items:flex-start;gap:var(--space-2)"><span style="color:var(--status-red)">●</span> Pflegezusatzversicherung prüfen</li>
+          </ul>
+        </div>
+        <div class="card" style="border-top:3px solid var(--status-yellow)">
+          <div style="font-size:var(--text-xs);font-weight:600;color:var(--status-yellow);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:var(--space-3)">Kurzfristig</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:var(--space-2)">
+            <li style="font-size:var(--text-sm);display:flex;align-items:flex-start;gap:var(--space-2)"><span style="color:var(--status-yellow)">●</span> Unfallversicherung abschließen</li>
+            <li style="font-size:var(--text-sm);display:flex;align-items:flex-start;gap:var(--space-2)"><span style="color:var(--status-yellow)">●</span> Hausratversicherung prüfen</li>
+          </ul>
+        </div>
+        <div class="card" style="border-top:3px solid var(--accent)">
+          <div style="font-size:var(--text-xs);font-weight:600;color:var(--accent-light);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:var(--space-3)">Mittelfristig</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:var(--space-2)">
+            <li style="font-size:var(--text-sm);display:flex;align-items:flex-start;gap:var(--space-2)"><span style="color:var(--accent-light)">●</span> Zahnzusatzversicherung</li>
+            <li style="font-size:var(--text-sm);display:flex;align-items:flex-start;gap:var(--space-2)"><span style="color:var(--accent-light)">●</span> Krankenzusatz stationär</li>
+            <li style="font-size:var(--text-sm);display:flex;align-items:flex-start;gap:var(--space-2)"><span style="color:var(--accent-light)">●</span> Auslandsreisekranken</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="app-footer">
+        <a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer">Created with Perplexity Computer</a> · FVM Makler Kundenportal · &copy; 2026
+      </div>
+    </div>
+
+    <!-- ==========================================
+         PRODUCTS PAGE
+         ========================================== -->
+    <div id="page-products" class="page">
+      <h1 class="section-title">Produktempfehlungen</h1>
+      <p class="section-subtitle">Persönlich ausgewählte Empfehlungen Ihres Maklers — unverbindlich und transparent.</p>
+
+      <div class="privacy-banner" style="background:var(--accent-bg);border-color:rgba(32,128,141,0.3);margin-bottom:var(--space-6)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span>Diese Vorauswahl wurde durch Ihren Makler getroffen. Die KI unterstützt lediglich bei der Darstellung. (EU AI Act konform)</span>
+      </div>
+
+      <div class="grid-auto" id="products-grid">
+        <!-- Filled by JS -->
+      </div>
+
+      <!-- Product detail modal -->
+      <div class="modal-overlay" id="product-modal">
+        <div class="modal" style="max-width:640px" id="product-modal-content">
+          <!-- Filled by JS -->
+        </div>
+      </div>
+
+      <div class="app-footer">
+        <a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer">Created with Perplexity Computer</a> · FVM Makler Kundenportal · &copy; 2026
+      </div>
+    </div>
+
+    <!-- ==========================================
+         FINANCES PAGE
+         ========================================== -->
+    <div id="page-finances" class="page">
+      <h1 class="section-title">Finanzen</h1>
+      <p class="section-subtitle">Ihre persönliche Einnahmen- und Ausgabenübersicht.</p>
+
+      <div class="privacy-banner">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        <span><strong>Ihre Finanzdaten sind ausschließlich für Sie sichtbar.</strong> Ihr Makler hat keinen Zugriff auf diese Informationen. Die Daten werden nur lokal angezeigt und nicht übertragen.</span>
+      </div>
+
+      <div class="grid-4" style="margin-bottom:var(--space-6)">
+        <div class="kpi-card">
+          <div class="kpi-label">Nettoeinkommen</div>
+          <div class="kpi-value" style="color:var(--status-green)">3.230 €</div>
+          <div class="kpi-sub">pro Monat</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Ausgaben gesamt</div>
+          <div class="kpi-value">2.273 €</div>
+          <div class="kpi-sub">pro Monat</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Versicherungen</div>
+          <div class="kpi-value" style="color:var(--accent-light)">93,16 €</div>
+          <div class="kpi-sub">2,9% des Einkommens</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Sparquote</div>
+          <div class="kpi-value" style="color:var(--status-green)">456,84 €</div>
+          <div class="kpi-sub">14,1% des Einkommens</div>
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-bottom:var(--space-5)">
+        <div class="card">
+          <div class="card-title" style="margin-bottom:var(--space-4)">Ausgabenverteilung</div>
+          <div class="chart-container" style="height:300px">
+            <canvas id="expense-chart"></canvas>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title" style="margin-bottom:var(--space-4)">Monatliche Aufschlüsselung</div>
+          <div style="display:flex;flex-direction:column;gap:var(--space-3)">
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <div style="display:flex;align-items:center;gap:var(--space-3)">
+                <div style="width:12px;height:12px;border-radius:3px;background:#6366f1"></div>
+                <span style="font-size:var(--text-sm)">Miete</span>
+              </div>
+              <span style="font-weight:600;font-size:var(--text-sm)">850,00 €</span>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <div style="display:flex;align-items:center;gap:var(--space-3)">
+                <div style="width:12px;height:12px;border-radius:3px;background:#f59e0b"></div>
+                <span style="font-size:var(--text-sm)">Lebensmittel</span>
+              </div>
+              <span style="font-weight:600;font-size:var(--text-sm)">420,00 €</span>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <div style="display:flex;align-items:center;gap:var(--space-3)">
+                <div style="width:12px;height:12px;border-radius:3px;background:#8b5cf6"></div>
+                <span style="font-size:var(--text-sm)">Sonstiges</span>
+              </div>
+              <span style="font-weight:600;font-size:var(--text-sm)">380,00 €</span>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <div style="display:flex;align-items:center;gap:var(--space-3)">
+                <div style="width:12px;height:12px;border-radius:3px;background:#3b82f6"></div>
+                <span style="font-size:var(--text-sm)">Transport</span>
+              </div>
+              <span style="font-weight:600;font-size:var(--text-sm)">280,00 €</span>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <div style="display:flex;align-items:center;gap:var(--space-3)">
+                <div style="width:12px;height:12px;border-radius:3px;background:#10b981"></div>
+                <span style="font-size:var(--text-sm)">Freizeit</span>
+              </div>
+              <span style="font-weight:600;font-size:var(--text-sm)">250,00 €</span>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <div style="display:flex;align-items:center;gap:var(--space-3)">
+                <div style="width:12px;height:12px;border-radius:3px;background:var(--accent)"></div>
+                <span style="font-size:var(--text-sm)">Versicherungen</span>
+              </div>
+              <span style="font-weight:600;font-size:var(--text-sm)">93,16 €</span>
+            </div>
+          </div>
+          <div style="margin-top:var(--space-5);padding-top:var(--space-4);border-top:1px solid var(--border)">
+            <div style="display:flex;justify-content:space-between;font-weight:600;font-size:var(--text-sm)">
+              <span>Sparen</span>
+              <span style="color:var(--status-green)">+456,84 €</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title" style="margin-bottom:var(--space-4)">Versicherungsausgaben im Detail</div>
+        <table class="data-table">
+          <thead><tr><th>Vertrag</th><th>Beitrag/Monat</th><th>Beitrag/Jahr</th><th>Anteil am Einkommen</th></tr></thead>
+          <tbody>
+            <tr><td>KFZ — KRAVAG</td><td>57,04 €</td><td>684,48 €</td><td>1,77%</td></tr>
+            <tr><td>Rechtsschutz — KS/AUXILIA</td><td>27,89 €</td><td>334,68 €</td><td>0,86%</td></tr>
+            <tr><td>Privathaftpflicht — Haftpflichtkasse</td><td>8,23 €</td><td>98,80 €</td><td>0,25%</td></tr>
+          </tbody>
+          <tfoot>
+            <tr style="font-weight:700"><td>Gesamt</td><td>93,16 €</td><td>1.117,96 €</td><td>2,88%</td></tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <div class="app-footer">
+        <a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer">Created with Perplexity Computer</a> · FVM Makler Kundenportal · &copy; 2026
+      </div>
+    </div>
+
+    <!-- ==========================================
+         VERTRAGSCHECK PAGE
+         ========================================== -->
+    <div id="page-contractcheck" class="page">
+      <h1 class="section-title">Vertragscheck</h1>
+      <p class="section-subtitle">Lassen Sie Ihre bestehenden Verträge kostenlos und unverbindlich durch Ihren Makler prüfen.</p>
+
+      <!-- Anti-Check24 Banner -->
+      <div class="vcheck-banner">
+        <h3>🛡️ Unabhängige Analyse durch Ihren persönlichen Makler</h3>
+        <ul>
+          <li>Keine Werbung, kein Sales Funnel</li>
+          <li>Keine Weitergabe Ihrer Daten an Dritte</li>
+          <li>Keine unerwünschten Angebote für Mietwagen, Kaffeeautomaten oder Reisen</li>
+          <li>Persönliche Prüfung — kein automatisierter Vergleich</li>
+        </ul>
+      </div>
+
+      <!-- How it works -->
+      <div style="font-size:var(--text-lg);font-weight:600;margin-bottom:var(--space-4)">So funktioniert’s</div>
+      <div class="vcheck-steps">
+        <div class="vcheck-step">
+          <div class="vcheck-step-num">1</div>
+          <h4>Vertrag hochladen</h4>
+          <p>Laden Sie Ihr bestehendes Vertragsdokument hoch (PDF/JPG).</p>
+        </div>
+        <div class="vcheck-step">
+          <div class="vcheck-step-num">2</div>
+          <h4>Persönliche Analyse</h4>
+          <p>Ihr Makler analysiert Ihren Vertrag. Dies erfolgt manuell und individuell — das dauert 1–2 Werktage, garantiert aber höchste Qualität.</p>
+        </div>
+        <div class="vcheck-step">
+          <div class="vcheck-step-num">3</div>
+          <h4>Ergebnis erhalten</h4>
+          <p>Sie erhalten eine ehrliche Einschätzung: Ist Ihr Vertrag gut? Gibt es Optimierungspotenzial? Ohne Verkaufsdruck.</p>
+        </div>
+      </div>
+
+      <!-- Upload Section -->
+      <div class="vcheck-upload-section">
+        <h3>Vertrag zur Prüfung einreichen</h3>
+        <div class="upload-zone" style="margin-bottom:var(--space-5)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <p style="font-weight:500;color:var(--text-secondary)">Vertragsdokument hochladen</p>
+          <p style="margin-top:var(--space-1)">PDF, JPG oder PNG (max. 10 MB)</p>
+        </div>
+        <div class="form-group">
+          <label>Welche Sparte?</label>
+          <select class="form-input" id="vcheck-sparte">
+            <option value="">Bitte wählen…</option>
+            <option>Unfallversicherung</option>
+            <option>Hausratversicherung</option>
+            <option>KFZ-Versicherung</option>
+            <option>Haftpflicht</option>
+            <option>Rechtsschutz</option>
+            <option>BU/EU</option>
+            <option>Altersvorsorge</option>
+            <option>Kranken/Zusatz</option>
+            <option>Sonstige</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Anmerkungen (optional)</label>
+          <textarea class="form-input" rows="3" placeholder="Platz für Kontext — z.B. was Sie am aktuellen Vertrag stört oder worauf Sie besonderen Wert legen."></textarea>
+        </div>
+        <button class="btn btn-filled btn-lg" onclick="submitVertragscheck()">Vertrag zur Prüfung einreichen</button>
+      </div>
+
+      <!-- Already submitted -->
+      <div class="vcheck-submitted">
+        <h3>Eingereichte Vertragschecks</h3>
+        <div class="vcheck-entry">
+          <div class="vcheck-entry-info">
+            <h4>Unfallversicherung — Zurich</h4>
+            <p>Eingereicht am 05.03.2026</p>
+            <span class="badge badge-yellow" style="margin-top:var(--space-2)">In Bearbeitung</span>
+            <div class="vcheck-stepper">
+              <div class="vcheck-stepper-dot">
+                <div class="dot done"></div>
+                <span>Eingereicht</span>
+              </div>
+              <div class="vcheck-stepper-line done"></div>
+              <div class="vcheck-stepper-dot">
+                <div class="dot current"></div>
+                <span>Analyse</span>
+              </div>
+              <div class="vcheck-stepper-line"></div>
+              <div class="vcheck-stepper-dot">
+                <div class="dot"></div>
+                <span>Ergebnis</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trust section -->
+      <div class="vcheck-trust">
+        <p>Die Auswertung wird persönlich von Ihrem Makler durchgeführt und erfolgt auf Basis jahrelanger Erfahrung. KI-unterstützte Vorbereitung beschleunigt den Prozess, aber die finale Bewertung trifft immer ein Mensch. Wir empfehlen nur, wenn es wirklich sinnvoll ist.</p>
+      </div>
+
+      <div class="app-footer">
+        <a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer">Created with Perplexity Computer</a> · FVM Makler Kundenportal · &copy; 2026
+      </div>
+    </div>
+
+    <!-- ==========================================
+         SETTINGS PAGE
+         ========================================== -->
+    <div id="page-settings" class="page">
+      <h1 class="section-title">Einstellungen</h1>
+
+      <div class="grid-2" style="align-items:start">
+        <div>
+          <!-- Personal data -->
+          <div class="settings-section">
+            <h3>Persönliche Daten</h3>
+            <div class="card">
+              <div class="info-row"><span class="info-label">Name</span><span class="info-value">Max Mustermann</span></div>
+              <div class="info-row"><span class="info-label">Geburtsdatum</span><span class="info-value">01.06.1972</span></div>
+              <div class="info-row"><span class="info-label">Alter</span><span class="info-value">53 Jahre</span></div>
+              <div class="info-row"><span class="info-label">Familienstand</span><span class="info-value">Ledig</span></div>
+              <div class="info-row"><span class="info-label">Adresse</span><span class="info-value">Musterallee 1, 67806 Rockenhausen</span></div>
+              <button class="btn btn-outline" style="margin-top:var(--space-4)">Änderung beantragen</button>
+            </div>
+          </div>
+
+          <!-- IBAN Change -->
+          <div class="settings-section">
+            <h3>IBAN ändern</h3>
+            <div class="card">
+              <div class="form-group">
+                <label>Verträge auswählen</label>
+                <div style="display:flex;flex-direction:column;gap:var(--space-2);margin-top:var(--space-2)">
+                  <label style="display:flex;align-items:center;gap:var(--space-2);font-size:var(--text-sm);cursor:pointer">
+                    <input type="checkbox"> KFZ — KRAVAG (152546458)
+                  </label>
+                  <label style="display:flex;align-items:center;gap:var(--space-2);font-size:var(--text-sm);cursor:pointer">
+                    <input type="checkbox"> PHV — Die Haftpflichtkasse
+                  </label>
+                  <label style="display:flex;align-items:center;gap:var(--space-2);font-size:var(--text-sm);cursor:pointer">
+                    <input type="checkbox"> RS — KS/AUXILIA (346454444333)
+                  </label>
+                  <label style="display:flex;align-items:center;gap:var(--space-2);font-size:var(--text-sm);cursor:pointer;font-weight:600">
+                    <input type="checkbox"> Alle Verträge
+                  </label>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Neue IBAN</label>
+                <input type="text" id="iban-input" class="form-input" placeholder="DE89 3704 0044 0532 0130 00" maxlength="27" autocomplete="off">
+                <div id="iban-result"></div>
+              </div>
+              <button class="btn btn-filled">IBAN-Änderung beantragen</button>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <!-- Address change -->
+          <div class="settings-section">
+            <h3>Adressänderung</h3>
+            <div class="card">
+              <div class="form-group">
+                <label>Straße & Hausnummer</label>
+                <input type="text" class="form-input" placeholder="Neue Straße 1">
+              </div>
+              <div style="display:grid;grid-template-columns:120px 1fr;gap:var(--space-3)">
+                <div class="form-group">
+                  <label>PLZ</label>
+                  <input type="text" class="form-input" placeholder="12345">
+                </div>
+                <div class="form-group">
+                  <label>Ort</label>
+                  <input type="text" class="form-input" placeholder="Musterstadt">
+                </div>
+              </div>
+              <button class="btn btn-filled" style="margin-top:var(--space-3)">Adresse ändern</button>
+            </div>
+          </div>
+
+          <!-- Password -->
+          <div class="settings-section">
+            <h3>Passwort ändern</h3>
+            <div class="card">
+              <div class="form-group">
+                <label>Aktuelles Passwort</label>
+                <input type="password" class="form-input" placeholder="••••••••">
+              </div>
+              <div class="form-group">
+                <label>Neues Passwort</label>
+                <input type="password" class="form-input" placeholder="••••••••">
+              </div>
+              <div class="form-group">
+                <label>Passwort bestätigen</label>
+                <input type="password" class="form-input" placeholder="••••••••">
+              </div>
+              <button class="btn btn-filled">Passwort ändern</button>
+            </div>
+          </div>
+
+          <!-- Notifications -->
+          <div class="settings-section">
+            <h3>Benachrichtigungen</h3>
+            <div class="card">
+              <div class="settings-row">
+                <label>E-Mail bei neuen Dokumenten</label>
+                <div class="toggle active" onclick="this.classList.toggle('active')"></div>
+              </div>
+              <div class="settings-row">
+                <label>E-Mail bei Schadenstatus-Updates</label>
+                <div class="toggle active" onclick="this.classList.toggle('active')"></div>
+              </div>
+              <div class="settings-row">
+                <label>E-Mail bei Vertragsänderungen</label>
+                <div class="toggle" onclick="this.classList.toggle('active')"></div>
+              </div>
+              <div class="settings-row">
+                <label>Newsletter & Tipps</label>
+                <div class="toggle" onclick="this.classList.toggle('active')"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- DSGVO -->
+          <div class="settings-section">
+            <h3>Datenschutz</h3>
+            <div class="card">
+              <p style="font-size:var(--text-sm);color:var(--text-secondary);margin-bottom:var(--space-4);line-height:1.6">
+                Ihre Daten werden gemäß DSGVO verarbeitet. Sie haben das Recht auf Auskunft, Berichtigung, Löschung und Datenübertragbarkeit.
+              </p>
+              <div style="display:flex;gap:var(--space-3);flex-wrap:wrap">
+                <button class="btn btn-outline">Daten exportieren</button>
+                <button class="btn btn-danger">Löschung beantragen</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="app-footer">
+        <a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer">Created with Perplexity Computer</a> · FVM Makler Kundenportal · &copy; 2026
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ==========================================
+     CONTRACT DETAIL OVERLAY
+     ========================================== -->
+<div class="detail-overlay" id="contract-detail">
+  <div class="detail-backdrop" onclick="closeContractDetail()"></div>
+  <div class="detail-panel" id="contract-detail-content">
+    <!-- Filled by JS -->
+  </div>
+</div>
+
+<!-- ==========================================
+     UPLOAD CONTRACT MODAL
+     ========================================== -->
+<div class="modal-overlay" id="modal-upload-contract">
+  <div class="modal">
+    <!-- Step 1: Upload -->
+    <div id="upload-step-1" class="upload-step active">
+      <div class="modal-title">Fremdvertrag hinzufügen</div>
+      <p style="font-size:var(--text-sm);color:var(--text-secondary);margin-bottom:var(--space-5)">
+        Laden Sie einen bestehenden Vertrag hoch, der bisher nicht über FVM Makler verwaltet wird.
+      </p>
+      <div class="upload-zone" style="margin-bottom:var(--space-5)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        <p style="font-weight:500;color:var(--text-secondary)">Vertragsdokument hochladen</p>
+        <p style="margin-top:var(--space-1)">PDF, JPG oder PNG (max. 10 MB)</p>
+      </div>
+      <div style="display:flex;gap:var(--space-3);justify-content:flex-end">
+        <button class="btn btn-ghost" onclick="closeUploadModal()">Abbrechen</button>
+        <button class="btn btn-filled" onclick="uploadStepNext(2)">Hochladen</button>
+      </div>
+    </div>
+
+    <!-- Step 2: Choose Action -->
+    <div id="upload-step-2" class="upload-step">
+      <div class="modal-title">Was möchten Sie mit diesem Vertrag tun?</div>
+      <div class="upload-action-cards">
+        <div class="upload-action-card" onclick="selectUploadAction('uebernehmen')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
+          <h4>Vertrag übernehmen</h4>
+          <p>Der Vertrag wird in Ihrem Kundenportal hinterlegt und durch FVM Makler betreut.</p>
+        </div>
+        <div class="upload-action-card" onclick="selectUploadAction('pruefen')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><path d="M8 11l2 2 4-4"/></svg>
+          <h4>Vertrag überprüfen lassen</h4>
+          <p>Ihr Makler prüft Ihren bestehenden Vertrag auf Optimierungspotenzial. Keine Kosten, keine Verpflichtung.</p>
+          <div class="upload-action-sub">Die Auswertung erfolgt persönlich durch Ihren Makler und liegt innerhalb von 1–2 Werktagen vor.</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:var(--space-3);justify-content:flex-end">
+        <button class="btn btn-ghost" onclick="uploadStepNext(1)">Zurück</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Confirmation -->
+    <div id="upload-step-3" class="upload-step">
+      <div class="upload-confirm">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        <h3>Vielen Dank!</h3>
+        <p id="upload-confirm-msg">Ihr Vertrag wurde erfolgreich hochgeladen.</p>
+      </div>
+      <div style="display:flex;justify-content:center;margin-top:var(--space-4)">
+        <button class="btn btn-filled" onclick="closeUploadModal()">Schließen</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================
+   APPLICATION STATE (in-memory only)
+   ============================================ */
+const APP_STATE = {
+  currentPage: 'dashboard',
+  theme: 'dark',
+  claimWizardStep: 1,
+  charts: {}
+};
+
+/* ============================================
+   DATA
+   ============================================ */
+const CONTRACTS = [
+  {
+    id: 0,
+    sparte: 'KFZ-Versicherung',
+    sparteShort: 'PKW',
+    versicherer: 'KRAVAG Versicherung AG',
+    vertragsnummer: '152546458',
+    beitrag: '684,48 €/Jahr',
+    beitragMonat: '57,04 €/Mon.',
+    zahlweise: 'Jährlich',
+    status: 'Aktiv',
+    kennzeichen: 'MM-PH 23',
+    color: 'accent',
+    documents: [
+      { name: 'Versicherungsschein_Police_01.01.2026.pdf', date: '01.01.2026', type: 'Police' },
+      { name: 'Beitragsrechnung_01.01.2026.pdf', date: '01.01.2026', type: 'Beitragsrechnung' }
+    ]
+  },
+  {
+    id: 1,
+    sparte: 'Privathaftpflicht',
+    sparteShort: 'PHV',
+    versicherer: 'Die Haftpflichtkasse',
+    vertragsnummer: '—',
+    beitrag: '98,80 €/Jahr',
+    beitragMonat: '8,23 €/Mon.',
+    zahlweise: 'Jährlich',
+    status: 'Aktiv',
+    color: 'blue',
+    documents: [
+      { name: 'Versicherungsschein_Police_15.06.2025.pdf', date: '15.06.2025', type: 'Police' }
+    ]
+  },
+  {
+    id: 2,
+    sparte: 'Rechtsschutzversicherung',
+    sparteShort: 'RS',
+    versicherer: 'KS/AUXILIA Rechtsschutzversicherungs AG',
+    vertragsnummer: '346454444333',
+    beitrag: '27,89 €/Mon.',
+    beitragMonat: '27,89 €/Mon.',
+    zahlweise: 'Monatlich',
+    status: 'Aktiv',
+    color: 'yellow',
+    documents: [
+      { name: 'Versicherungsschein_Police_05.03.2026.pdf', date: '05.03.2026', type: 'Police' },
+      { name: 'Beitragsrechnung_01.03.2026.pdf', date: '01.03.2026', type: 'Beitragsrechnung' },
+      { name: 'Beitragsrechnung_23.02.2026.pdf', date: '23.02.2026', type: 'Beitragsrechnung' },
+      { name: 'Beitragsrechnung_23.02.2026(1).pdf', date: '23.02.2026', type: 'Beitragsrechnung' },
+      { name: 'Beitragsrechnung_23.02.2026(2).pdf', date: '23.02.2026', type: 'Beitragsrechnung' }
+    ]
+  }
+];
+
+const PRODUCTS = [
+  {
+    name: 'Berufsunfähigkeit (BU)',
+    desc: 'Schutz bei Berufsunfähigkeit — die wichtigste Absicherung für Arbeitnehmer.',
+    urgent: true,
+    insurer: 'Alte Leipziger',
+    price: 'ca. 85 — 140 €/Monat',
+    reasons: ['Existenzsicherung bei Verlust der Arbeitskraft', '53 Jahre — zeitnaher Abschluss wichtig', 'Beitragssteigerung mit jedem Jahr', 'Verzichtbare Klauseln möglich für günstigeren Beitrag'],
+    coverage: 'BU-Rente bis 1.500 €/Monat, Nachversicherungsgarantie, Prognosezeitraum 6 Monate',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>'
+  },
+  {
+    name: 'Altersvorsorge',
+    desc: 'Private Altersvorsorge zum Aufbau einer zusätzlichen Rente.',
+    urgent: true,
+    insurer: 'Continentale',
+    price: 'ab 150 — 300 €/Monat',
+    reasons: ['Gesetzliche Rente allein reicht nicht aus', 'Steuerliche Vorteile durch Basisrente', 'Flexible Einzahlungen möglich', 'Garantierte Mindestrente plus Überschüsse'],
+    coverage: 'Fondsgebundene Basisrente, flexible Beitragsgestaltung, Kapitalwahlrecht',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>'
+  },
+  {
+    name: 'Pflegezusatz',
+    desc: 'Zusatzversicherung für den Pflegefall — schließt die Pflegelücke.',
+    urgent: true,
+    insurer: 'Hallesche',
+    price: 'ca. 35 — 65 €/Monat',
+    reasons: ['Gesetzliche Pflegeversicherung deckt nur 50% der Kosten', 'Pflegelücke ca. 2.000 €/Monat', 'Früher Einstieg = günstigere Beiträge', 'Pflegetagegeld oder Pflegekostenversicherung wählbar'],
+    coverage: 'Pflegetagegeld bis 1.800 €/Mon. bei Pflegegrad 5, weltweiter Schutz',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>'
+  },
+  {
+    name: 'Unfallversicherung',
+    desc: 'Finanzielle Absicherung nach einem Unfall — 24h Schutz weltweit.',
+    urgent: false,
+    insurer: 'Die Haftpflichtkasse',
+    price: 'ca. 15 — 30 €/Monat',
+    reasons: ['24/7 Unfallschutz weltweit', 'Ergänzung zur Berufsunfähigkeitsversicherung', 'Einmalzahlung bei Invalidität', 'Krankenhaustagegeld und Bergungskosten'],
+    coverage: 'Invaliditätssumme 150.000 €, Progression 350%, Krankenhaustagegeld 30 €/Tag',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>'
+  },
+  {
+    name: 'Hausratversicherung',
+    desc: 'Schutz für Ihre Einrichtung gegen Feuer, Einbruch, Wasser und Sturm.',
+    urgent: false,
+    insurer: 'Alte Leipziger',
+    price: 'ca. 8 — 18 €/Monat',
+    reasons: ['Schutz gegen Einbruchdiebstahl', 'Feuer-, Leitungswasser- & Sturmschäden', 'Fahrraddiebstahl inklusive', 'Unterversicherungsverzicht möglich'],
+    coverage: 'Versicherungssumme 65.000 €, inkl. Fahrradklausel, Elementarschäden optional',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>'
+  },
+  {
+    name: 'Zahnzusatz',
+    desc: 'Erstattung für Zahnersatz, Implantate und professionelle Zahnreinigung.',
+    urgent: false,
+    insurer: 'Hallesche',
+    price: 'ca. 20 — 45 €/Monat',
+    reasons: ['Bis 90% Erstattung für Zahnersatz', 'Prophylaxe & PZR inklusive', 'Keine Wartezeiten bei Unfall', 'Kieferorthopädische Leistungen möglich'],
+    coverage: '90% Zahnersatz, 100% Zahnbehandlung, 2x PZR/Jahr, Implantate inklusive',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 00-7 7c0 3 2 5 3 8 .5 1.5 1 3 1 5h6c0-2 .5-3.5 1-5 1-3 3-5 3-8a7 7 0 00-7-7z"/></svg>'
+  },
+  {
+    name: 'Krankenzusatz stationär',
+    desc: 'Chefarztbehandlung und Einzelzimmer im Krankenhaus.',
+    urgent: false,
+    insurer: 'Continentale',
+    price: 'ca. 25 — 55 €/Monat',
+    reasons: ['Chefarztbehandlung garantiert', 'Einzelzimmer bei stationärem Aufenthalt', 'Freie Krankenhauswahl', 'Keine Zuzahlungen im Krankenhaus'],
+    coverage: 'Ein-/Zweibettzimmer, Chefarzt, freie KH-Wahl, Krankenhaustagegeld 25 €/Tag',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>'
+  },
+  {
+    name: 'Auslandsreisekranken',
+    desc: 'Medizinische Versorgung und Krankenrücktransport bei Auslandsreisen.',
+    urgent: false,
+    insurer: 'Hanse Merkur',
+    price: 'ca. 8 — 15 €/Jahr',
+    reasons: ['Weltweiter Schutz bei Auslandsreisen', 'Medizinisch notwendiger Krankenrücktransport', 'Ambulante & stationäre Behandlung', 'Auch für Langzeitreisen verfügbar'],
+    coverage: 'Ambulant & stationär weltweit, Rücktransport, Schmerzstillende Zahnbehandlung',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>'
+  }
+];
+
+/* ============================================
+   NAVIGATION
+   ============================================ */
+const PAGE_TITLES = {
+  dashboard: 'Dashboard',
+  contracts: 'Verträge',
+  documents: 'Dokumente',
+  claims: 'Schaden melden',
+  analysis: 'Bedarfsanalyse',
+  products: 'Produktempfehlungen',
+  contractcheck: 'Vertragscheck',
+  finances: 'Finanzen',
+  settings: 'Einstellungen'
+};
+
+function navigate(page) {
+  APP_STATE.currentPage = page;
+  window.location.hash = page;
+
+  document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+  var el = document.getElementById('page-' + page);
+  if (el) el.classList.add('active');
+
+  document.querySelectorAll('.nav-item').forEach(function(n) { n.classList.remove('active'); });
+  var navItem = document.querySelector('[data-page="' + page + '"]');
+  if (navItem) navItem.classList.add('active');
+
+  document.getElementById('header-title').textContent = PAGE_TITLES[page] || page;
+  document.querySelector('.main-content').scrollTop = 0;
+
+  if (page === 'analysis') initGaugeChart('gauge-analysis');
+  if (page === 'dashboard') initGaugeChart('gauge-dashboard');
+  if (page === 'finances') initExpenseChart();
+  if (page === 'products') renderProducts();
+}
+
+/* ============================================
+   LOGIN / LOGOUT
+   ============================================ */
+function doLogin() {
+  document.getElementById('login-page').style.display = 'none';
+  document.getElementById('app-shell').classList.add('active');
+  navigate('dashboard');
+  initGaugeChart('gauge-dashboard');
+}
+
+function doLogout() {
+  document.getElementById('app-shell').classList.remove('active');
+  document.getElementById('login-page').style.display = 'flex';
+}
+
+/* ============================================
+   THEME TOGGLE
+   ============================================ */
+function toggleTheme() {
+  var html = document.documentElement;
+  var current = html.getAttribute('data-theme');
+  var next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  APP_STATE.theme = next;
+  // Reinitialize charts with new colors
+  Object.keys(APP_STATE.charts).forEach(function(key) {
+    APP_STATE.charts[key].destroy();
+    delete APP_STATE.charts[key];
+  });
+  if (APP_STATE.currentPage === 'dashboard') initGaugeChart('gauge-dashboard');
+  if (APP_STATE.currentPage === 'analysis') initGaugeChart('gauge-analysis');
+  if (APP_STATE.currentPage === 'finances') initExpenseChart();
+}
+
+/* ============================================
+   CHART INITIALIZATION
+   ============================================ */
+function getChartTextColor() {
+  return APP_STATE.theme === 'dark' ? '#8b9bb0' : '#6b7280';
+}
+
+function initGaugeChart(canvasId) {
+  if (APP_STATE.charts[canvasId]) {
+    APP_STATE.charts[canvasId].destroy();
+    delete APP_STATE.charts[canvasId];
+  }
+  var canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+  APP_STATE.charts[canvasId] = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      datasets: [{
+        data: [22, 78],
+        backgroundColor: ['#ef4444', APP_STATE.theme === 'dark' ? '#1a1f26' : '#e5e7eb'],
+        borderWidth: 0,
+        borderRadius: 4
+      }]
+    },
+    options: {
+      cutout: '78%',
+      rotation: -90,
+      circumference: 360,
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: { legend: { display: false }, tooltip: { enabled: false } },
+      animation: { animateRotate: true, duration: 1200 }
+    }
+  });
+}
+
+function initExpenseChart() {
+  if (APP_STATE.charts['expense']) {
+    APP_STATE.charts['expense'].destroy();
+    delete APP_STATE.charts['expense'];
+  }
+  var canvas = document.getElementById('expense-chart');
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+  APP_STATE.charts['expense'] = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Miete', 'Lebensmittel', 'Sonstiges', 'Transport', 'Freizeit', 'Versicherungen'],
+      datasets: [{
+        data: [850, 420, 380, 280, 250, 93.16],
+        backgroundColor: ['#6366f1', '#f59e0b', '#8b5cf6', '#3b82f6', '#10b981', '#20808D'],
+        borderWidth: 0,
+        borderRadius: 3
+      }]
+    },
+    options: {
+      cutout: '55%',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: APP_STATE.theme === 'dark' ? '#19222c' : '#fff',
+          titleColor: APP_STATE.theme === 'dark' ? '#e8ecf0' : '#111827',
+          bodyColor: APP_STATE.theme === 'dark' ? '#8b9bb0' : '#6b7280',
+          borderColor: APP_STATE.theme === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
+          borderWidth: 1,
+          padding: 12,
+          callbacks: {
+            label: function(context) {
+              return context.label + ': ' + context.parsed.toLocaleString('de-DE', {minimumFractionDigits:2}) + ' €';
+            }
+          }
+        }
+      },
+      animation: { animateRotate: true, duration: 1000 }
+    }
+  });
+}
+
+/* ============================================
+   CONTRACT DETAIL
+   ============================================ */
+function showContractDetail(idx) {
+  var c = CONTRACTS[idx];
+  var colorMap = { accent: 'var(--accent-bg)', blue: 'var(--status-blue-bg)', yellow: 'var(--status-yellow-bg)' };
+  var textMap = { accent: 'var(--accent-light)', blue: 'var(--status-blue)', yellow: 'var(--status-yellow)' };
+  var html = '<div class="detail-header">' +
+    '<div style="display:flex;align-items:center;gap:var(--space-4)">' +
+    '<div style="width:48px;height:48px;border-radius:var(--radius-sm);background:' + colorMap[c.color] + ';display:flex;align-items:center;justify-content:center;font-weight:700;font-size:var(--text-sm);color:' + textMap[c.color] + '">' + c.sparteShort + '</div>' +
+    '<div><div style="font-size:var(--text-xl);font-weight:700">' + c.sparte + '</div>' +
+    '<div style="font-size:var(--text-sm);color:var(--text-secondary)">' + c.versicherer + '</div></div></div>' +
+    '<button class="detail-close" onclick="closeContractDetail()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>';
+
+  html += '<div style="margin-bottom:var(--space-6)">' +
+    '<span class="badge badge-green" style="font-size:var(--text-sm);padding:var(--space-2) var(--space-4)">' + c.status + '</span></div>';
+
+  html += '<div style="margin-bottom:var(--space-6)">';
+  html += '<div class="info-row"><span class="info-label">Vertragsnummer</span><span class="info-value">' + c.vertragsnummer + '</span></div>';
+  html += '<div class="info-row"><span class="info-label">Versicherer</span><span class="info-value">' + c.versicherer + '</span></div>';
+  html += '<div class="info-row"><span class="info-label">Beitrag</span><span class="info-value">' + c.beitrag + '</span></div>';
+  html += '<div class="info-row"><span class="info-label">Zahlweise</span><span class="info-value">' + c.zahlweise + '</span></div>';
+  if (c.kennzeichen) {
+    html += '<div class="info-row"><span class="info-label">Kennzeichen</span><span class="info-value">' + c.kennzeichen + '</span></div>';
+  }
+  html += '</div>';
+
+  html += '<div style="font-size:var(--text-base);font-weight:600;margin-bottom:var(--space-4)">Dokumente (' + c.documents.length + ')</div>';
+  html += '<div style="display:flex;flex-direction:column;gap:var(--space-2);margin-bottom:var(--space-5)">';
+  c.documents.forEach(function(doc) {
+    html += '<div style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-3);background:var(--bg-card);border-radius:var(--radius-sm);border:1px solid var(--border)">' +
+      '<div style="display:flex;align-items:center;gap:var(--space-3)">' +
+      '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--status-red)" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>' +
+      '<div><div style="font-size:var(--text-sm);font-weight:500">' + doc.name + '</div>' +
+      '<div style="font-size:var(--text-xs);color:var(--text-muted)">' + doc.date + ' · ' + doc.type + '</div></div></div>' +
+      '<div style="display:flex;gap:var(--space-2)">' +
+      '<button class="btn btn-ghost" style="font-size:var(--text-xs)">Ansehen</button>' +
+      '<button class="btn btn-ghost" style="font-size:var(--text-xs)">Download</button></div></div>';
+  });
+  html += '</div>';
+  html += '<div class="upload-zone" style="padding:var(--space-6)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:28px;height:28px;margin-bottom:var(--space-2);opacity:0.4"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg><p style="font-size:var(--text-sm)">Eigenes Dokument hochladen</p></div>';
+
+  document.getElementById('contract-detail-content').innerHTML = html;
+  document.getElementById('contract-detail').classList.add('active');
+}
+
+function closeContractDetail() {
+  document.getElementById('contract-detail').classList.remove('active');
+}
+
+/* ============================================
+   PRODUCTS RENDERING
+   ============================================ */
+function renderProducts() {
+  var grid = document.getElementById('products-grid');
+  if (!grid) return;
+  var html = '';
+  PRODUCTS.forEach(function(p, i) {
+    html += '<div class="product-card" onclick="showProductDetail(' + i + ')">';
+    if (p.urgent) {
+      html += '<div class="product-card-badge"><span class="badge badge-red">DRINGEND</span></div>';
+    }
+    html += '<div class="product-card-icon">' + p.icon + '</div>';
+    html += '<h3>' + p.name + '</h3>';
+    html += '<p>' + p.desc + '</p>';
+    html += '<div style="margin-top:var(--space-3);font-size:var(--text-sm);font-weight:600;color:var(--accent-light)">' + p.price + '</div>';
+    html += '</div>';
+  });
+  grid.innerHTML = html;
+}
+
+function showProductDetail(idx) {
+  var p = PRODUCTS[idx];
+  var html = '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:var(--space-5)">' +
+    '<div><div style="font-size:var(--text-xl);font-weight:700;margin-bottom:var(--space-1)">' + p.name + '</div>' +
+    '<div style="font-size:var(--text-sm);color:var(--text-secondary)">' + p.insurer + '</div></div>' +
+    '<button class="detail-close" onclick="closeProductModal()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>';
+
+  if (p.urgent) {
+    html += '<div style="margin-bottom:var(--space-4)"><span class="badge badge-red" style="font-size:var(--text-sm);padding:var(--space-2) var(--space-4)">Dringend empfohlen</span></div>';
+  }
+
+  html += '<div style="background:var(--accent-bg);padding:var(--space-4);border-radius:var(--radius-sm);margin-bottom:var(--space-5)">' +
+    '<div style="font-size:var(--text-xs);color:var(--text-muted);margin-bottom:var(--space-1)">Unverbindliche Preisempfehlung</div>' +
+    '<div style="font-size:var(--text-2xl);font-weight:700;color:var(--accent-light)">' + p.price + '</div></div>';
+
+  html += '<div style="margin-bottom:var(--space-5)"><div style="font-weight:600;margin-bottom:var(--space-3);font-size:var(--text-sm)">Warum diese Empfehlung?</div><ul style="list-style:none;display:flex;flex-direction:column;gap:var(--space-2)">';
+  p.reasons.forEach(function(r) {
+    html += '<li style="font-size:var(--text-sm);display:flex;align-items:flex-start;gap:var(--space-2);color:var(--text-secondary)"><span style="color:var(--accent-light);font-weight:700">✓</span> ' + r + '</li>';
+  });
+  html += '</ul></div>';
+
+  html += '<div style="margin-bottom:var(--space-5)"><div style="font-weight:600;margin-bottom:var(--space-2);font-size:var(--text-sm)">Leistungsumfang</div>' +
+    '<p style="font-size:var(--text-sm);color:var(--text-secondary);line-height:1.5">' + p.coverage + '</p></div>';
+
+  html += '<div style="background:var(--bg-surface);padding:var(--space-4);border-radius:var(--radius-sm);margin-bottom:var(--space-5);border:1px solid var(--border)">' +
+    '<p style="font-size:var(--text-xs);color:var(--text-muted);line-height:1.5">Unverbindliches Angebot. Die endgültige Prämie wird nach individueller Prüfung durch Ihren Makler ermittelt.</p></div>';
+
+  html += '<button class="btn btn-filled btn-lg" style="width:100%;margin-bottom:var(--space-3)">Angebot anfragen</button>';
+  html += '<p style="font-size:var(--text-xs);color:var(--text-muted);text-align:center">Diese Vorauswahl wurde durch Ihren Makler getroffen. Die KI unterstützt lediglich bei der Darstellung.</p>';
+
+  document.getElementById('product-modal-content').innerHTML = html;
+  document.getElementById('product-modal').classList.add('active');
+}
+
+function closeProductModal() {
+  document.getElementById('product-modal').classList.remove('active');
+}
+
+/* ============================================
+   MODALS
+   ============================================ */
+function showModal(id) {
+  document.getElementById('modal-' + id).classList.add('active');
+}
+function closeModal(id) {
+  document.getElementById('modal-' + id).classList.remove('active');
+}
+
+// Close modals on backdrop click
+document.addEventListener('click', function(e) {
+  if (e.target.classList.contains('modal-overlay') && e.target.classList.contains('active')) {
+    e.target.classList.remove('active');
+  }
+});
+
+/* ============================================
+   ACCORDION
+   ============================================ */
+function toggleAccordion(header) {
+  header.parentElement.classList.toggle('open');
+}
+
+/* ============================================
+   CLAIMS WIZARD
+   ============================================ */
+function showClaimWizard() {
+  document.getElementById('claim-wizard').style.display = 'block';
+  wizardNext(1);
+}
+
+function wizardNext(step) {
+  APP_STATE.claimWizardStep = step;
+  for (var i = 1; i <= 4; i++) {
+    var s = document.getElementById('wizard-step-' + i);
+    if (s) s.style.display = i === step ? 'block' : 'none';
+  }
+  var steps = document.querySelectorAll('#wizard-steps .wizard-step');
+  steps.forEach(function(ws, idx) {
+    ws.className = 'wizard-step';
+    if (idx + 1 < step) ws.classList.add('done');
+    if (idx + 1 === step) ws.classList.add('active');
+  });
+}
+
+function submitClaim() {
+  alert('Schaden erfolgreich gemeldet! Sie erhalten eine Bestätigung per E-Mail.');
+  document.getElementById('claim-wizard').style.display = 'none';
+}
+
+/* ============================================
+   CONTRACT FILTER
+   ============================================ */
+function filterContracts(filter, btn) {
+  document.querySelectorAll('#contract-tabs .tab').forEach(function(t) { t.classList.remove('active'); });
+  if (btn) btn.classList.add('active');
+  // For demo, all contracts are "aktiv"
+  var rows = document.querySelectorAll('#contracts-table tbody tr');
+  rows.forEach(function(r) {
+    r.style.display = (filter === 'all' || filter === 'aktiv') ? '' : 'none';
+  });
+}
+
+/* ============================================
+   HASH-BASED ROUTING
+   ============================================ */
+function handleHash() {
+  var hash = window.location.hash.replace('#', '') || 'dashboard';
+  if (PAGE_TITLES[hash]) navigate(hash);
+}
+window.addEventListener('hashchange', handleHash);
+
+/* ============================================
+   IBAN VALIDATION
+   ============================================ */
+var GERMAN_BANKS = {
+  '37040044': { name: 'Commerzbank', bic: 'COBADEFFXXX' },
+  '10010010': { name: 'Postbank', bic: 'PBNKDEFF' },
+  '10020000': { name: 'HSBC Trinkaus', bic: 'TUBDDEDD' },
+  '10070000': { name: 'Deutsche Bank', bic: 'DEUTDEBBXXX' },
+  '10070024': { name: 'Deutsche Bank PGK', bic: 'DEUTDEDB' },
+  '10050000': { name: 'Landesbank Berlin', bic: 'BELADEBE' },
+  '10090000': { name: 'Berliner Volksbank', bic: 'BEVODEBB' },
+  '20050550': { name: 'Hamburger Sparkasse', bic: 'HASPDEHHXXX' },
+  '20070000': { name: 'Deutsche Bank Hamburg', bic: 'DEUTDEHHXXX' },
+  '25050000': { name: 'Norddeutsche Landesbank', bic: 'NOLADE2H' },
+  '30050000': { name: 'Stadtsparkasse D\u00fcsseldorf', bic: 'DUSSDEDD' },
+  '36050105': { name: 'Sparkasse Essen', bic: 'SPESDE3E' },
+  '37010050': { name: 'Postbank K\u00f6ln', bic: 'PBNKDEFF370' },
+  '37050198': { name: 'Sparkasse K\u00f6lnBonn', bic: 'COLSDE33' },
+  '37060120': { name: 'Sparda-Bank West', bic: 'GENODED1SPK' },
+  '40050150': { name: 'Sparkasse M\u00fcnsterland Ost', bic: 'WELADED1MST' },
+  '44050199': { name: 'Sparkasse Dortmund', bic: 'DORTDE33' },
+  '50010060': { name: 'Postbank Frankfurt', bic: 'PBNKDEFF' },
+  '50010517': { name: 'ING-DiBa', bic: 'INGDDEFFXXX' },
+  '50020200': { name: 'HSBC Frankfurt', bic: 'TUBDDEFF' },
+  '50040000': { name: 'Commerzbank Frankfurt', bic: 'COBADEFFXXX' },
+  '50050201': { name: 'Frankfurter Sparkasse', bic: 'HELADEF1822' },
+  '50070010': { name: 'Deutsche Bank Frankfurt', bic: 'DEUTDEFF' },
+  '50070024': { name: 'Deutsche Bank PGK Frankfurt', bic: 'DEUTDEDB' },
+  '50080000': { name: 'DZ Bank', bic: 'DRESDEFF' },
+  '50090500': { name: 'Sparda-Bank Hessen', bic: 'GENODEF1S12' },
+  '55050120': { name: 'Sparkasse Mainz', bic: 'MALADE51MNZ' },
+  '60010070': { name: 'Postbank Stuttgart', bic: 'PBNKDEFF600' },
+  '60050101': { name: 'BW-Bank Stuttgart', bic: 'SOLADEST600' },
+  '70010080': { name: 'Postbank M\u00fcnchen', bic: 'PBNKDEFF700' },
+  '70020270': { name: 'UniCredit HVB M\u00fcnchen', bic: 'HYVEDEMMXXX' },
+  '70050000': { name: 'Bayerische Landesbank', bic: 'BYLADEMMXXX' },
+  '76050101': { name: 'Sparkasse N\u00fcrnberg', bic: 'SSKNDE77' },
+  '86050200': { name: 'Sparkasse Leipzig', bic: 'SOLADES1GRM' }
+};
+
+function validateIBAN(iban) {
+  // Strip spaces and uppercase
+  iban = iban.replace(/\s/g, '').toUpperCase();
+  if (iban.length === 0) return { valid: false, empty: true };
+  // Check basic format: 2 letter country + 2 digits + rest
+  if (!/^[A-Z]{2}\d{2}[A-Z0-9]+$/.test(iban)) return { valid: false };
+  // For German IBANs, length must be 22
+  if (iban.substring(0, 2) === 'DE' && iban.length !== 22) return { valid: false, partial: iban.length < 22 };
+  // MOD97 check: rearrange (move first 4 to end)
+  var rearranged = iban.substring(4) + iban.substring(0, 4);
+  // Replace letters with numbers (A=10, B=11 ... Z=35)
+  var numeric = '';
+  for (var i = 0; i < rearranged.length; i++) {
+    var ch = rearranged.charCodeAt(i);
+    if (ch >= 65 && ch <= 90) {
+      numeric += (ch - 55).toString();
+    } else {
+      numeric += rearranged[i];
+    }
+  }
+  // MOD97 on large number (process in chunks)
+  var remainder = numeric;
+  while (remainder.length > 2) {
+    var block = remainder.substring(0, 9);
+    remainder = (parseInt(block, 10) % 97).toString() + remainder.substring(block.length);
+  }
+  var mod = parseInt(remainder, 10) % 97;
+  if (mod !== 1) return { valid: false };
+  // Extract BLZ for German IBANs
+  var blz = null;
+  var bank = null;
+  if (iban.substring(0, 2) === 'DE') {
+    blz = iban.substring(4, 12);
+    bank = GERMAN_BANKS[blz] || null;
+  }
+  return { valid: true, blz: blz, bank: bank };
+}
+
+function formatIBAN(value) {
+  var cleaned = value.replace(/\s/g, '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+  // Max 22 chars for DE IBAN
+  if (cleaned.length > 22) cleaned = cleaned.substring(0, 22);
+  // Insert spaces every 4 chars
+  var formatted = '';
+  for (var i = 0; i < cleaned.length; i++) {
+    if (i > 0 && i % 4 === 0) formatted += ' ';
+    formatted += cleaned[i];
+  }
+  return formatted;
+}
+
+function initIBANValidation() {
+  var input = document.getElementById('iban-input');
+  var result = document.getElementById('iban-result');
+  if (!input || !result) return;
+
+  input.addEventListener('input', function(e) {
+    var cursorPos = input.selectionStart;
+    var oldLength = input.value.length;
+    var formatted = formatIBAN(input.value);
+    input.value = formatted;
+    // Adjust cursor position for added/removed spaces
+    var newLength = formatted.length;
+    var diff = newLength - oldLength;
+    var newPos = cursorPos + diff;
+    if (newPos < 0) newPos = 0;
+    if (newPos > newLength) newPos = newLength;
+    input.setSelectionRange(newPos, newPos);
+
+    var validation = validateIBAN(formatted);
+
+    input.classList.remove('iban-input-valid', 'iban-input-invalid');
+    result.className = '';
+    result.textContent = '';
+
+    if (validation.empty) {
+      // Nothing typed yet
+      return;
+    }
+
+    if (validation.partial) {
+      // Still typing, don't show error yet
+      return;
+    }
+
+    if (validation.valid) {
+      input.classList.add('iban-input-valid');
+      result.className = 'valid';
+      if (validation.bank) {
+        result.textContent = '\u2713 ' + validation.bank.name + ' \u00b7 ' + validation.bank.bic;
+      } else {
+        result.textContent = '\u2713 G\u00fcltige IBAN';
+      }
+    } else {
+      input.classList.add('iban-input-invalid');
+      result.className = 'invalid';
+      result.textContent = 'Ung\u00fcltige IBAN';
+    }
+  });
+}
+
+/* ============================================
+   UPLOAD CONTRACT MULTI-STEP
+   ============================================ */
+function uploadStepNext(step) {
+  for (var i = 1; i <= 3; i++) {
+    var el = document.getElementById('upload-step-' + i);
+    if (el) {
+      el.classList.remove('active');
+      if (i === step) el.classList.add('active');
+    }
+  }
+}
+
+function selectUploadAction(action) {
+  var msg = document.getElementById('upload-confirm-msg');
+  if (action === 'uebernehmen') {
+    msg.textContent = 'Ihr Vertrag wurde erfolgreich hochgeladen und wird ab sofort durch FVM Makler betreut. Sie finden ihn in K\u00fcrze in Ihrer Vertrags\u00fcbersicht.';
+  } else {
+    msg.textContent = 'Ihr Vertrag wurde erfolgreich hochgeladen und wird durch Ihren Makler gepr\u00fcft. Sie erhalten das Ergebnis innerhalb von 1\u20132 Werktagen.';
+  }
+  uploadStepNext(3);
+}
+
+function closeUploadModal() {
+  document.getElementById('modal-upload-contract').classList.remove('active');
+  // Reset to step 1 after closing
+  setTimeout(function() { uploadStepNext(1); }, 300);
+}
+
+/* ============================================
+   VERTRAGSCHECK
+   ============================================ */
+function submitVertragscheck() {
+  alert('Vielen Dank! Ihr Vertrag wurde zur Pr\u00fcfung eingereicht. Ihr Makler wird sich innerhalb von 1\u20132 Werktagen bei Ihnen melden.');
+}
+
+/* ============================================
+   INITIALIZATION
+   ============================================ */
+document.addEventListener('DOMContentLoaded', function() {
+  // Show login page first
+  document.getElementById('login-page').style.display = 'flex';
+  // Init IBAN validation
+  initIBANValidation();
+});
+</script>
+
+</body>
+</html>

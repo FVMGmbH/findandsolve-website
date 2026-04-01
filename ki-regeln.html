@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KI-Regeln — 3-Layer System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  height: 100%;
+}
+body {
+  min-height: 100%;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px;
+  background: #0B1120;
+  color: #F8FAFC;
+  line-height: 1.6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+/* Modern scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.2);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.35);
+}
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.2) transparent;
+}
+
+::selection {
+  background: rgba(16, 185, 129, 0.25);
+  color: #F8FAFC;
+}
+
+:root {
+  --bg: #0B1120;
+  --surface: #1E293B;
+  --border: rgba(148, 163, 184, 0.12);
+  --border-bright: rgba(148, 163, 184, 0.22);
+  --text: #F8FAFC;
+  --text-muted: #94A3B8;
+  --text-secondary: #CBD5E1;
+  --teal: #0D9488;
+  --teal-light: #14B8A6;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --shadow-lg: 0 12px 32px rgba(0,0,0,0.5);
+}
+
+.rules-showcase {
+  width: 1000px;
+  max-width: 96vw;
+  max-height: 92vh;
+  overflow-y: auto;
+  background: var(--surface);
+  border: 1px solid var(--border-bright);
+  border-radius: var(--radius-xl);
+  padding: 36px 32px 28px;
+  box-shadow: var(--shadow-lg);
+  animation: appear 0.5s var(--ease);
+}
+@keyframes appear {
+  from { opacity: 0; transform: translateY(16px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.rs-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+.rs-header h3 {
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+.rs-header p {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.rules-levels {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.rules-level {
+  border: 1px solid var(--border-bright);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: levelIn 0.6s var(--ease) forwards;
+}
+.rules-level:nth-child(1) { animation-delay: 0.15s; }
+.rules-level:nth-child(2) { animation-delay: 0.35s; }
+.rules-level:nth-child(3) { animation-delay: 0.55s; }
+
+@keyframes levelIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.rl-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border-bright);
+}
+.rl-num {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 800;
+  color: white;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+.rl-num.lvl-1 { background: linear-gradient(135deg, var(--teal), #10b981); }
+.rl-num.lvl-2 { background: linear-gradient(135deg, #6366f1, #8b5cf6); }
+.rl-num.lvl-3 { background: linear-gradient(135deg, #f59e0b, #ef4444); }
+
+.rl-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+}
+.rl-subtitle {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-left: auto;
+  font-style: italic;
+}
+
+.rl-body {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 14px 18px;
+}
+
+.rule-card {
+  flex: 1 1 280px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 14px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  opacity: 0;
+  transform: translateX(-12px);
+  animation: cardIn 0.4s ease forwards;
+}
+.rules-level:nth-child(1) .rule-card:nth-child(1) { animation-delay: 0.35s; }
+.rules-level:nth-child(1) .rule-card:nth-child(2) { animation-delay: 0.45s; }
+.rules-level:nth-child(1) .rule-card:nth-child(3) { animation-delay: 0.55s; }
+.rules-level:nth-child(1) .rule-card:nth-child(4) { animation-delay: 0.65s; }
+.rules-level:nth-child(2) .rule-card:nth-child(1) { animation-delay: 0.55s; }
+.rules-level:nth-child(2) .rule-card:nth-child(2) { animation-delay: 0.65s; }
+.rules-level:nth-child(2) .rule-card:nth-child(3) { animation-delay: 0.75s; }
+.rules-level:nth-child(2) .rule-card:nth-child(4) { animation-delay: 0.85s; }
+.rules-level:nth-child(3) .rule-card:nth-child(1) { animation-delay: 0.75s; }
+.rules-level:nth-child(3) .rule-card:nth-child(2) { animation-delay: 0.85s; }
+.rules-level:nth-child(3) .rule-card:nth-child(3) { animation-delay: 0.95s; }
+.rules-level:nth-child(3) .rule-card:nth-child(4) { animation-delay: 1.05s; }
+.rules-level:nth-child(3) .rule-card:nth-child(5) { animation-delay: 1.15s; }
+
+@keyframes cardIn {
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.rc-toggle {
+  flex-shrink: 0;
+  width: 34px;
+  height: 19px;
+  border-radius: 10px;
+  background: var(--teal);
+  position: relative;
+  margin-top: 2px;
+  cursor: pointer;
+  transition: background 0.25s ease;
+}
+.rc-toggle::after {
+  content: '';
+  position: absolute;
+  top: 2.5px;
+  right: 2.5px;
+  width: 14px;
+  height: 14px;
+  background: white;
+  border-radius: 50%;
+  transition: transform 0.25s ease;
+}
+.rc-toggle.off {
+  background: rgba(255,255,255,0.15);
+}
+.rc-toggle.off::after {
+  transform: translateX(-15px);
+}
+
+.rc-badge {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 6px;
+  margin-bottom: 3px;
+}
+.rc-badge.b-phv { background: rgba(99,102,241,0.15); color: #818cf8; }
+.rc-badge.b-kfz { background: rgba(245,158,11,0.15); color: #fbbf24; }
+.rc-badge.b-hr { background: rgba(16,185,129,0.15); color: #34d399; }
+.rc-badge.b-rs { background: rgba(236,72,153,0.15); color: #f472b6; }
+.rc-badge.b-cross { background: rgba(13,148,136,0.15); color: var(--teal-light); }
+.rc-badge.b-leben { background: rgba(168,85,247,0.15); color: #c084fc; }
+.rc-badge.b-kunde { background: rgba(251,146,60,0.15); color: #fb923c; }
+
+.rc-text {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+.rc-text strong {
+  display: block;
+  font-size: 12.5px;
+  color: var(--text);
+  margin-bottom: 1px;
+}
+
+.rc-avatar {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: white;
+  margin-top: 1px;
+}
+.rc-avatar.av-1 { background: linear-gradient(135deg, #6366f1, #8b5cf6); }
+.rc-avatar.av-2 { background: linear-gradient(135deg, #10b981, #059669); }
+.rc-avatar.av-3 { background: linear-gradient(135deg, #f59e0b, #d97706); }
+.rc-avatar.av-4 { background: linear-gradient(135deg, #ef4444, #dc2626); }
+.rc-avatar.av-5 { background: linear-gradient(135deg, #ec4899, #db2777); }
+
+.rules-closing {
+  text-align: center;
+  margin-top: 24px;
+  opacity: 0;
+  animation: levelIn 0.6s var(--ease) 1.3s forwards;
+}
+.rules-closing .rc-tagline {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--teal-light);
+  margin-bottom: 16px;
+}
+
+@media (max-width: 640px) {
+  body { padding: 12px; }
+  .rules-showcase { padding: 20px 16px; }
+  .rl-head { flex-wrap: wrap; }
+  .rl-subtitle { margin-left: 38px; margin-top: -4px; }
+  .rule-card { flex: 1 1 100%; }
+}
+</style>
+</head>
+<body>
+
+<div class="rules-showcase">
+  <div class="rs-header">
+    <h3>KI-Regeln — So steuert ihr eure KI</h3>
+    <p>Drei Ebenen. Volle Kontrolle. Vom großen Ganzen bis zum einzelnen Kunden.</p>
+  </div>
+
+  <div class="rules-levels">
+
+    <!-- LEVEL 1: Globale Regeln -->
+    <div class="rules-level">
+      <div class="rl-head">
+        <div class="rl-num lvl-1">1</div>
+        <div class="rl-title">Globale Regeln</div>
+        <div class="rl-subtitle">Gelten für jeden Kunden, jede Sparte</div>
+      </div>
+      <div class="rl-body">
+        <div class="rule-card">
+          <div class="rc-toggle"></div>
+          <div>
+            <span class="rc-badge b-phv">PHV</span>
+            <div class="rc-text"><strong>PHV-Preischeck</strong>Wenn PHV bei Single teurer als 80 €/Jahr → Vorschlag zur Umstellung erstellen</div>
+          </div>
+        </div>
+        <div class="rule-card">
+          <div class="rc-toggle"></div>
+          <div>
+            <span class="rc-badge b-kfz">KFZ</span>
+            <div class="rc-text"><strong>KFZ Beitragserhöhung</strong>Wenn KFZ-Beitrag &gt; 10 % gestiegen → Wechselvorschlag erstellen</div>
+          </div>
+        </div>
+        <div class="rule-card">
+          <div class="rc-toggle"></div>
+          <div>
+            <span class="rc-badge b-cross">Cross-Selling</span>
+            <div class="rc-text"><strong>Lückenanalyse</strong>Wenn Kunde nur PHV hat → dezent auf Hausrat hinweisen</div>
+          </div>
+        </div>
+        <div class="rule-card">
+          <div class="rc-toggle"></div>
+          <div>
+            <span class="rc-badge b-leben">Leben</span>
+            <div class="rc-text"><strong>BU-Erinnerung</strong>Kunde unter 35 ohne BU → proaktiv BU-Angebot vorschlagen</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LEVEL 2: Sparten-Regeln -->
+    <div class="rules-level">
+      <div class="rl-head">
+        <div class="rl-num lvl-2">2</div>
+        <div class="rl-title">Individuelle Sparten-Regeln</div>
+        <div class="rl-subtitle">Feinjustiert pro Versicherungsart</div>
+      </div>
+      <div class="rl-body">
+        <div class="rule-card">
+          <div class="rc-toggle"></div>
+          <div>
+            <span class="rc-badge b-kfz">KFZ</span>
+            <div class="rc-text"><strong>SF-Klassen-Übernahme</strong>Bei Fahranfängern immer SF-Klassen-Übernahme von Eltern prüfen</div>
+          </div>
+        </div>
+        <div class="rule-card">
+          <div class="rc-toggle"></div>
+          <div>
+            <span class="rc-badge b-hr">Hausrat</span>
+            <div class="rc-text"><strong>Unterversicherungsverzicht</strong>Ab 120 qm immer Unterversicherungsverzicht empfehlen</div>
+          </div>
+        </div>
+        <div class="rule-card">
+          <div class="rc-toggle"></div>
+          <div>
+            <span class="rc-badge b-phv">PHV</span>
+            <div class="rc-text"><strong>Schlüsselverlust-Klausel</strong>Immer Schlüsselverlust-Klausel mit anbieten — wird oft vergessen</div>
+          </div>
+        </div>
+        <div class="rule-card">
+          <div class="rc-toggle"></div>
+          <div>
+            <span class="rc-badge b-rs">Rechtsschutz</span>
+            <div class="rc-text"><strong>Berufs-RS für Selbstständige</strong>Bei Selbstständigen automatisch Berufs-Rechtsschutz prüfen</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LEVEL 3: Kunden-Regeln -->
+    <div class="rules-level">
+      <div class="rl-head">
+        <div class="rl-num lvl-3">3</div>
+        <div class="rl-title">Individuelle Kunden-Regeln</div>
+        <div class="rl-subtitle">Die KI kennt eure Kunden so gut wie ihr</div>
+      </div>
+      <div style="padding:10px 18px 0;">
+        <div style="display:flex;align-items:center;gap:8px;padding:8px 14px;background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.15);border-radius:8px;font-size:12px;color:#fbbf24;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span>Individuelle Kundenregeln können die globalen KI-Regeln <strong style="color:#fff;">überschreiben</strong> — so ist eine individuelle Steuerung pro Kunde möglich.</span>
+        </div>
+      </div>
+      <div class="rl-body">
+        <div class="rule-card">
+          <div class="rc-avatar av-1">JK</div>
+          <div>
+            <span class="rc-badge b-kunde">Kundenregel</span>
+            <div class="rc-text"><strong>Julia Klein</strong>Kommunikation nur per E-Mail, kein Telefon. Reagiert schnell auf Mails.</div>
+          </div>
+        </div>
+        <div class="rule-card">
+          <div class="rc-avatar av-2">TB</div>
+          <div>
+            <span class="rc-badge b-kunde">Kundenregel</span>
+            <div class="rc-text"><strong>Thomas Berger</strong>Fan von VHV — bei Empfehlungen priorisieren. Mag keine Bündelangebote.</div>
+          </div>
+        </div>
+        <div class="rule-card">
+          <div class="rc-avatar av-3">SW</div>
+          <div>
+            <span class="rc-badge b-kunde">Kundenregel</span>
+            <div class="rc-text"><strong>Sabine Wolf</strong>Bevorzugt persönliche Beratung. Keine automatisierten E-Mails senden.</div>
+          </div>
+        </div>
+        <div class="rule-card">
+          <div class="rc-avatar av-4">ML</div>
+          <div>
+            <span class="rc-badge b-kunde">Kundenregel</span>
+            <div class="rc-text"><strong>Markus Lang</strong>Selbstständiger Handwerker. Immer Betriebshaftpflicht mit prüfen.</div>
+          </div>
+        </div>
+        <div class="rule-card">
+          <div class="rc-avatar av-5">AH</div>
+          <div>
+            <span class="rc-badge b-kunde">Kundenregel</span>
+            <div class="rc-text"><strong>Anna Hoffmann</strong>Preissensitiv — immer günstigste Option zuerst zeigen. Kein Upselling.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="rules-closing">
+    <div class="rc-tagline">Eure Regeln. Eure KI. — Sie arbeitet so, wie ihr es wollt.</div>
+  </div>
+</div>
+
+<script>
+// Toggle clicks
+document.querySelectorAll('.rc-toggle').forEach(function(t) {
+  t.addEventListener('click', function() {
+    this.classList.toggle('off');
+  });
+});
+</script>
+</body>
+</html>

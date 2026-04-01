@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FindandSolve PDF-Splitter Demo</title>
+<script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Purple palette matching the real app */
+    --purple-600: #7c3aed;
+    --purple-700: #6d28d9;
+    --purple-500: #8b5cf6;
+    --purple-400: #a78bfa;
+    --purple-300: #c4b5fd;
+    --purple-200: #ddd6fe;
+    /* Dark UI surfaces */
+    --bg-dark: #0c0a1a;
+    --surface-1: #141225;
+    --surface-2: #1a1730;
+    --surface-3: #211e3a;
+    --border-dark: rgba(255,255,255,0.08);
+    --border-light: rgba(255,255,255,0.12);
+    --text: #e8e8f0;
+    --text-muted: #8585a0;
+    --text-dim: #5a5a78;
+    /* Header gradient (very dark purple, like the real app) */
+    --header-from: #1a0a3e;
+    --header-to: #2d1464;
+    /* Emerald */
+    --emerald-400: #34d399;
+    --emerald-500: #10b981;
+    --emerald-bg: rgba(52,211,153,0.08);
+    --emerald-border: rgba(52,211,153,0.2);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: rgba(0,0,0,0.6);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+  }
+
+  /* ── Dialog Container ─────────────── */
+  .dialog {
+    background: var(--surface-1);
+    border-radius: 16px;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.6), 0 0 0 1px var(--border-dark);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    width: 860px;
+    max-width: 94vw;
+    max-height: 85vh;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .dialog.expanded {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 0;
+    z-index: 100;
+  }
+
+  /* ── Header ─────────────────────────── */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    background: linear-gradient(135deg, var(--header-from), var(--header-to));
+    border-bottom: 1px solid rgba(139,92,246,0.15);
+    flex-shrink: 0;
+  }
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .header-icon svg { width: 16px; height: 16px; color: var(--purple-300); }
+  .header-title { font-size: 13px; font-weight: 600; color: white; }
+  .header-file { font-size: 11px; color: var(--purple-300); opacity: 0.6; margin-left: 4px; }
+  .header-right { display: flex; align-items: center; gap: 2px; }
+  .header-btn {
+    width: 28px; height: 28px;
+    border: none; background: transparent;
+    border-radius: 6px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s;
+    color: rgba(255,255,255,0.5);
+  }
+  .header-btn:hover { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.85); }
+  .header-btn svg { width: 15px; height: 15px; }
+
+  /* ── Compact Body ───────────────────── */
+  .compact-body {
+    padding: 14px 16px 10px;
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .dialog.expanded .compact-body { display: none; }
+  .hint-text {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    line-height: 1.4;
+  }
+
+  /* ── Thumbnail Grid ─────────────────── */
+  .thumb-grid {
+    display: flex;
+    gap: 10px;
+    flex: 1;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 6px;
+  }
+  .thumb-grid::-webkit-scrollbar { height: 4px; }
+  .thumb-grid::-webkit-scrollbar-track { background: transparent; }
+  .thumb-grid::-webkit-scrollbar-thumb { background: rgba(139,92,246,0.2); border-radius: 2px; }
+
+  .thumb-card {
+    position: relative;
+    flex-shrink: 0;
+    width: 128px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 2px solid var(--border-light);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: var(--surface-2);
+  }
+  .thumb-card:hover {
+    border-color: rgba(139,92,246,0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+  }
+  .thumb-card.selected {
+    border-color: var(--purple-600);
+    box-shadow: 0 0 0 3px rgba(124,58,237,0.2), 0 6px 20px rgba(124,58,237,0.25);
+  }
+  .thumb-card.extracted {
+    border-color: rgba(52,211,153,0.4);
+    opacity: 0.6;
+  }
+  .thumb-card canvas, .thumb-card img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* ── Page Number Badge ──────────────── */
+  .page-num {
+    position: absolute;
+    top: 5px; left: 5px;
+    min-width: 20px; height: 20px;
+    padding: 0 5px;
+    border-radius: 5px;
+    font-size: 10px;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 2;
+    transition: all 0.15s;
+  }
+  .thumb-card:not(.selected):not(.extracted) .page-num {
+    background: rgba(0,0,0,0.55);
+    color: white;
+  }
+  .thumb-card.selected .page-num {
+    background: var(--purple-600);
+    color: white;
+  }
+  .thumb-card.extracted .page-num {
+    background: var(--emerald-500);
+    color: white;
+  }
+
+  /* ── Selection Checkmark ────────────── */
+  .page-check {
+    position: absolute;
+    top: 5px; right: 5px;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--purple-600);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; transform: scale(0.5);
+    transition: all 0.2s ease;
+    z-index: 2;
+  }
+  .thumb-card.selected .page-check { opacity: 1; transform: scale(1); }
+  .page-check svg { width: 12px; height: 12px; color: white; }
+  .extracted-badge {
+    position: absolute;
+    bottom: 5px; right: 5px;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--emerald-500);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 2;
+  }
+  .extracted-badge svg { width: 10px; height: 10px; color: white; }
+
+  /* ── Extracted Info Bar ─────────────── */
+  .extracted-bar {
+    margin-top: 10px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: var(--emerald-bg);
+    border: 1px solid var(--emerald-border);
+    display: none;
+  }
+  .extracted-bar.visible { display: block; }
+  .extracted-bar-head {
+    display: flex; align-items: center; gap: 6px; margin-bottom: 4px;
+  }
+  .extracted-bar-head svg { width: 14px; height: 14px; color: var(--emerald-400); }
+  .extracted-bar-head span { font-size: 11px; font-weight: 600; color: var(--emerald-400); }
+  .extracted-badges { display: flex; flex-wrap: wrap; gap: 4px; }
+  .extracted-badges span {
+    font-size: 10px; padding: 2px 8px; border-radius: 10px;
+    background: rgba(52,211,153,0.12); color: var(--emerald-400); font-weight: 500;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .extracted-badges .badge-num {
+    width: 14px; height: 14px; border-radius: 50%; background: var(--emerald-500);
+    color: white; font-size: 8px; font-weight: 700;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+
+  /* ── Footer ─────────────────────────── */
+  .footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    border-top: 1px solid var(--border-dark);
+    flex-shrink: 0;
+    background: var(--surface-2);
+  }
+  .selection-info { font-size: 12px; color: var(--text-dim); }
+  .selection-info.active { color: var(--purple-400); font-weight: 600; }
+  .footer-btns { display: flex; align-items: center; gap: 8px; }
+  .btn-cancel {
+    padding: 7px 14px; border-radius: 8px; font-size: 12px; font-weight: 500;
+    border: none; background: transparent; color: var(--text-muted); cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-cancel:hover { background: rgba(255,255,255,0.05); color: var(--text); }
+  .btn-extract {
+    padding: 7px 16px; border-radius: 8px; font-size: 12px; font-weight: 600;
+    border: none; color: white; cursor: pointer;
+    display: flex; align-items: center; gap: 5px;
+    transition: all 0.15s;
+    background: var(--purple-600);
+    box-shadow: 0 2px 8px rgba(124,58,237,0.3);
+  }
+  .btn-extract:hover:not(:disabled) { background: var(--purple-500); box-shadow: 0 4px 12px rgba(124,58,237,0.4); }
+  .btn-extract:disabled { background: var(--surface-3); color: var(--text-dim); box-shadow: none; cursor: not-allowed; }
+  .btn-extract svg { width: 14px; height: 14px; }
+  .btn-finish {
+    padding: 7px 16px; border-radius: 8px; font-size: 12px; font-weight: 600;
+    border: 1px solid var(--emerald-border); color: var(--emerald-400); cursor: pointer;
+    display: flex; align-items: center; gap: 5px;
+    transition: all 0.15s; background: transparent;
+  }
+  .btn-finish:hover { background: var(--emerald-bg); }
+  .btn-finish:disabled { display: none; }
+  .btn-finish svg { width: 14px; height: 14px; }
+
+  /* ── Expanded View ──────────────────── */
+  .expanded-body {
+    flex: 1;
+    display: none;
+    overflow: hidden;
+  }
+  .dialog.expanded .expanded-body { display: flex; }
+  .pdf-pane {
+    flex: 1;
+    border-right: 1px solid var(--border-dark);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--bg-dark);
+  }
+  .pdf-pane-label {
+    display: flex; align-items: center; gap: 5px;
+    padding: 6px 12px;
+    border-bottom: 1px solid var(--border-dark);
+    background: var(--surface-2);
+  }
+  .pdf-pane-label svg { width: 12px; height: 12px; color: var(--text-dim); }
+  .pdf-pane-label span { font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-dim); }
+  .pdf-viewer {
+    flex: 1;
+    overflow: hidden;
+    padding: 8px;
+  }
+  .pdf-viewer iframe {
+    width: 100%;
+    height: 100%;
+    border: 1px solid var(--border-dark);
+    border-radius: 4px;
+    background: white;
+  }
+  .thumb-pane {
+    width: 380px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--surface-1);
+  }
+  .thumb-pane-hint {
+    font-size: 11px;
+    color: var(--text-muted);
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border-dark);
+    line-height: 1.4;
+  }
+  .thumb-pane-grid {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-content: flex-start;
+  }
+  .thumb-pane-grid::-webkit-scrollbar { width: 4px; }
+  .thumb-pane-grid::-webkit-scrollbar-track { background: transparent; }
+  .thumb-pane-grid::-webkit-scrollbar-thumb { background: rgba(139,92,246,0.2); border-radius: 2px; }
+  .thumb-pane-grid .thumb-card {
+    width: calc(20% - 7px);
+    min-width: 58px;
+  }
+
+  /* ── Finish Dialog ──────────────────── */
+  .finish-overlay {
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.6); backdrop-filter: blur(6px);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.25s;
+  }
+  .finish-overlay.active { opacity: 1; pointer-events: auto; }
+  .finish-dialog {
+    background: var(--surface-1); border-radius: 16px; padding: 24px;
+    max-width: 400px; width: 90%;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+    border: 1px solid var(--border-light);
+    transform: scale(0.92); transition: transform 0.25s;
+  }
+  .finish-overlay.active .finish-dialog { transform: scale(1); }
+  .finish-dialog-icon {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 14px;
+  }
+  .finish-dialog-icon svg { width: 22px; height: 22px; color: var(--purple-400); }
+  .finish-dialog-icon h3 { font-size: 16px; font-weight: 700; color: var(--text); }
+  .finish-dialog p { font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 10px; }
+  .finish-dialog p strong { color: var(--purple-400); }
+  .finish-list { list-style: none; margin-bottom: 16px; }
+  .finish-list li {
+    display: flex; align-items: center; gap: 6px;
+    padding: 3px 0; font-size: 12px; color: var(--text-muted);
+  }
+  .finish-list li svg { width: 14px; height: 14px; color: var(--emerald-400); flex-shrink: 0; }
+  .finish-btns { display: flex; gap: 8px; justify-content: flex-end; }
+  .finish-btns button {
+    padding: 8px 16px; border-radius: 8px; font-size: 12px; font-weight: 500;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .btn-no { background: transparent; border: 1px solid var(--border-light); color: var(--text-muted); }
+  .btn-no:hover { background: rgba(255,255,255,0.04); color: var(--text); }
+  .btn-yes {
+    background: var(--purple-600); border: none; color: white; font-weight: 600;
+    display: flex; align-items: center; gap: 5px;
+    box-shadow: 0 2px 8px rgba(124,58,237,0.3);
+  }
+  .btn-yes:hover { background: var(--purple-500); }
+  .btn-yes svg { width: 14px; height: 14px; }
+
+  /* ── Toast ──────────────────────────── */
+  .toast {
+    position: fixed; bottom: 24px; left: 50%; z-index: 300;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--surface-1); border: 1px solid var(--emerald-border);
+    border-radius: 12px; padding: 12px 20px;
+    display: flex; align-items: center; gap: 10px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+  .toast-icon {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--emerald-500); display: flex; align-items: center; justify-content: center;
+  }
+  .toast-icon svg { width: 14px; height: 14px; color: white; }
+  .toast-text { font-size: 13px; font-weight: 600; color: var(--text); }
+  .toast-sub { font-size: 11px; color: var(--text-muted); }
+
+  /* ── Loading ────────────────────────── */
+  .loading-wrap {
+    display: flex; align-items: center; justify-content: center;
+    flex: 1; gap: 10px; padding: 40px;
+  }
+  .spinner {
+    width: 24px; height: 24px; border: 3px solid var(--border-light);
+    border-top-color: var(--purple-600); border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-text { font-size: 13px; color: var(--text-dim); }
+</style>
+</head>
+<body>
+
+<div class="dialog" id="dialog">
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <div class="header-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="18" r="3"/><path d="M6 9v6M9 6h6M9 18h6" stroke-dasharray="3 3"/></svg>
+      </div>
+      <span class="header-title">Dokument teilen</span>
+      <span class="header-file">Herr_Schmidt_Unterlagen.pdf</span>
+    </div>
+    <div class="header-right">
+      <button class="header-btn" id="expandBtn" title="Ansicht vergrößern" onclick="toggleExpand()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+      </button>
+      <button class="header-btn" title="Schließen" onclick="resetDemo()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Compact body -->
+  <div class="compact-body" id="compactBody">
+    <p class="hint-text">Wähle die Seiten aus, die als eigenes Dokument extrahiert werden sollen. Klicke einzelne Seiten an oder wähle mehrere aus.</p>
+    <div class="loading-wrap" id="loadingState">
+      <div class="spinner"></div>
+      <span class="loading-text">PDF wird geladen...</span>
+    </div>
+    <div class="thumb-grid" id="thumbGrid" style="display:none;"></div>
+    <div class="extracted-bar" id="extractedBar">
+      <div class="extracted-bar-head">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        <span id="extractedLabel"></span>
+      </div>
+      <div class="extracted-badges" id="extractedBadges"></div>
+    </div>
+  </div>
+
+  <!-- Expanded body -->
+  <div class="expanded-body" id="expandedBody">
+    <div class="pdf-pane">
+      <div class="pdf-pane-label">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        <span>Original-PDF</span>
+      </div>
+      <div class="pdf-viewer">
+        <iframe id="pdfIframe" title="PDF-Vollansicht"></iframe>
+      </div>
+    </div>
+    <div class="thumb-pane">
+      <div class="thumb-pane-hint">Links das Original lesen, rechts Seiten zum Extrahieren auswählen.</div>
+      <div class="thumb-pane-grid" id="thumbGridExpanded"></div>
+      <div style="padding:8px 12px;">
+        <div class="extracted-bar" id="extractedBarExpanded">
+          <div class="extracted-bar-head">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            <span id="extractedLabelExpanded"></span>
+          </div>
+          <div class="extracted-badges" id="extractedBadgesExpanded"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="selection-info" id="selectionInfo">Seiten anklicken zum Auswählen</div>
+    <div class="footer-btns">
+      <button class="btn-finish" id="finishBtn" disabled onclick="handleFinish()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        Fertig
+      </button>
+      <button class="btn-cancel" onclick="resetDemo()">Abbrechen</button>
+      <button class="btn-extract" id="extractBtn" disabled onclick="handleExtract()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="18" r="3"/><path d="M6 9v6M9 6h6M9 18h6" stroke-dasharray="3 3"/></svg>
+        <span id="extractLabel">Extrahieren</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Finish Dialog -->
+<div class="finish-overlay" id="finishOverlay">
+  <div class="finish-dialog">
+    <div class="finish-dialog-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      <h3>Original-PDF behalten?</h3>
+    </div>
+    <p>Du hast <strong id="finishCount"></strong> extrahiert:</p>
+    <ul class="finish-list" id="finishList"></ul>
+    <p>Soll das komplette Original-PDF zusätzlich als Ganzes abgelegt werden?</p>
+    <div class="finish-btns">
+      <button class="btn-no" onclick="finishDemo(false)">Nein, nur Teile</button>
+      <button class="btn-yes" onclick="finishDemo(true)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        Ja, Original behalten
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+  <div class="toast-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+  </div>
+  <div>
+    <div class="toast-text" id="toastText"></div>
+    <div class="toast-sub">Fahrzeugschein / Brief / Führerschein → Herr Schmidt</div>
+  </div>
+</div>
+
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+const { PDFDocument, rgb, StandardFonts } = PDFLib;
+
+let pdfBytes = null;
+let pdfBlobUrl = null;
+let thumbnailDataUrls = [];
+let selectedPages = new Set();
+let extractedGroups = [];
+let isExpanded = false;
+
+const SVG_CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>';
+
+async function generateDemoPdf() {
+  const doc = await PDFDocument.create();
+  const font = await doc.embedFont(StandardFonts.Helvetica);
+  const fontBold = await doc.embedFont(StandardFonts.HelveticaBold);
+
+  const pages = [
+    { title: 'Fahrzeugschein', sub: 'Zulassungsbescheinigung Teil I - Seite 1', accent: [0.37, 0.65, 0.98],
+      fields: [['Halter:', 'Schmidt, Thomas'], ['Anschrift:', 'Musterstr. 42, 80331 München'], ['Kennzeichen:', 'M-TS 2024'], ['Hersteller:', 'Volkswagen AG'], ['Typ:', 'Golf VIII 2.0 TDI'], ['FIN:', 'WVWZZZ1KZMP012345'], ['Erstzulassung:', '15.03.2023']], stamp: 'ZULASSUNGSSTELLE' },
+    { title: 'Fahrzeugschein', sub: 'Zulassungsbescheinigung Teil I - Seite 2', accent: [0.37, 0.65, 0.98],
+      fields: [['Hubraum:', '1.968 ccm'], ['Leistung:', '110 kW / 150 PS'], ['Kraftstoff:', 'Diesel'], ['CO2:', '118 g/km'], ['Schadstoffklasse:', 'Euro 6d'], ['Gesamtmasse:', '1.960 kg'], ['Plätze:', '5']], stamp: null },
+    { title: 'Zulassungsbescheinigung', sub: 'Teil I - Technische Daten', accent: [0.96, 0.62, 0.04],
+      fields: [['Fahrzeugklasse:', 'M1'], ['Aufbauart:', 'Limousine (AB)'], ['Achsen:', '2'], ['Bereifung:', '205/55 R16 91V'], ['Max. Geschw.:', '216 km/h'], ['Standger.:', '72 dB(A)'], ['Fahrger.:', '68 dB(A)']], stamp: null },
+    { title: 'Fahrzeugbrief', sub: 'Zulassungsbescheinigung Teil II', accent: [0.96, 0.62, 0.04],
+      fields: [['Eigentümer:', 'Schmidt, Thomas'], ['Erwerb:', '15.03.2023'], ['Voreigentümer:', 'Autohaus Müller GmbH'], ['Kennzeichen:', 'M-TS 2024'], ['FIN:', 'WVWZZZ1KZMP012345'], ['Sicherheitscode:', '****-****-****'], ['Nummer:', 'II 2023/M/045892']], stamp: 'KRAFTFAHRT-BUNDESAMT' },
+    { title: 'Führerschein', sub: 'Vorderseite - EU-Kartenführerschein', accent: [0.20, 0.83, 0.60],
+      fields: [['1. Name:', 'Schmidt'], ['2. Vorname:', 'Thomas'], ['3. Geburtsdatum:', '14.07.1985'], ['4a. Ausstellung:', '22.09.2018'], ['4b. Gültig bis:', '21.09.2033'], ['4c. Behörde:', 'Landratsamt München'], ['5. Nr.:', 'T490 S2018 0922 01']], stamp: 'BUNDESREPUBLIK DEUTSCHLAND' },
+    { title: 'Führerschein', sub: 'Rückseite - Fahrerlaubnisklassen', accent: [0.20, 0.83, 0.60],
+      fields: [['Klasse B:', '22.09.2018'], ['Klasse B96:', '22.09.2018'], ['Klasse BE:', '15.04.2019'], ['Klasse AM:', '22.09.2018'], ['Klasse L:', '22.09.2018'], ['Beschr.:', 'Keine'], ['Auflagen:', 'Sehhilfe (01.01)']], stamp: null },
+  ];
+
+  for (const cfg of pages) {
+    const p = doc.addPage([420, 595]);
+    const { width, height } = p.getSize();
+    p.drawRectangle({ x: 0, y: 0, width, height, color: rgb(0.98, 0.98, 0.97) });
+    p.drawRectangle({ x: 0, y: height - 48, width, height: 48, color: rgb(...cfg.accent) });
+    p.drawText(cfg.title, { x: 18, y: height - 32, size: 15, font: fontBold, color: rgb(1,1,1) });
+    p.drawText(cfg.sub, { x: 18, y: height - 66, size: 8, font, color: rgb(0.4,0.4,0.4) });
+    p.drawRectangle({ x: 18, y: height - 76, width: width - 36, height: 0.5, color: rgb(0.85,0.85,0.85) });
+    let y = height - 100;
+    for (const [label, val] of cfg.fields) {
+      if (y < 80) break;
+      p.drawText(label, { x: 18, y, size: 8, font, color: rgb(0.5,0.5,0.5) });
+      p.drawText(val, { x: 140, y, size: 9, font: fontBold, color: rgb(0.15,0.15,0.15) });
+      y -= 25;
+    }
+    p.drawRectangle({ x: 18, y: 60, width: width - 36, height: 45, color: rgb(0.95,0.95,0.95), borderColor: rgb(0.88,0.88,0.88), borderWidth: 0.5 });
+    p.drawText('Dokumententyp: ' + cfg.title, { x: 26, y: 88, size: 7, font, color: rgb(0.5,0.5,0.5) });
+    p.drawText('Herr Schmidt, Thomas - M-TS 2024', { x: 26, y: 75, size: 8, font: fontBold, color: rgb(0.3,0.3,0.3) });
+    if (cfg.stamp) p.drawText(cfg.stamp, { x: width/2 - 50, y: 38, size: 6, font, color: rgb(...cfg.accent), opacity: 0.3 });
+  }
+  return await doc.save();
+}
+
+async function renderThumbnails(data) {
+  const pdf = await pdfjsLib.getDocument({ data }).promise;
+  const results = [];
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const pg = await pdf.getPage(i);
+    const vp = pg.getViewport({ scale: 0.5 });
+    const canvas = document.createElement('canvas');
+    canvas.width = vp.width;
+    canvas.height = vp.height;
+    await pg.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
+    results.push(canvas.toDataURL('image/jpeg', 0.85));
+  }
+  return results;
+}
+
+function createThumbCard(index, dataUrl) {
+  const card = document.createElement('div');
+  card.className = 'thumb-card';
+  card.dataset.page = index;
+  const img = document.createElement('img');
+  img.src = dataUrl;
+  img.alt = 'Seite ' + (index + 1);
+  img.draggable = false;
+  card.appendChild(img);
+  const num = document.createElement('div');
+  num.className = 'page-num';
+  num.textContent = index + 1;
+  card.appendChild(num);
+  const check = document.createElement('div');
+  check.className = 'page-check';
+  check.innerHTML = SVG_CHECK;
+  card.appendChild(check);
+  card.addEventListener('click', () => togglePage(index));
+  return card;
+}
+
+function togglePage(index) {
+  if (extractedGroups.flatMap(g => g.pages).includes(index)) return;
+  if (selectedPages.has(index)) selectedPages.delete(index);
+  else selectedPages.add(index);
+  updateUI();
+}
+
+function toggleExpand() {
+  isExpanded = !isExpanded;
+  document.getElementById('dialog').classList.toggle('expanded', isExpanded);
+  if (isExpanded && pdfBlobUrl) {
+    document.getElementById('pdfIframe').src = pdfBlobUrl + '#toolbar=1&navpanes=0';
+  }
+  rebuildThumbs();
+  const btn = document.getElementById('expandBtn');
+  btn.innerHTML = isExpanded
+    ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/><line x1="14" y1="10" x2="21" y2="3"/><line x1="3" y1="21" x2="10" y2="14"/></svg>'
+    : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>';
+}
+
+function rebuildThumbs() {
+  const compactGrid = document.getElementById('thumbGrid');
+  const expandedGrid = document.getElementById('thumbGridExpanded');
+  const target = isExpanded ? expandedGrid : compactGrid;
+  const other = isExpanded ? compactGrid : expandedGrid;
+  other.innerHTML = '';
+  target.innerHTML = '';
+  thumbnailDataUrls.forEach((url, i) => target.appendChild(createThumbCard(i, url)));
+  compactGrid.style.display = isExpanded ? 'none' : 'flex';
+  updateUI();
+}
+
+function updateUI() {
+  const allExtracted = extractedGroups.flatMap(g => g.pages);
+  const grid = isExpanded ? document.getElementById('thumbGridExpanded') : document.getElementById('thumbGrid');
+  grid.querySelectorAll('.thumb-card').forEach(card => {
+    const idx = parseInt(card.dataset.page);
+    card.classList.toggle('selected', selectedPages.has(idx));
+    card.classList.toggle('extracted', allExtracted.includes(idx));
+    const oldBadge = card.querySelector('.extracted-badge');
+    if (oldBadge) oldBadge.remove();
+    if (allExtracted.includes(idx) && !selectedPages.has(idx)) {
+      const eb = document.createElement('div');
+      eb.className = 'extracted-badge';
+      eb.innerHTML = SVG_CHECK;
+      card.appendChild(eb);
+    }
+  });
+  const info = document.getElementById('selectionInfo');
+  if (selectedPages.size > 0) {
+    info.textContent = selectedPages.size + (selectedPages.size === 1 ? ' Seite ausgewählt' : ' Seiten ausgewählt');
+    info.className = 'selection-info active';
+  } else {
+    info.textContent = 'Seiten anklicken zum Auswählen';
+    info.className = 'selection-info';
+  }
+  document.getElementById('extractBtn').disabled = selectedPages.size === 0;
+  document.getElementById('extractLabel').textContent = selectedPages.size > 0
+    ? 'Extrahieren (' + selectedPages.size + ')' : 'Extrahieren';
+  document.getElementById('finishBtn').disabled = extractedGroups.length === 0;
+  updateExtractedBar('extractedBar', 'extractedLabel', 'extractedBadges');
+  updateExtractedBar('extractedBarExpanded', 'extractedLabelExpanded', 'extractedBadgesExpanded');
+}
+
+function updateExtractedBar(barId, labelId, badgesId) {
+  const bar = document.getElementById(barId);
+  if (extractedGroups.length === 0) { bar.classList.remove('visible'); return; }
+  bar.classList.add('visible');
+  document.getElementById(labelId).textContent =
+    extractedGroups.length + ' Teildokument' + (extractedGroups.length !== 1 ? 'e' : '') + ' bereit zur Verarbeitung';
+  document.getElementById(badgesId).innerHTML = extractedGroups.map((g, i) =>
+    '<span><span class="badge-num">' + (i+1) + '</span>Seiten ' + g.pages.map(p => p+1).join(', ') + '</span>'
+  ).join('');
+}
+
+function handleExtract() {
+  if (selectedPages.size === 0) return;
+  const pages = Array.from(selectedPages).sort((a, b) => a - b);
+  const nameMap = { 0: 'Fahrzeugschein', 1: 'Fahrzeugschein', 2: 'Zulassungsbescheinigung', 3: 'Brief', 4: 'Führerschein', 5: 'Führerschein' };
+  extractedGroups.push({ pages, name: nameMap[pages[0]] || 'Dokument' });
+  selectedPages.clear();
+  updateUI();
+  const btn = document.getElementById('extractBtn');
+  btn.style.background = '#10b981';
+  document.getElementById('extractLabel').textContent = 'Extrahiert!';
+  setTimeout(() => { btn.style.background = ''; updateUI(); }, 1200);
+}
+
+function handleFinish() {
+  if (extractedGroups.length === 0) return;
+  document.getElementById('finishCount').textContent =
+    extractedGroups.length + ' Teildokument' + (extractedGroups.length !== 1 ? 'e' : '');
+  document.getElementById('finishList').innerHTML = extractedGroups.map(g =>
+    '<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>' +
+    g.name + ' - Seiten ' + g.pages.map(p => p+1).join(', ') + '</li>'
+  ).join('');
+  document.getElementById('finishOverlay').classList.add('active');
+}
+
+function finishDemo(keep) {
+  document.getElementById('finishOverlay').classList.remove('active');
+  const total = extractedGroups.length + (keep ? 1 : 0);
+  document.getElementById('toastText').textContent = total + ' Dokument' + (total !== 1 ? 'e' : '') + ' zugeordnet';
+  document.getElementById('toast').classList.add('show');
+  setTimeout(() => document.getElementById('toast').classList.remove('show'), 4000);
+  setTimeout(() => { extractedGroups = []; selectedPages.clear(); updateUI(); }, 2000);
+}
+
+function resetDemo() {
+  extractedGroups = [];
+  selectedPages.clear();
+  if (isExpanded) toggleExpand();
+  updateUI();
+}
+
+async function init() {
+  try {
+    pdfBytes = await generateDemoPdf();
+    const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+    pdfBlobUrl = URL.createObjectURL(blob);
+    thumbnailDataUrls = await renderThumbnails(new Uint8Array(pdfBytes));
+    const grid = document.getElementById('thumbGrid');
+    thumbnailDataUrls.forEach((url, i) => grid.appendChild(createThumbCard(i, url)));
+    document.getElementById('loadingState').style.display = 'none';
+    grid.style.display = 'flex';
+    updateUI();
+  } catch (err) {
+    console.error('Init error:', err);
+    document.getElementById('loadingState').innerHTML =
+      '<span class="loading-text" style="color:#ef4444;">Fehler: ' + err.message + '</span>';
+  }
+}
+init();
+</script>
+</body>
+</html>
